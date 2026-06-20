@@ -14,7 +14,6 @@
       --muted: #ccc;
       --gold: #f0c27b;
       --green: #2ecc71;
-      --red: #ff2d55;
       --radius: 16px;
       --shadow: 0 8px 20px rgba(0,0,0,0.6);
     }
@@ -63,15 +62,6 @@
       background: var(--gold); color: #0d0d0d; padding: 3px 10px; border-radius: 20px;
       font-weight: bold; display: inline-block;
     }
-    .warning {
-      background: #ff2d5515; border-left: 4px solid #ff2d55; padding: 10px;
-      border-radius: 0 10px 10px 0; margin: 8px 0; font-size: 0.85rem;
-    }
-    .critical {
-      background: #ff2d5525; border-left: 4px solid #ff2d55; padding: 10px;
-      border-radius: 0 10px 10px 0; margin: 8px 0; font-size: 0.85rem;
-      font-weight: bold;
-    }
     .flex { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
     .log-entry {
       font-family: monospace; background: #2a000015; padding: 6px; border-radius: 6px;
@@ -85,18 +75,26 @@
       background: var(--accent); color: white; padding: 2px 8px; border-radius: 10px;
       font-size: 0.7rem; font-weight: bold; margin-left: 5px;
     }
-    @media (max-width: 600px) {
-      body { padding: 10px; }
-      table { font-size: 0.75rem; }
-      th, td { padding: 6px 4px; }
+    /* Modal */
+    .modal {
+      display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.7); justify-content: center; align-items: center;
     }
+    .modal.active { display: flex; }
+    .modal-content {
+      background: var(--card-bg); border: 1px solid var(--accent); border-radius: var(--radius);
+      padding: 25px; max-width: 400px; width: 90%; color: var(--text);
+    }
+    .modal-content h3 { margin-top: 0; }
+    .modal-content input, .modal-content textarea { margin: 8px 0; }
+    .modal-buttons { display: flex; justify-content: flex-end; gap: 10px; }
   </style>
 </head>
 <body>
   <div class="header">
     <div>
       <h1>🖤 Punkte-System <span style="font-size:0.7em;">Cuckold Edition</span></h1>
-      <p style="margin:0;">Ehemann sammelt Punkte · Ehefrau bewertet · Cuckold-Fokus</p>
+      <p style="margin:0;">Ehemann sammelt Punkte · Ehefrau bewertet · Wiederholbar</p>
       <button style="background:#555; font-size:0.8rem;" onclick="manuellSynchronisieren()">🔄 Synchronisieren</button>
       <span id="syncStatus" class="sync-status"></span>
     </div>
@@ -113,13 +111,13 @@
 
   <div id="tab-aufgaben" class="tab-content card">
     <h2>Aufgaben für den Ehemann <span class="cuckold-tag">Sammle Punkte</span></h2>
-    <p style="font-size:0.8rem; color:var(--muted);">Führe Aufgaben aus, um Punkte zu verdienen. Die Ehefrau bewertet.</p>
+    <p style="font-size:0.8rem; color:var(--muted);">Erledige eine Aufgabe, klicke auf ✅. Die Ehefrau bewertet danach mit Punkten, Qualität (1-10) und Kommentar. Die Aufgabe wird danach wieder freigegeben.</p>
     <table><thead><tr><th>Aufgabe</th><th>Punkte</th><th>Status</th><th>Aktion</th></tr></thead><tbody id="aufgabenBody"></tbody></table>
   </div>
 
   <div id="tab-einloesungen" class="tab-content card" style="display:none;">
     <h2>Einlösekatalog – Cuckold & Hardcore <span class="cuckold-tag">Punkte ausgeben</span></h2>
-    <p style="font-size:0.8rem; color:var(--muted);">Der Ehemann löst seine Punkte für diese Wünsche ein.</p>
+    <p style="font-size:0.8rem; color:var(--muted);">Ehemann löst Punkte ein. Keine zusätzlichen Warnungen, nur eine Bestätigung.</p>
     <table><thead><tr><th>Einlösung</th><th>Kosten</th><th>Notiz</th><th>Aktion</th></tr></thead><tbody id="einloesungenBody"></tbody></table>
   </div>
 
@@ -133,7 +131,7 @@
     <label>Punkte (Richtwert) / Kosten:</label>
     <input type="number" id="neuerPunkte" value="10" min="1"><br><br>
     <label>Notiz (optional):</label>
-    <input type="text" id="neuerHinweis" placeholder="z.B. Cuckold, Hardcore, Bitte überdenken"><br><br>
+    <input type="text" id="neuerHinweis" placeholder="z.B. Cuckold, Hardcore"><br><br>
     <button onclick="neuenEintragHinzufuegen()">Speichern</button>
   </div>
 
@@ -144,40 +142,45 @@
 
   <div id="tab-regeln" class="tab-content card" style="display:none;">
     <h2>⚠️ Wichtige Regeln & Safewords</h2>
-    <div class="critical">
-      <strong>🛑 Safeword:</strong> „ROT“ = sofortiger Abbruch aller Aktivitäten. Keine Fragen, keine Diskussion.
-    </div>
-    <div class="warning">
-      <strong>🟡 Pause-Wort:</strong> „GELB“ = langsamer, Grenze erreicht, kurz besprechen.
+    <div style="background:#ff2d5525; border-left:4px solid #ff2d55; padding:10px; margin:8px 0;">
+      <strong>🛑 Safeword:</strong> „ROT“ = sofortiger Abbruch aller Aktivitäten.
     </div>
     <h3>Grundregeln</h3>
     <ul>
-      <li>Alles geschieht <strong>einvernehmlich</strong>. Beide können jederzeit „Nein“ sagen.</li>
-      <li>Die Ehefrau hat bei allen Einlösungen <strong>Vetorecht</strong>.</li>
-      <li>Kritische Einlösungen (mit Dritten) erfordern <strong>vorherige detaillierte Absprache</strong>.</li>
+      <li>Alles einvernehmlich, Vetorecht für beide jederzeit.</li>
       <li>Safer Sex ist Pflicht (Kondome, Lecktücher).</li>
-      <li>Nach intensiven Sessions: <strong>Aftercare</strong> einplanen (kuscheln, reden).</li>
-      <li>Eifersuchtsgefühle sind erlaubt und werden ernst genommen.</li>
-      <li>Der Ehemann darf jederzeit aus der Cuckold-Rolle aussteigen.</li>
+      <li>Nach intensiven Sessions: Aftercare einplanen.</li>
+      <li>Der Ehemann kann jederzeit aus der Cuckold-Rolle aussteigen.</li>
     </ul>
-    <h3>Cuckold-Zusatzregeln</h3>
-    <ul>
-      <li>Der Ehemann bestimmt nie den Bull – die Ehefrau sucht aus.</li>
-      <li>Der Ehemann kann zuschauen oder im Nebenraum warten (je nach Absprache).</li>
-      <li>Kein Kontakt zwischen Ehemann und Bull ohne Zustimmung der Ehefrau.</li>
-      <li>Nach dem Treffen: Gemeinsame Zeit nur für euch beide.</li>
-    </ul>
+  </div>
+
+  <!-- Bewertungs-Modal -->
+  <div id="bewertungsModal" class="modal">
+    <div class="modal-content">
+      <h3>⭐ Aufgabe bewerten</h3>
+      <p id="modalAufgabenText"></p>
+      <label>Punkte vergeben:</label>
+      <input type="number" id="modalPunkte" min="1" value="10">
+      <label>Qualität (1-10):</label>
+      <input type="number" id="modalQualitaet" min="1" max="10" value="8">
+      <label>Kommentar:</label>
+      <textarea id="modalKommentar" rows="2" placeholder="z.B. 'Fast perfekt, aber Massage war zu kurz'"></textarea>
+      <div class="modal-buttons">
+        <button onclick="bewertungSpeichern()">Speichern</button>
+        <button style="background:#555;" onclick="modalSchliessen()">Abbrechen</button>
+      </div>
+    </div>
   </div>
 
   <script>
     // ==================== KONFIGURATION ====================
-    // HIER DEINE ECHTEN DATEN EINTRAGEN:
     const BIN_ID = "6a36c9e0f5f4af5e29151a52";
     const MASTER_KEY = "$2a$10$RXS/6UhoYPTh7nq/AcLtEeSOld4i4UdPbE25C2m90QuyLRxaGrLgS";
 
     // ==================== DATEN & SYNC ====================
     let lokaleDaten = { aufgaben: [], einloesungen: [], konto: 0, log: [] };
     let aktuelleVersion = null;
+    let bewertungsAufgabeId = null;
 
     const API_BASE = `https://api.jsonbin.io/v3/b/${BIN_ID}`;
     const HEADERS = {
@@ -269,36 +272,27 @@
           { id: genId(), text: 'Ihr die Füße küssen und massieren', punkte: 10, status: 'offen' }
         ],
         einloesungen: [
-          // --- Erotik zu zweit ---
           { id: genId(), text: 'Gemeinsam Porno ansehen (sie sucht aus)', kosten: 10, hinweis: '' },
           { id: genId(), text: 'Sie holt ihm einen runter (Handjob)', kosten: 15, hinweis: '' },
           { id: genId(), text: 'Blowjob von ihr (bis zum Höhepunkt)', kosten: 25, hinweis: '' },
           { id: genId(), text: 'Geschlechtsverkehr nach seinen Vorlieben', kosten: 40, hinweis: '' },
           { id: genId(), text: 'Verwöhnabend für ihn (Bad, Massage, Oral, Sex)', kosten: 80, hinweis: '' },
-
-          // --- Cuckold light ---
           { id: genId(), text: 'Sie erzählt ihm eine frühere Sex-Geschichte (real oder Fantasie)', kosten: 30, hinweis: 'Cuckold-Light' },
           { id: genId(), text: 'Sie trägt aufreizende Kleidung in der Öffentlichkeit', kosten: 25, hinweis: 'Cuckold-Light' },
-          { id: genId(), text: 'Sie schreibt mit einem anderen Mann (anzüglich)', kosten: 40, hinweis: 'Cuckold-Light · Grenzen vorher abstecken' },
-          { id: genId(), text: 'Sie flirtet in seiner Anwesenheit mit einem anderen Mann', kosten: 120, hinweis: '⚠️ Bitte überdenken · Cuckold' },
-          { id: genId(), text: 'Sie tanzt eng mit einem anderen Mann (kein Küssen)', kosten: 100, hinweis: 'Cuckold · Ehemann schaut zu' },
-
-          // --- Cuckold medium ---
-          { id: genId(), text: 'Sie küsst einen anderen Mann (vor seinen Augen)', kosten: 180, hinweis: '⚠️ Cuckold · Bitte überdenken' },
-          { id: genId(), text: 'Sie gibt einem anderen Mann einen Handjob', kosten: 200, hinweis: '⚠️⚠️ Cuckold · Nur mit Absprache' },
-          { id: genId(), text: 'Sie gibt einem anderen Mann einen Blowjob', kosten: 250, hinweis: '⚠️⚠️ Cuckold · Safer Sex beachten' },
-          { id: genId(), text: 'Er darf zuschauen, wie sie mit einem anderen Mann schläft', kosten: 350, hinweis: '⚠️⚠️⚠️ Cuckold · Höchste Vorsicht' },
-
-          // --- Cuckold hardcore ---
-          { id: genId(), text: 'Sie hat Sex mit einem anderen Mann (er wartet im Nebenraum)', kosten: 400, hinweis: '⚠️⚠️⚠️ Hardcore Cuckold' },
-          { id: genId(), text: 'Sie hat Sex mit einem anderen Mann (er schaut zu)', kosten: 450, hinweis: '⚠️⚠️⚠️ Hardcore Cuckold' },
-          { id: genId(), text: 'Sie macht ein Sex-Date aus, er darf nur hören (Tür zu)', kosten: 500, hinweis: '⚠️⚠️⚠️ Extrem Cuckold' },
-          { id: genId(), text: 'Cleanup – er leckt sie nach dem Sex mit einem anderen', kosten: 350, hinweis: '⚠️⚠️⚠️ Cuckold · Nur bei völligem Einverständnis' },
-
-          // --- Keuschhaltung / Femdom ---
+          { id: genId(), text: 'Sie schreibt mit einem anderen Mann (anzüglich)', kosten: 40, hinweis: 'Cuckold-Light' },
+          { id: genId(), text: 'Sie flirtet in seiner Anwesenheit mit einem anderen Mann', kosten: 120, hinweis: 'Cuckold' },
+          { id: genId(), text: 'Sie tanzt eng mit einem anderen Mann (kein Küssen)', kosten: 100, hinweis: 'Cuckold' },
+          { id: genId(), text: 'Sie küsst einen anderen Mann (vor seinen Augen)', kosten: 180, hinweis: 'Cuckold' },
+          { id: genId(), text: 'Sie gibt einem anderen Mann einen Handjob', kosten: 200, hinweis: 'Cuckold' },
+          { id: genId(), text: 'Sie gibt einem anderen Mann einen Blowjob', kosten: 250, hinweis: 'Cuckold' },
+          { id: genId(), text: 'Er darf zuschauen, wie sie mit einem anderen Mann schläft', kosten: 350, hinweis: 'Cuckold' },
+          { id: genId(), text: 'Sie hat Sex mit einem anderen Mann (er wartet im Nebenraum)', kosten: 400, hinweis: 'Hardcore Cuckold' },
+          { id: genId(), text: 'Sie hat Sex mit einem anderen Mann (er schaut zu)', kosten: 450, hinweis: 'Hardcore Cuckold' },
+          { id: genId(), text: 'Sie macht ein Sex-Date aus, er darf nur hören (Tür zu)', kosten: 500, hinweis: 'Extrem Cuckold' },
+          { id: genId(), text: 'Cleanup – er leckt sie nach dem Sex mit einem anderen', kosten: 350, hinweis: 'Cuckold' },
           { id: genId(), text: 'Er bleibt 24h im Keuschheitsgürtel (sie hat den Schlüssel)', kosten: 50, hinweis: 'Femdom' },
-          { id: genId(), text: 'Sie bestimmt 48h komplett über seine Orgasmen', kosten: 100, hinweis: 'Femdom · Orgasm Control' },
-          { id: genId(), text: 'Er muss ihr zuschauen, während sie sich selbst befriedigt (kein Anfassen)', kosten: 40, hinweis: 'Tease & Denial' }
+          { id: genId(), text: 'Sie bestimmt 48h komplett über seine Orgasmen', kosten: 100, hinweis: 'Femdom' },
+          { id: genId(), text: 'Er muss ihr zuschauen, während sie sich selbst befriedigt', kosten: 40, hinweis: 'Tease & Denial' }
         ],
         konto: 0,
         log: []
@@ -319,15 +313,19 @@
       const tbody = document.getElementById('aufgabenBody');
       tbody.innerHTML = '';
       (lokaleDaten.aufgaben || []).forEach(a => {
+        let zusatzInfo = '';
+        if (a.lastQuality) {
+          zusatzInfo = `<br><small style="color:var(--gold);">⭐ ${a.lastQuality}/10</small>`;
+          if (a.lastComment) zusatzInfo += `<br><small style="color:var(--muted);">💬 ${esc(a.lastComment)}</small>`;
+        }
         tbody.innerHTML += `
           <tr>
-            <td><span class="editable-cell" data-id="${a.id}" data-field="text" data-typ="aufgabe">${esc(a.text)}</span></td>
+            <td><span class="editable-cell" data-id="${a.id}" data-field="text" data-typ="aufgabe">${esc(a.text)}</span>${zusatzInfo}</td>
             <td><span class="punkte-badge editable-cell" data-id="${a.id}" data-field="punkte" data-typ="aufgabe">${a.punkte||0}</span></td>
-            <td>${statusBadge(a.status)}</td>
+            <td>${a.status === 'erledigt_unbewertet' ? '🟡 Wartet' : '🔵 Offen'}</td>
             <td class="flex">
               ${a.status === 'offen' ? `<button onclick="erledigt('${a.id}')">✅ Erledigt</button>` : ''}
-              ${a.status === 'erledigt_unbewertet' ? `<button onclick="bewerten('${a.id}')">⭐ Bewerten</button>` : ''}
-              ${a.status === 'bewertet' ? `<span style="color:var(--green)">+${a.vergebenePunkte||a.punkte} P.</span>` : ''}
+              ${a.status === 'erledigt_unbewertet' ? `<button onclick="bewertungsModalOeffnen('${a.id}')">⭐ Bewerten</button>` : ''}
               <button style="background:#555;" onclick="loeschen('${a.id}','aufgabe')">🗑</button>
             </td>
           </tr>`;
@@ -339,16 +337,9 @@
       const tbody = document.getElementById('einloesungenBody');
       tbody.innerHTML = '';
       (lokaleDaten.einloesungen || []).forEach(e => {
-        let warn = '';
-        const txt = (e.text || '').toLowerCase();
-        if (txt.includes('sex mit anderem') || txt.includes('blowjob') && txt.includes('anderen')) {
-          warn = '<br><span class="critical">⚠️⚠️⚠️ Hardcore Cuckold – nur mit absolutem Einverständnis und Safer Sex</span>';
-        } else if (txt.includes('flirtet') || txt.includes('küsst') || txt.includes('handjob') && txt.includes('anderen')) {
-          warn = '<br><span class="warning">⚠️ Bitte überdenken – Regeln vorher festlegen</span>';
-        }
         tbody.innerHTML += `
           <tr>
-            <td><span class="editable-cell" data-id="${e.id}" data-field="text" data-typ="einloesung">${esc(e.text)}</span>${warn}</td>
+            <td><span class="editable-cell" data-id="${e.id}" data-field="text" data-typ="einloesung">${esc(e.text)}</span></td>
             <td><span class="punkte-badge editable-cell" data-id="${e.id}" data-field="kosten" data-typ="einloesung">${e.kosten||0}</span></td>
             <td>${esc(e.hinweis||'')}</td>
             <td class="flex">
@@ -367,13 +358,6 @@
         container.innerHTML += `<div class="log-entry">[${e.time}] ${e.text}</div>`;
       });
       if (container.innerHTML === '') container.textContent = 'Keine Einträge';
-    }
-
-    function statusBadge(status) {
-      if (status === 'offen') return '🔵 Offen';
-      if (status === 'erledigt_unbewertet') return '🟡 Wartet';
-      if (status === 'bewertet') return '🟢 Punkte vergeben';
-      return status;
     }
 
     function esc(text) { return String(text).replace(/[&<>"]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'})[m]); }
@@ -395,30 +379,48 @@
       datenSpeichern().then(renderAlles);
     }
 
-    function bewerten(id) {
+    function bewertungsModalOeffnen(id) {
       const a = lokaleDaten.aufgaben.find(x => x.id === id);
       if (!a) return;
-      const vorschlag = a.punkte || 5;
-      const eingabe = prompt(`Punkte für „${a.text}“? (Vorschlag: ${vorschlag})`, vorschlag);
-      if (eingabe === null) return;
-      const punkte = parseInt(eingabe);
-      if (isNaN(punkte) || punkte < 0) return;
-      a.status = 'bewertet';
-      a.vergebenePunkte = punkte;
+      bewertungsAufgabeId = id;
+      document.getElementById('modalAufgabenText').textContent = a.text;
+      document.getElementById('modalPunkte').value = a.punkte || 10;
+      document.getElementById('modalQualitaet').value = a.lastQuality || 8;
+      document.getElementById('modalKommentar').value = '';
+      document.getElementById('bewertungsModal').classList.add('active');
+    }
+
+    function modalSchliessen() {
+      document.getElementById('bewertungsModal').classList.remove('active');
+      bewertungsAufgabeId = null;
+    }
+
+    function bewertungSpeichern() {
+      if (!bewertungsAufgabeId) return;
+      const a = lokaleDaten.aufgaben.find(x => x.id === bewertungsAufgabeId);
+      if (!a) return;
+      const punkte = parseInt(document.getElementById('modalPunkte').value) || 0;
+      const qualitaet = parseInt(document.getElementById('modalQualitaet').value) || 8;
+      const kommentar = document.getElementById('modalKommentar').value.trim();
+      if (punkte <= 0) { alert('Bitte positive Punkte vergeben.'); return; }
+      if (qualitaet < 1 || qualitaet > 10) { alert('Qualität muss zwischen 1 und 10 liegen.'); return; }
+
+      // Punkte gutschreiben
       lokaleDaten.konto = (lokaleDaten.konto || 0) + punkte;
-      log(`Frau vergibt ${punkte} Punkte für „${a.text}“.`);
+      // Qualität und Kommentar speichern
+      a.lastQuality = qualitaet;
+      a.lastComment = kommentar;
+      // Aufgabe wieder auf offen setzen für Wiederholung
+      a.status = 'offen';
+
+      log(`Frau vergibt ${punkte} Punkte für „${a.text}“ (Qualität: ${qualitaet}/10)${kommentar ? ' – Kommentar: ' + kommentar : ''}`);
+      modalSchliessen();
       datenSpeichern().then(renderAlles);
     }
 
     function einloesen(id) {
       const e = lokaleDaten.einloesungen.find(x => x.id === id);
       if (!e || (lokaleDaten.konto||0) < (e.kosten||0)) return;
-      const txt = (e.text || '').toLowerCase();
-      if (txt.includes('sex mit anderem') || txt.includes('blowjob') && txt.includes('anderen') || txt.includes('cleanup')) {
-        if (!confirm('⚠️⚠️⚠️ EXTREME CUCKOLD-EINLÖSUNG!\n\nSeid ihr beide absolut sicher?\nSafer Sex? Regeln besprochen? Safeword klar?\n\nFortfahren?')) return;
-      } else if (txt.includes('flirtet') || txt.includes('küsst') || txt.includes('handjob') && txt.includes('anderen')) {
-        if (!confirm('⚠️ Cuckold-Einlösung!\n\nGrenzen abgesteckt? Beide einverstanden?\n\nFortfahren?')) return;
-      }
       if (!confirm(`„${e.text}“ für ${e.kosten} Punkte einlösen?`)) return;
       lokaleDaten.konto -= e.kosten;
       log(`Ehemann löst ein: „${e.text}“ (${e.kosten} P.).`);
