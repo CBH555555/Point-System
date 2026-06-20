@@ -3,19 +3,20 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-  <title>Punkte-System für Paare</title>
+  <title>Punkte-System – Cuckold Edition</title>
   <style>
     :root {
-      --bg: #1a1a2e;
-      --card-bg: #16213e;
-      --accent: #e94560;
-      --accent2: #0f3460;
+      --bg: #0d0d0d;
+      --card-bg: #1a0a0a;
+      --accent: #ff2d55;
+      --accent2: #4a0000;
       --text: #eee;
       --muted: #ccc;
       --gold: #f0c27b;
       --green: #2ecc71;
+      --red: #ff2d55;
       --radius: 16px;
-      --shadow: 0 8px 20px rgba(0,0,0,0.4);
+      --shadow: 0 8px 20px rgba(0,0,0,0.6);
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
@@ -31,25 +32,26 @@
       display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center;
       background: var(--card-bg); padding: 20px; border-radius: var(--radius);
       box-shadow: var(--shadow); margin-bottom: 20px;
+      border: 1px solid var(--accent2);
     }
     .konto { font-size: 2.2rem; font-weight: bold; color: var(--gold); }
     button {
       background: var(--accent); color: white; border: none; padding: 10px 18px;
       border-radius: 30px; font-size: 0.95rem; cursor: pointer; transition: 0.2s;
-      margin: 4px; font-weight: 600; box-shadow: 0 4px 10px rgba(233,68,96,0.3);
+      margin: 4px; font-weight: 600; box-shadow: 0 4px 10px rgba(255,45,85,0.4);
     }
-    button:hover { background: #c12f4a; transform: scale(1.02); }
-    button:disabled { background: gray; cursor: not-allowed; box-shadow: none; }
+    button:hover { background: #d41c40; transform: scale(1.02); }
+    button:disabled { background: #555; cursor: not-allowed; box-shadow: none; }
     .card {
       background: var(--card-bg); border-radius: var(--radius); padding: 20px;
-      margin-bottom: 20px; box-shadow: var(--shadow);
+      margin-bottom: 20px; box-shadow: var(--shadow); border: 1px solid #2a0000;
     }
     table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 0.9rem; }
     th { background: var(--accent2); padding: 12px 8px; text-align: left; color: white; font-weight: 600; }
-    td { padding: 10px 8px; border-bottom: 1px solid rgba(255,255,255,0.1); vertical-align: middle; }
-    tr:hover { background: rgba(255,255,255,0.05); }
+    td { padding: 10px 8px; border-bottom: 1px solid rgba(255,255,255,0.05); vertical-align: middle; }
+    tr:hover { background: rgba(255,45,85,0.05); }
     input, textarea, select {
-      background: #2a2a4a; border: 1px solid #444; color: white; border-radius: 6px;
+      background: #1a1a1a; border: 1px solid #444; color: white; border-radius: 6px;
       padding: 6px 10px; font-size: 0.9rem; width: 100%; box-sizing: border-box;
     }
     .editable-cell {
@@ -58,22 +60,31 @@
     }
     .editable-cell:hover { border-color: var(--accent); }
     .punkte-badge {
-      background: var(--gold); color: #1a1a2e; padding: 3px 10px; border-radius: 20px;
+      background: var(--gold); color: #0d0d0d; padding: 3px 10px; border-radius: 20px;
       font-weight: bold; display: inline-block;
     }
     .warning {
-      background: #ff6b6b22; border-left: 4px solid #ff6b6b; padding: 10px;
+      background: #ff2d5515; border-left: 4px solid #ff2d55; padding: 10px;
       border-radius: 0 10px 10px 0; margin: 8px 0; font-size: 0.85rem;
+    }
+    .critical {
+      background: #ff2d5525; border-left: 4px solid #ff2d55; padding: 10px;
+      border-radius: 0 10px 10px 0; margin: 8px 0; font-size: 0.85rem;
+      font-weight: bold;
     }
     .flex { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
     .log-entry {
-      font-family: monospace; background: #0f346622; padding: 6px; border-radius: 6px;
+      font-family: monospace; background: #2a000015; padding: 6px; border-radius: 6px;
       margin: 4px 0; font-size: 0.8rem;
     }
     .tab-btn { background: var(--accent2); color: white; box-shadow: none; }
     .tab-btn.active { background: var(--accent); }
-    hr { border-color: rgba(255,255,255,0.1); margin: 15px 0; }
+    hr { border-color: rgba(255,255,255,0.05); margin: 15px 0; }
     .sync-status { font-size: 0.8rem; color: var(--muted); }
+    .cuckold-tag {
+      background: var(--accent); color: white; padding: 2px 8px; border-radius: 10px;
+      font-size: 0.7rem; font-weight: bold; margin-left: 5px;
+    }
     @media (max-width: 600px) {
       body { padding: 10px; }
       table { font-size: 0.75rem; }
@@ -84,9 +95,9 @@
 <body>
   <div class="header">
     <div>
-      <h1>🔥 Punkte-System</h1>
-      <p style="margin:0;">Ehemann sammelt Punkte · Ehefrau bewertet</p>
-      <button style="background:#555; font-size:0.8rem;" onclick="manuellSynchronisieren()">🔄 Jetzt synchronisieren</button>
+      <h1>🖤 Punkte-System <span style="font-size:0.7em;">Cuckold Edition</span></h1>
+      <p style="margin:0;">Ehemann sammelt Punkte · Ehefrau bewertet · Cuckold-Fokus</p>
+      <button style="background:#555; font-size:0.8rem;" onclick="manuellSynchronisieren()">🔄 Synchronisieren</button>
       <span id="syncStatus" class="sync-status"></span>
     </div>
     <div class="konto" id="kontoAnzeige">0 Punkte</div>
@@ -97,15 +108,18 @@
     <button class="tab-btn" onclick="switchTab('einloesungen')">🎁 Einlösungen</button>
     <button class="tab-btn" onclick="switchTab('neu')">➕ Neu</button>
     <button class="tab-btn" onclick="switchTab('log')">📜 Verlauf</button>
+    <button class="tab-btn" onclick="switchTab('regeln')">⚠️ Regeln</button>
   </div>
 
   <div id="tab-aufgaben" class="tab-content card">
-    <h2>Aufgaben (Ehemann führt aus, Frau bewertet)</h2>
+    <h2>Aufgaben für den Ehemann <span class="cuckold-tag">Sammle Punkte</span></h2>
+    <p style="font-size:0.8rem; color:var(--muted);">Führe Aufgaben aus, um Punkte zu verdienen. Die Ehefrau bewertet.</p>
     <table><thead><tr><th>Aufgabe</th><th>Punkte</th><th>Status</th><th>Aktion</th></tr></thead><tbody id="aufgabenBody"></tbody></table>
   </div>
 
   <div id="tab-einloesungen" class="tab-content card" style="display:none;">
-    <h2>Einlösekatalog (Ehemann wünscht, Punkte abziehen)</h2>
+    <h2>Einlösekatalog – Cuckold & Hardcore <span class="cuckold-tag">Punkte ausgeben</span></h2>
+    <p style="font-size:0.8rem; color:var(--muted);">Der Ehemann löst seine Punkte für diese Wünsche ein.</p>
     <table><thead><tr><th>Einlösung</th><th>Kosten</th><th>Notiz</th><th>Aktion</th></tr></thead><tbody id="einloesungenBody"></tbody></table>
   </div>
 
@@ -118,6 +132,8 @@
     <input type="text" id="neuerText" placeholder="Beschreibung"><br><br>
     <label>Punkte (Richtwert) / Kosten:</label>
     <input type="number" id="neuerPunkte" value="10" min="1"><br><br>
+    <label>Notiz (optional):</label>
+    <input type="text" id="neuerHinweis" placeholder="z.B. Cuckold, Hardcore, Bitte überdenken"><br><br>
     <button onclick="neuenEintragHinzufuegen()">Speichern</button>
   </div>
 
@@ -126,11 +142,38 @@
     <div id="logContainer">Keine Einträge</div>
   </div>
 
+  <div id="tab-regeln" class="tab-content card" style="display:none;">
+    <h2>⚠️ Wichtige Regeln & Safewords</h2>
+    <div class="critical">
+      <strong>🛑 Safeword:</strong> „ROT“ = sofortiger Abbruch aller Aktivitäten. Keine Fragen, keine Diskussion.
+    </div>
+    <div class="warning">
+      <strong>🟡 Pause-Wort:</strong> „GELB“ = langsamer, Grenze erreicht, kurz besprechen.
+    </div>
+    <h3>Grundregeln</h3>
+    <ul>
+      <li>Alles geschieht <strong>einvernehmlich</strong>. Beide können jederzeit „Nein“ sagen.</li>
+      <li>Die Ehefrau hat bei allen Einlösungen <strong>Vetorecht</strong>.</li>
+      <li>Kritische Einlösungen (mit Dritten) erfordern <strong>vorherige detaillierte Absprache</strong>.</li>
+      <li>Safer Sex ist Pflicht (Kondome, Lecktücher).</li>
+      <li>Nach intensiven Sessions: <strong>Aftercare</strong> einplanen (kuscheln, reden).</li>
+      <li>Eifersuchtsgefühle sind erlaubt und werden ernst genommen.</li>
+      <li>Der Ehemann darf jederzeit aus der Cuckold-Rolle aussteigen.</li>
+    </ul>
+    <h3>Cuckold-Zusatzregeln</h3>
+    <ul>
+      <li>Der Ehemann bestimmt nie den Bull – die Ehefrau sucht aus.</li>
+      <li>Der Ehemann kann zuschauen oder im Nebenraum warten (je nach Absprache).</li>
+      <li>Kein Kontakt zwischen Ehemann und Bull ohne Zustimmung der Ehefrau.</li>
+      <li>Nach dem Treffen: Gemeinsame Zeit nur für euch beide.</li>
+    </ul>
+  </div>
+
   <script>
     // ==================== KONFIGURATION ====================
     // HIER DEINE ECHTEN DATEN EINTRAGEN:
-    const BIN_ID = "DEINE_BIN_ID";          // ← deine Bin‑ID von jsonbin.io
-    const MASTER_KEY = "DEIN_MASTER_KEY";  // ← dein Master‑Key von jsonbin.io
+    const BIN_ID = "6a36c9e0f5f4af5e29151a52";
+    const MASTER_KEY = "$2a$10$RXS/6UhoYPTh7nq/AcLtEeSOld4i4UdPbE25C2m90QuyLRxaGrLgS";
 
     // ==================== DATEN & SYNC ====================
     let lokaleDaten = { aufgaben: [], einloesungen: [], konto: 0, log: [] };
@@ -172,7 +215,7 @@
           if (latest.ok) {
             const latestData = await latest.json();
             if (latestData.record.version !== aktuelleVersion) {
-              alert('⚠️ Die Daten wurden inzwischen auf einem anderen Gerät geändert. Die Seite wird neu geladen.');
+              alert('⚠️ Die Daten wurden auf einem anderen Gerät geändert. Seite wird neu geladen.');
               location.reload();
               return;
             }
@@ -204,31 +247,58 @@
     function initialisiereStandardDaten() {
       lokaleDaten = {
         aufgaben: [
-          { id: genId(), text: 'Sie ungestört lange ausschlafen lassen, Kinder/Frühstück übernehmen', punkte: 6, status: 'offen' },
-          { id: genId(), text: 'Frühstück ans Bett bringen (inkl. Blume, Briefchen)', punkte: 5, status: 'offen' },
+          { id: genId(), text: 'Sie ungestört ausschlafen lassen, Frühstück übernehmen', punkte: 6, status: 'offen' },
+          { id: genId(), text: 'Frühstück ans Bett bringen (Blume, Briefchen)', punkte: 5, status: 'offen' },
           { id: genId(), text: 'Küche komplett aufräumen + saugen', punkte: 8, status: 'offen' },
-          { id: genId(), text: 'Ein warmes Bad vorbereiten (Kerzen, Musik, Getränk)', punkte: 12, status: 'offen' },
-          { id: genId(), text: '30-Minuten-Massage (ohne sexuelle Erwartung)', punkte: 15, status: 'offen' },
-          { id: genId(), text: 'Liebesbrief oder erotische Notiz hinterlassen', punkte: 4, status: 'offen' },
-          { id: genId(), text: 'Einen Date-Abend planen (Restaurant/Kino reservieren)', punkte: 10, status: 'offen' },
+          { id: genId(), text: 'Warmes Bad einlassen (Kerzen, Musik, Getränk)', punkte: 12, status: 'offen' },
+          { id: genId(), text: '30-Minuten-Ganzkörpermassage', punkte: 15, status: 'offen' },
+          { id: genId(), text: 'Liebesbrief oder erotische Notiz schreiben', punkte: 4, status: 'offen' },
+          { id: genId(), text: 'Date-Abend planen (Restaurant reservieren)', punkte: 10, status: 'offen' },
           { id: genId(), text: 'Ihr Lieblingsessen kochen und servieren', punkte: 10, status: 'offen' },
-          { id: genId(), text: 'Fußmassage nach einem langen Tag', punkte: 6, status: 'offen' },
-          { id: genId(), text: 'Spontan eine Hausarbeit abnehmen, die sie sonst macht', punkte: 8, status: 'offen' },
+          { id: genId(), text: 'Fußmassage nach langem Tag', punkte: 6, status: 'offen' },
+          { id: genId(), text: 'Hausarbeit abnehmen, die sie sonst macht', punkte: 8, status: 'offen' },
           { id: genId(), text: 'Gemeinsamen Ausflug komplett organisieren', punkte: 25, status: 'offen' },
           { id: genId(), text: 'Überraschungs-Picknick', punkte: 20, status: 'offen' },
-          { id: genId(), text: 'Einen ganzen Tag lang nur für sie da sein', punkte: 30, status: 'offen' },
-          { id: genId(), text: 'Die gesamte Wohnung saugen und wischen', punkte: 12, status: 'offen' },
-          { id: genId(), text: 'Badezimmer komplett putzen', punkte: 15, status: 'offen' }
+          { id: genId(), text: 'Ganzen Tag nur für sie da sein (Handy aus)', punkte: 30, status: 'offen' },
+          { id: genId(), text: 'Wohnung saugen und wischen', punkte: 12, status: 'offen' },
+          { id: genId(), text: 'Badezimmer komplett putzen', punkte: 15, status: 'offen' },
+          { id: genId(), text: 'Ihr Dessous kaufen (ihre Größe, Kassenbon aufheben)', punkte: 18, status: 'offen' },
+          { id: genId(), text: 'Erotisches Foto von sich selbst schicken (nur für sie)', punkte: 8, status: 'offen' },
+          { id: genId(), text: 'Sie oral verwöhnen bis zum Höhepunkt', punkte: 20, status: 'offen' },
+          { id: genId(), text: 'Keuschheitsgürtel tragen (1 Tag)', punkte: 25, status: 'offen' },
+          { id: genId(), text: 'Ihr die Füße küssen und massieren', punkte: 10, status: 'offen' }
         ],
         einloesungen: [
-          { id: genId(), text: 'Gemeinsam einen Porno ansehen (sie sucht mit aus)', kosten: 10, hinweis: '' },
+          // --- Erotik zu zweit ---
+          { id: genId(), text: 'Gemeinsam Porno ansehen (sie sucht aus)', kosten: 10, hinweis: '' },
           { id: genId(), text: 'Sie holt ihm einen runter (Handjob)', kosten: 15, hinweis: '' },
-          { id: genId(), text: 'Sie gibt ihm einen Blowjob (bis zum Höhepunkt)', kosten: 25, hinweis: '' },
-          { id: genId(), text: 'Sie begleitet ihn ins Freibad (auch wenn sie keine Lust hat)', kosten: 20, hinweis: '' },
-          { id: genId(), text: 'Geschlechtsverkehr nach seinen Vorlieben (Stellung, Tempo)', kosten: 40, hinweis: '' },
-          { id: genId(), text: 'Ein kompletter Verwöhnabend für ihn (Bad, Massage, Oralsex, Sex)', kosten: 80, hinweis: '' },
-          { id: genId(), text: 'Sie flirtet in seiner Anwesenheit mit einem anderen Mann', kosten: 120, hinweis: '⚠️ Bitte überdenken – Regeln und Safeword vorher festlegen' },
-          { id: genId(), text: 'Sie hat Sex mit einem anderen Mann', kosten: 300, hinweis: '⚠️⚠️ Nur bei absolutem Einverständnis und klaren Absprachen' }
+          { id: genId(), text: 'Blowjob von ihr (bis zum Höhepunkt)', kosten: 25, hinweis: '' },
+          { id: genId(), text: 'Geschlechtsverkehr nach seinen Vorlieben', kosten: 40, hinweis: '' },
+          { id: genId(), text: 'Verwöhnabend für ihn (Bad, Massage, Oral, Sex)', kosten: 80, hinweis: '' },
+
+          // --- Cuckold light ---
+          { id: genId(), text: 'Sie erzählt ihm eine frühere Sex-Geschichte (real oder Fantasie)', kosten: 30, hinweis: 'Cuckold-Light' },
+          { id: genId(), text: 'Sie trägt aufreizende Kleidung in der Öffentlichkeit', kosten: 25, hinweis: 'Cuckold-Light' },
+          { id: genId(), text: 'Sie schreibt mit einem anderen Mann (anzüglich)', kosten: 40, hinweis: 'Cuckold-Light · Grenzen vorher abstecken' },
+          { id: genId(), text: 'Sie flirtet in seiner Anwesenheit mit einem anderen Mann', kosten: 120, hinweis: '⚠️ Bitte überdenken · Cuckold' },
+          { id: genId(), text: 'Sie tanzt eng mit einem anderen Mann (kein Küssen)', kosten: 100, hinweis: 'Cuckold · Ehemann schaut zu' },
+
+          // --- Cuckold medium ---
+          { id: genId(), text: 'Sie küsst einen anderen Mann (vor seinen Augen)', kosten: 180, hinweis: '⚠️ Cuckold · Bitte überdenken' },
+          { id: genId(), text: 'Sie gibt einem anderen Mann einen Handjob', kosten: 200, hinweis: '⚠️⚠️ Cuckold · Nur mit Absprache' },
+          { id: genId(), text: 'Sie gibt einem anderen Mann einen Blowjob', kosten: 250, hinweis: '⚠️⚠️ Cuckold · Safer Sex beachten' },
+          { id: genId(), text: 'Er darf zuschauen, wie sie mit einem anderen Mann schläft', kosten: 350, hinweis: '⚠️⚠️⚠️ Cuckold · Höchste Vorsicht' },
+
+          // --- Cuckold hardcore ---
+          { id: genId(), text: 'Sie hat Sex mit einem anderen Mann (er wartet im Nebenraum)', kosten: 400, hinweis: '⚠️⚠️⚠️ Hardcore Cuckold' },
+          { id: genId(), text: 'Sie hat Sex mit einem anderen Mann (er schaut zu)', kosten: 450, hinweis: '⚠️⚠️⚠️ Hardcore Cuckold' },
+          { id: genId(), text: 'Sie macht ein Sex-Date aus, er darf nur hören (Tür zu)', kosten: 500, hinweis: '⚠️⚠️⚠️ Extrem Cuckold' },
+          { id: genId(), text: 'Cleanup – er leckt sie nach dem Sex mit einem anderen', kosten: 350, hinweis: '⚠️⚠️⚠️ Cuckold · Nur bei völligem Einverständnis' },
+
+          // --- Keuschhaltung / Femdom ---
+          { id: genId(), text: 'Er bleibt 24h im Keuschheitsgürtel (sie hat den Schlüssel)', kosten: 50, hinweis: 'Femdom' },
+          { id: genId(), text: 'Sie bestimmt 48h komplett über seine Orgasmen', kosten: 100, hinweis: 'Femdom · Orgasm Control' },
+          { id: genId(), text: 'Er muss ihr zuschauen, während sie sich selbst befriedigt (kein Anfassen)', kosten: 40, hinweis: 'Tease & Denial' }
         ],
         konto: 0,
         log: []
@@ -270,8 +340,11 @@
       tbody.innerHTML = '';
       (lokaleDaten.einloesungen || []).forEach(e => {
         let warn = '';
-        if (e.text && (e.text.includes('anderen Mann') || e.text.includes('Sex mit anderem'))) {
-          warn = '<br><span class="warning">⚠️ Bitte überdenken – Safeword und Regeln vorher besprechen</span>';
+        const txt = (e.text || '').toLowerCase();
+        if (txt.includes('sex mit anderem') || txt.includes('blowjob') && txt.includes('anderen')) {
+          warn = '<br><span class="critical">⚠️⚠️⚠️ Hardcore Cuckold – nur mit absolutem Einverständnis und Safer Sex</span>';
+        } else if (txt.includes('flirtet') || txt.includes('küsst') || txt.includes('handjob') && txt.includes('anderen')) {
+          warn = '<br><span class="warning">⚠️ Bitte überdenken – Regeln vorher festlegen</span>';
         }
         tbody.innerHTML += `
           <tr>
@@ -298,7 +371,7 @@
 
     function statusBadge(status) {
       if (status === 'offen') return '🔵 Offen';
-      if (status === 'erledigt_unbewertet') return '🟡 Wartet auf Bewertung';
+      if (status === 'erledigt_unbewertet') return '🟡 Wartet';
       if (status === 'bewertet') return '🟢 Punkte vergeben';
       return status;
     }
@@ -340,8 +413,11 @@
     function einloesen(id) {
       const e = lokaleDaten.einloesungen.find(x => x.id === id);
       if (!e || (lokaleDaten.konto||0) < (e.kosten||0)) return;
-      if (e.text && (e.text.includes('anderen Mann') || e.text.includes('Sex mit anderem'))) {
-        if (!confirm('⚠️ Kritische Einlösung! Seid ihr euch absolut einig und habt alle Regeln besprochen? Fortfahren?')) return;
+      const txt = (e.text || '').toLowerCase();
+      if (txt.includes('sex mit anderem') || txt.includes('blowjob') && txt.includes('anderen') || txt.includes('cleanup')) {
+        if (!confirm('⚠️⚠️⚠️ EXTREME CUCKOLD-EINLÖSUNG!\n\nSeid ihr beide absolut sicher?\nSafer Sex? Regeln besprochen? Safeword klar?\n\nFortfahren?')) return;
+      } else if (txt.includes('flirtet') || txt.includes('küsst') || txt.includes('handjob') && txt.includes('anderen')) {
+        if (!confirm('⚠️ Cuckold-Einlösung!\n\nGrenzen abgesteckt? Beide einverstanden?\n\nFortfahren?')) return;
       }
       if (!confirm(`„${e.text}“ für ${e.kosten} Punkte einlösen?`)) return;
       lokaleDaten.konto -= e.kosten;
@@ -380,13 +456,15 @@
       const typ = document.getElementById('neuerTyp').value;
       const text = document.getElementById('neuerText').value.trim();
       const punkte = parseInt(document.getElementById('neuerPunkte').value) || 0;
+      const hinweis = document.getElementById('neuerHinweis').value.trim();
       if (!text) { alert('Text fehlt'); return; }
       if (typ === 'aufgabe') {
         lokaleDaten.aufgaben.push({ id: genId(), text, punkte, status: 'offen' });
       } else {
-        lokaleDaten.einloesungen.push({ id: genId(), text, kosten: punkte, hinweis: '' });
+        lokaleDaten.einloesungen.push({ id: genId(), text, kosten: punkte, hinweis });
       }
       document.getElementById('neuerText').value = '';
+      document.getElementById('neuerHinweis').value = '';
       log(`Neuer Eintrag: ${text}`);
       datenSpeichern().then(renderAlles);
     }
@@ -403,7 +481,6 @@
       event.target.classList.add('active');
     }
 
-    // Start
     datenLaden();
   </script>
 </body>
