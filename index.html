@@ -1,0 +1,1090 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Unser Spiel</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, sans-serif;
+  background: #0e0b10;
+  color: #f0e8e0;
+  min-height: 100vh;
+}
+.center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 20px;
+}
+.box {
+  background: #1a1520;
+  border: 1px solid #2e2535;
+  border-radius: 16px;
+  padding: 40px 30px;
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+}
+h1 {
+  color: #c9a96e;
+  font-size: 1.8rem;
+  margin-bottom: 8px;
+}
+.sub {
+  color: #7a6e7a;
+  font-size: 0.9rem;
+  margin-bottom: 30px;
+}
+input {
+  width: 100%;
+  padding: 12px 16px;
+  background: #0e0b10;
+  border: 1px solid #2e2535;
+  border-radius: 8px;
+  color: #f0e8e0;
+  font-size: 1rem;
+  margin-bottom: 12px;
+  outline: none;
+}
+input:focus { border-color: #c9a96e; }
+.btn {
+  width: 100%;
+  padding: 12px;
+  background: #c9a96e;
+  color: #0e0b10;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 8px;
+}
+.btn-sec {
+  background: transparent;
+  color: #c9a96e;
+  border: 1px solid #c9a96e;
+}
+.btn-small {
+  padding: 8px 14px;
+  font-size: 0.85rem;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+}
+.btn-gold { background: #c9a96e; color: #0e0b10; }
+.btn-purple { background: #8b5e8b; color: white; }
+.btn-ghost { background: transparent; border: 1px solid #2e2535; color: #f0e8e0; }
+.btn-red { background: #c96e6e; color: white; }
+.err { color: #c96e6e; font-size: 0.85rem; margin-top: 8px; min-height: 20px; }
+
+.game-cards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  justify-content: center;
+  max-width: 900px;
+  margin-top: 24px;
+}
+.gc {
+  background: #1a1520;
+  border: 2px solid #2e2535;
+  border-radius: 14px;
+  padding: 24px 20px;
+  width: 220px;
+  text-align: center;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+.gc:hover { transform: translateY(-4px); }
+.gc .ico { font-size: 2.5rem; margin-bottom: 10px; }
+.gc h2 { font-size: 1.1rem; margin-bottom: 8px; }
+.gc p { color: #7a6e7a; font-size: 0.85rem; margin-bottom: 14px; }
+.gold-card { border-color: #c9a96e; }
+.gold-card h2 { color: #c9a96e; }
+.purple-card { border-color: #8b5e8b; }
+.purple-card h2 { color: #8b5e8b; }
+.red-card { border-color: #2e2535; opacity: 0.6; }
+.red-card h2 { color: #c96e6e; }
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 20px;
+  background: #1a1520;
+  border-bottom: 1px solid #2e2535;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+header h1 { font-size: 1.2rem; }
+.tabs {
+  display: flex;
+  gap: 4px;
+  padding: 12px 20px 0;
+  overflow-x: auto;
+  border-bottom: 1px solid #2e2535;
+}
+.tab {
+  padding: 8px 14px;
+  border-radius: 8px 8px 0 0;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: bold;
+  color: #7a6e7a;
+  background: transparent;
+  border: none;
+  white-space: nowrap;
+}
+.tab.active { background: #1a1520; color: #c9a96e; }
+.content { padding: 20px; max-width: 900px; margin: 0 auto; }
+
+.filter-row {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+.filter-label {
+  font-size: 0.8rem;
+  color: #7a6e7a;
+  margin-bottom: 6px;
+}
+.cb {
+  padding: 6px 12px;
+  border-radius: 16px;
+  border: 1px solid #2e2535;
+  background: transparent;
+  color: #7a6e7a;
+  cursor: pointer;
+  font-size: 0.78rem;
+  margin: 2px;
+}
+.cb.active { background: #8b5e8b; color: white; border-color: #8b5e8b; }
+
+.qcard {
+  background: #1a1520;
+  border: 1px solid #2e2535;
+  border-radius: 16px;
+  padding: 30px 20px;
+  text-align: center;
+  margin-bottom: 16px;
+  min-height: 180px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.qcat {
+  font-size: 0.7rem;
+  color: #8b5e8b;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 10px;
+}
+.qtext {
+  font-size: 1.2rem;
+  line-height: 1.5;
+  color: #f0e8e0;
+}
+.qimg {
+  max-height: 180px;
+  border-radius: 8px;
+  margin-bottom: 12px;
+}
+.options {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+.opt {
+  flex: 1;
+  min-width: 180px;
+  padding: 14px;
+  background: #1a1520;
+  border: 2px solid #2e2535;
+  border-radius: 10px;
+  color: #f0e8e0;
+  cursor: pointer;
+  font-size: 0.95rem;
+}
+.opt:hover { border-color: #c9a96e; }
+.opt.sel-a { border-color: #c9a96e; background: rgba(201,169,110,0.1); }
+.opt.sel-b { border-color: #8b5e8b; background: rgba(139,94,139,0.1); }
+.nav { display: flex; justify-content: center; gap: 10px; }
+.progress { text-align: center; color: #7a6e7a; font-size: 0.85rem; margin-bottom: 12px; }
+
+.form-box {
+  background: #1a1520;
+  border: 1px solid #2e2535;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+.form-box h2 {
+  color: #c9a96e;
+  font-size: 1.1rem;
+  margin-bottom: 14px;
+}
+.form-row {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+.form-row input, .form-row select, .form-row textarea {
+  flex: 1;
+  min-width: 180px;
+  padding: 10px 14px;
+  background: #0e0b10;
+  border: 1px solid #2e2535;
+  border-radius: 8px;
+  color: #f0e8e0;
+  font-size: 0.9rem;
+  font-family: inherit;
+  outline: none;
+}
+.form-row select option { background: #1a1520; }
+
+.q-item {
+  background: #1a1520;
+  border: 1px solid #2e2535;
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 8px;
+}
+.q-item-meta {
+  font-size: 0.75rem;
+  color: #8b5e8b;
+  margin-bottom: 4px;
+}
+.q-item-text { font-size: 0.9rem; margin-bottom: 4px; }
+.q-item-opts { font-size: 0.8rem; color: #7a6e7a; }
+.q-item-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+  align-items: center;
+}
+
+.result-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 14px;
+}
+.result-card {
+  background: #1a1520;
+  border: 1px solid #2e2535;
+  border-radius: 10px;
+  padding: 16px;
+}
+.result-card h3 {
+  color: #c9a96e;
+  font-size: 1rem;
+  margin-bottom: 10px;
+}
+.bar {
+  height: 8px;
+  background: #2e2535;
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 6px;
+}
+.bar-fill { height: 100%; background: #c9a96e; }
+</style>
+</head>
+<body>
+
+<div id="login" class="center">
+  <div class="box">
+    <h1>Unser Spiel</h1>
+    <p class="sub">Privat und Sicher</p>
+    <input type="password" id="pwInput" placeholder="Passwort">
+    <button class="btn" id="loginBtn">Einloggen</button>
+    <p class="err" id="loginErr"></p>
+    <p style="font-size:0.75rem;color:#3a3040;margin-top:16px;">
+      <a href="#" id="resetLink" style="color:#7a6e7a;">Passwort zuruecksetzen</a>
+    </p>
+  </div>
+</div>
+
+<div id="selector" class="center" style="display:none;">
+  <h1>Was moechtet ihr spielen?</h1>
+  <p class="sub" style="margin-top:8px;">Waehle ein Spiel</p>
+  <div class="game-cards">
+    <div class="gc gold-card" id="openWdl">
+      <div class="ico">&#10024;</div>
+      <h2>Wuerdest du lieber</h2>
+      <p>Viele Fragen fuer uns beide</p>
+      <button class="btn-small btn-gold">Spielen</button>
+    </div>
+    <div class="gc" id="openAdvet" style="border-color:#c96e6e;cursor:pointer;">
+      <div class="ico">&#128269;</div>
+      <h2 style="color:#c96e6e;">Realitaetscheck</h2>
+      <p>Psychologischer Test</p>
+      <button class="btn-small" style="background:#c96e6e;color:white;">Spielen</button>
+    </div>
+    <div class="gc purple-card" id="openEropoly">
+      <div class="ico">&#127922;</div>
+      <h2>Eropoly</h2>
+      <p>Das erotische Brettspiel</p>
+      <button class="btn-small btn-purple">Spielen</button>
+    </div>
+  </div>
+  <button class="btn-small btn-ghost" id="logoutBtn" style="margin-top:24px;">Abmelden</button>
+</div>
+
+<div id="app" style="display:none;">
+  <header>
+    <h1 style="color:#c9a96e;">Wuerdest du lieber</h1>
+    <button class="btn-small btn-ghost" id="backBtn">Zurueck</button>
+  </header>
+  <div class="tabs">
+    <button class="tab active" data-tab="play">Spiel</button>
+    <button class="tab" data-tab="edit">Fragen</button>
+    <button class="tab" data-tab="results">Auswertung</button>
+    <button class="tab" data-tab="settings">Einstellungen</button>
+  </div>
+
+  <div id="pane-play" class="content">
+    <div class="filter-row">
+      <div>
+        <div class="filter-label">Spieler:</div>
+        <button class="cb active" data-player="frau">Frau</button>
+        <button class="cb" data-player="mann">Mann</button>
+      </div>
+      <div style="flex:1;min-width:200px;">
+        <div class="filter-label">Kategorie:</div>
+        <div id="catFilter"></div>
+      </div>
+    </div>
+    <div class="progress" id="progressInfo"></div>
+    <div class="qcard">
+      <div class="qcat" id="qCat"></div>
+      <img id="qImg" class="qimg" style="display:none;" alt="">
+      <div class="qtext" id="qText">Waehle und starte!</div>
+    </div>
+    <div class="options" id="optionsRow"></div>
+    <div class="nav">
+      <button class="btn-small btn-ghost" id="prevBtn">Zurueck</button>
+      <button class="btn-small btn-gold" id="nextBtn">Naechste</button>
+      <button class="btn-small btn-purple" id="shuffleBtn">Zufaellig</button>
+    </div>
+  </div>
+
+  <div id="pane-edit" class="content" style="display:none;">
+    <div class="form-box">
+      <h2>Neue Frage</h2>
+      <div class="form-row">
+        <select id="nPlayer">
+          <option value="frau">Frau</option>
+          <option value="mann">Mann</option>
+          <option value="beide">Beide</option>
+        </select>
+        <select id="nCat"></select>
+      </div>
+      <div class="form-row">
+        <textarea id="nQ" rows="2" placeholder="Wuerdest du lieber..."></textarea>
+      </div>
+      <div class="form-row">
+        <input type="text" id="nA" placeholder="Option A">
+        <input type="text" id="nB" placeholder="Option B">
+      </div>
+      <button class="btn-small btn-gold" id="addBtn">Hinzufuegen</button>
+    </div>
+    <div class="form-box">
+      <h2>Alle Fragen</h2>
+      <div id="editFilter" style="margin-bottom:12px;"></div>
+      <div id="qList"></div>
+    </div>
+  </div>
+
+  <div id="pane-results" class="content" style="display:none;">
+    <h2 style="color:#c9a96e;margin-bottom:16px;">Auswertung</h2>
+    <div id="resultsContent"></div>
+  </div>
+
+  <div id="pane-settings" class="content" style="display:none;">
+    <h2 style="color:#c9a96e;margin-bottom:16px;">Einstellungen</h2>
+    <div class="form-box" style="max-width:400px;">
+      <p style="color:#7a6e7a;margin-bottom:12px;font-size:0.9rem;">Passwort aendern</p>
+      <input type="password" id="newPw1" placeholder="Neues Passwort" style="margin-bottom:8px;">
+      <input type="password" id="newPw2" placeholder="Wiederholen" style="margin-bottom:8px;">
+      <button class="btn-small btn-gold" id="savePwBtn">Speichern</button>
+      <p id="pwMsg" style="color:#6ec9a9;font-size:0.85rem;margin-top:8px;"></p>
+    </div>
+    <div class="form-box" style="max-width:400px;">
+      <button class="btn-small btn-red" id="resetAnsBtn" style="width:100%;margin-bottom:8px;">Antworten zuruecksetzen</button>
+      <button class="btn-small btn-red" id="resetAllBtn" style="width:100%;background:#8b0000;">Alle Fragen neu laden</button>
+    </div>
+  </div>
+</div>
+
+<script id="data" type="application/json">[{"id":1,"player":"frau","cat":"anfaenger","q":"Würdest du lieber in die Sauna gehen und dort offen mit einem fremden Mann flirten oder lieber in einen Club tanzen gehen?","a":"Sauna & Flirten","b":"Club tanzen","img":null,"answers":{}},{"id":2,"player":"frau","cat":"anfaenger","q":"Würdest du lieber auf einer Party dein Höschen einem fremden Mann heimlich zeigen oder eine Stunde intensiv mit ihm flirten?","a":"Höschen zeigen","b":"Intensiv flirten","img":null,"answers":{}},{"id":3,"player":"frau","cat":"anfaenger","q":"Würdest du lieber im Swingerclub einfach nur zuschauen oder gar nicht erst hingehen?","a":"Zuschauen","b":"Gar nicht hingehen","img":null,"answers":{}},{"id":4,"player":"frau","cat":"anfaenger","q":"Würdest du lieber offen mit deinem Partner über deine geheimen Fantasien reden oder sie lieber für dich behalten?","a":"Offen reden","b":"Für mich behalten","img":null,"answers":{}},{"id":5,"player":"frau","cat":"anfaenger","q":"Würdest du lieber einem fremden Mann beim Tanzen sehr nah kommen und spüren wie er reagiert oder lieber Abstand halten?","a":"Sehr nah kommen","b":"Abstand halten","img":null,"answers":{}},{"id":6,"player":"frau","cat":"anfaenger","q":"Würdest du lieber ein aufreizendes Foto von dir an einen fremden Mann schicken oder lieber ein Date mit ihm haben?","a":"Aufregtes Foto schicken","b":"Date haben","img":null,"answers":{}},{"id":7,"player":"frau","cat":"anfaenger","q":"Würdest du lieber dass dein Mann dabei ist wenn du das erste Mal flirtest oder lieber allein?","a":"Mann dabei","b":"Allein","img":null,"answers":{}},{"id":8,"player":"frau","cat":"anfaenger","q":"Würdest du lieber langsam herantasten - erst küssen dann mehr - oder direkt einsteigen?","a":"Langsam herantasten","b":"Direkt einsteigen","img":null,"answers":{}},{"id":9,"player":"mann","cat":"anfaenger","q":"Würdest du lieber zusehen wie deine Frau auf der Tanzfläche sehr intensiv mit einem anderen tanzt oder lieber selbst dabei tanzen?","a":"Zuschauen","b":"Selbst dabei sein","img":null,"answers":{}},{"id":10,"player":"mann","cat":"anfaenger","q":"Würdest du lieber dass deine Frau das erste Mal flirtet und du es erst danach erfährst oder live dabei bist?","a":"Danach erfahren","b":"Live dabei sein","img":null,"answers":{}},{"id":11,"player":"mann","cat":"anfaenger","q":"Würdest du lieber in kleinen Schritten ins Thema hineinwachsen oder lieber direkt tief einsteigen?","a":"Kleine Schritte","b":"Direkt einsteigen","img":null,"answers":{}},{"id":12,"player":"beide","cat":"anfaenger","q":"Würdest du lieber das Thema als reine Fantasie behalten oder es aktiv ausprobieren?","a":"Reine Fantasie","b":"Aktiv ausprobieren","img":null,"answers":{}},{"id":20,"player":"frau","cat":"cuckold","q":"Würdest du lieber einen anderen Mann ganz normal privat treffen oder lieber im Swingerclub?","a":"Privat treffen","b":"Swingerclub","img":null,"answers":{}},{"id":21,"player":"frau","cat":"cuckold","q":"Würdest du lieber selbst den anderen Mann aussuchen oder deinem Mann die Wahl überlassen?","a":"Selbst aussuchen","b":"Mann wählt","img":null,"answers":{}},{"id":22,"player":"frau","cat":"cuckold","q":"Würdest du lieber jemanden den ihr beide kennt oder einen völligen Fremden?","a":"Jemanden den wir kennen","b":"Völligen Fremden","img":null,"answers":{}},{"id":23,"player":"frau","cat":"cuckold","q":"Würdest du lieber ein einmaliges Treffen oder eine feste wiederkehrende Bekanntschaft?","a":"Einmalig","b":"Feste Bekanntschaft","img":null,"answers":{}},{"id":24,"player":"frau","cat":"cuckold","q":"Würdest du lieber bei euch zuhause treffen oder in einem Hotel?","a":"Zuhause","b":"Hotel","img":null,"answers":{}},{"id":25,"player":"frau","cat":"cuckold","q":"Würdest du lieber dass dein Mann dabei ist und zuschaut oder dass er woanders wartet?","a":"Er schaut zu","b":"Er wartet woanders","img":null,"answers":{}},{"id":26,"player":"frau","cat":"cuckold","q":"Würdest du lieber die Hotwife-Rolle voll ausleben - du bestimmst alles - oder lieber gemeinsam entscheiden?","a":"Ich bestimme alles","b":"Gemeinsam entscheiden","img":null,"answers":{}},{"id":27,"player":"frau","cat":"cuckold","q":"Würdest du lieber deinen Mann mit Andeutungen und Nachrichten reizen bevor du gehst oder ihn einfach überraschen?","a":"Vorher reizen","b":"Überraschen","img":null,"answers":{}},{"id":28,"player":"frau","cat":"cuckold","q":"Würdest du lieber die getragene Unterwäsche danach als Beweis zeigen oder diskret verschwinden lassen?","a":"Als Beweis zeigen","b":"Diskret verschwinden lassen","img":null,"answers":{}},{"id":29,"player":"frau","cat":"cuckold","q":"Würdest du lieber jemanden der körperlich sehr anders ist als dein Mann oder ähnlich?","a":"Sehr anders","b":"Ähnlich wie mein Mann","img":null,"answers":{}},{"id":30,"player":"frau","cat":"cuckold","q":"Würdest du lieber jemanden der dominanter ist als dein Mann oder sanfter?","a":"Dominanter","b":"Sanfter","img":null,"answers":{}},{"id":31,"player":"frau","cat":"cuckold","q":"Würdest du lieber jemanden jünger als deinen Mann oder älter?","a":"Jünger","b":"Älter","img":null,"answers":{}},{"id":32,"player":"frau","cat":"cuckold","q":"Würdest du lieber danach direkt mit deinem Mann intim sein oder erst etwas Abstand brauchen?","a":"Direkt intim","b":"Erst Abstand","img":null,"answers":{}},{"id":33,"player":"frau","cat":"cuckold","q":"Würdest du lieber dass dein Mann dich nach dem Treffen verwöhnt oder du ihn?","a":"Er verwöhnt mich","b":"Ich verwöhne ihn","img":null,"answers":{}},{"id":34,"player":"mann","cat":"cuckold","q":"Würdest du lieber dabei sein und live zuschauen oder es dir danach erzählen lassen?","a":"Live zuschauen","b":"Danach erzählen lassen","img":null,"answers":{}},{"id":35,"player":"mann","cat":"cuckold","q":"Würdest du lieber das Sperma aus deiner Frau auslecken oder lieber selbst noch in sie eindringen und reinspritzen?","a":"Auslecken","b":"Selbst reinspritzen","img":null,"answers":{}},{"id":36,"player":"mann","cat":"cuckold","q":"Würdest du lieber alle Details hören oder lieber nur das Wesentliche wissen?","a":"Alle Details","b":"Nur das Wesentliche","img":null,"answers":{}},{"id":37,"player":"mann","cat":"cuckold","q":"Würdest du lieber dass sie dir live per Nachricht berichtet während sie beim anderen ist oder erst danach?","a":"Live berichten","b":"Erst danach","img":null,"answers":{}},{"id":38,"player":"mann","cat":"cuckold","q":"Würdest du lieber Fotos oder Videos bekommen während sie weg ist oder keine Spuren?","a":"Fotos & Videos","b":"Keine Spuren","img":null,"answers":{}},{"id":39,"player":"mann","cat":"cuckold","q":"Würdest du lieber wissen wie sie den anderen findet oder es lieber nicht wissen?","a":"Wissen","b":"Nicht wissen","img":null,"answers":{}},{"id":40,"player":"mann","cat":"cuckold","q":"Würdest du lieber dass sie aufreizend gekleidet zum Treffen geht oder eher dezent?","a":"Aufreizend","b":"Dezent","img":null,"answers":{}},{"id":41,"player":"mann","cat":"cuckold","q":"Würdest du lieber dass ihr Liebhaber dich kennt und respektiert oder ein anonymer Fremder bleibt?","a":"Kennt mich","b":"Anonymer Fremder","img":null,"answers":{}},{"id":42,"player":"beide","cat":"cuckold","q":"Würdest du lieber klare Regeln vorher festlegen oder lieber spontan und flexibel bleiben?","a":"Klare Regeln","b":"Spontan & flexibel","img":null,"answers":{}},{"id":43,"player":"beide","cat":"cuckold","q":"Würdest du lieber jederzeit ohne Erklärung stoppen können oder lieber ein gemeinsames Codewort nutzen?","a":"Jederzeit stoppen","b":"Codewort","img":null,"answers":{}},{"id":50,"player":"frau","cat":"liebhaber","q":"Würdest du lieber einen Liebhaber der sehr zärtlich und liebevoll ist oder einen der dominant und fordernd ist?","a":"Zärtlich & liebevoll","b":"Dominant & fordernd","img":null,"answers":{}},{"id":51,"player":"frau","cat":"liebhaber","q":"Würdest du lieber einen Liebhaber der dir das Gefühl gibt einzigartig zu sein oder einen der dich als reine Lust behandelt?","a":"Einzigartig & besonders","b":"Reine Lust","img":null,"answers":{}},{"id":52,"player":"frau","cat":"liebhaber","q":"Würdest du lieber einen Liebhaber der dir den Weg zeigt und führt oder einen bei dem du selbst alles bestimmst?","a":"Er führt mich","b":"Ich bestimme alles","img":null,"answers":{}},{"id":53,"player":"frau","cat":"liebhaber","q":"Würdest du lieber ein ganzes Wochenende mit deinem Liebhaber verbringen oder lieber nur kurze intensive Treffen?","a":"Ganzes Wochenende","b":"Kurze intensive Treffen","img":null,"answers":{}},{"id":54,"player":"frau","cat":"liebhaber","q":"Würdest du lieber dass dein Liebhaber dir das Gefühl von Verliebt-Sein gibt oder dass es klar nur körperlich bleibt?","a":"Gefühl von Verliebt-Sein","b":"Nur körperlich","img":null,"answers":{}},{"id":55,"player":"frau","cat":"liebhaber","q":"Würdest du lieber bei deinem Liebhaber Geborgenheit und Sicherheit spüren oder das Kribbeln des Verbotenen?","a":"Geborgenheit & Sicherheit","b":"Kribbeln des Verbotenen","img":null,"answers":{}},{"id":56,"player":"frau","cat":"liebhaber","q":"Würdest du lieber dass dein Liebhaber dir Wertschätzung zeigt - Nachrichten, kleine Gesten - oder komplett diskret bleibt?","a":"Wertschätzung zeigen","b":"Komplett diskret","img":null,"answers":{}},{"id":57,"player":"frau","cat":"liebhaber","q":"Würdest du lieber einen Liebhaber der körperlich sehr präsent und intensiv ist oder einen der emotional sehr tief mit dir verbunden ist?","a":"Körperlich präsent & intensiv","b":"Emotional tief verbunden","img":null,"answers":{}},{"id":58,"player":"frau","cat":"liebhaber","q":"Würdest du lieber dass dein Liebhaber deutlich größer bestückt ist als dein Mann oder in etwa gleich?","a":"Deutlich größer","b":"Ähnlich wie mein Mann","img":null,"answers":{}},{"id":59,"player":"frau","cat":"liebhaber","q":"Würdest du lieber einen Liebhaber der sehr lang ausdauernd ist oder einen der kurz aber extrem intensiv ist?","a":"Lang & ausdauernd","b":"Kurz & extrem intensiv","img":null,"answers":{}},{"id":60,"player":"frau","cat":"liebhaber","q":"Würdest du lieber einen Liebhaber der mehrmals kommen kann oder einen der einmal sehr lange durchhält?","a":"Mehrmals","b":"Einmal sehr lange","img":null,"answers":{}},{"id":61,"player":"frau","cat":"liebhaber","q":"Würdest du lieber dass dein Liebhaber bis zu deinem Höhepunkt wartet oder sich selbst nicht kontrolliert?","a":"Wartet auf mich","b":"Unkontrolliert & triebhaft","img":null,"answers":{}},{"id":62,"player":"frau","cat":"liebhaber","q":"Würdest du lieber einen Mann mit kleinem aber dickem Glied oder einem langen aber schmalem?","a":"Klein aber dick","b":"Lang aber schmal","img":null,"answers":{}},{"id":63,"player":"frau","cat":"liebhaber","q":"Würdest du lieber einen durchschnittlich großen Mann der wirklich weiß was er tut oder einen sehr großen der ungeübt ist?","a":"Durchschnittlich & geübt","b":"Sehr groß & ungeübt","img":null,"answers":{}},{"id":64,"player":"frau","cat":"liebhaber","q":"Würdest du lieber deinem Mann von der Größe des Liebhabers erzählen oder es für dich behalten?","a":"Offen erzählen","b":"Für mich behalten","img":null,"answers":{}},{"id":65,"player":"frau","cat":"liebhaber","q":"Wenn dein Liebhaber dir sexuell alles gibt - würdest du lieber dass dein Mann dich dann nicht mehr sexuell bedienen muss oder dass er es trotzdem versucht?","a":"Muss es nicht mehr versuchen","b":"Soll es trotzdem versuchen","img":null,"answers":{}},{"id":66,"player":"mann","cat":"liebhaber","q":"Würdest du lieber wissen was dein Liebhaber deiner Frau bedeutet oder es lieber nicht wissen?","a":"Wissen","b":"Nicht wissen","img":null,"answers":{}},{"id":67,"player":"mann","cat":"liebhaber","q":"Würdest du lieber wissen dass ihr Liebhaber deutlich größer ist als du oder dass er kleiner ist?","a":"Er ist größer","b":"Er ist kleiner","img":null,"answers":{}},{"id":68,"player":"mann","cat":"liebhaber","q":"Würdest du dich lieber von ihr im Spiel kleiner Schwanz oder schneller Spritzer nennen lassen?","a":"Kleiner Schwanz","b":"Schneller Spritzer","img":null,"answers":{}},{"id":69,"player":"mann","cat":"liebhaber","q":"Würdest du lieber wissen dass ihr Liebhaber ausdauernder ist als du oder lieber nicht wissen?","a":"Wissen","b":"Nicht wissen","img":null,"answers":{}},{"id":70,"player":"mann","cat":"liebhaber","q":"Würdest du lieber dass sie dir sagt wie lange es mit dem Liebhaber gedauert hat oder es für sich behält?","a":"Sagt es mir","b":"Behält es für sich","img":null,"answers":{}},{"id":71,"player":"mann","cat":"liebhaber","q":"Würdest du lieber dass sie dich sexuell nicht mehr braucht weil der Liebhaber das übernimmt oder dass sie beides will?","a":"Liebhaber übernimmt das","b":"Sie will beides","img":null,"answers":{}},{"id":80,"player":"frau","cat":"gefuehle","q":"Würdest du lieber dass das Kribbeln zum Liebhaber nur oberflächlich bleibt oder tiefer werden darf?","a":"Nur oberflächlich","b":"Darf tiefer werden","img":null,"answers":{}},{"id":81,"player":"frau","cat":"gefuehle","q":"Würdest du lieber das Gefühl von Verliebt-Sein zum Liebhaber genießen ohne es deinem Mann zu sagen oder offen damit umgehen?","a":"Für mich behalten","b":"Offen damit sein","img":null,"answers":{}},{"id":82,"player":"frau","cat":"gefuehle","q":"Würdest du lieber dass ein Wochenende mit dem Liebhaber rein körperlich bleibt oder auch emotional verbindend sein darf?","a":"Rein körperlich","b":"Auch emotional","img":null,"answers":{}},{"id":83,"player":"frau","cat":"gefuehle","q":"Würdest du lieber eine emotionale Verbindung zum Liebhaber erlaubt haben oder klare Trennung - nur Körper?","a":"Emotionale Verbindung okay","b":"Nur Körper - keine Gefühle","img":null,"answers":{}},{"id":84,"player":"frau","cat":"gefuehle","q":"Würdest du lieber nach dem Treffen über deine Gefühle sprechen oder sie lieber selbst verarbeiten?","a":"Darüber sprechen","b":"Selbst verarbeiten","img":null,"answers":{}},{"id":85,"player":"frau","cat":"gefuehle","q":"Würdest du lieber dass dein Mann weiß wenn du dich zum Liebhaber hingezogen fühlst oder es für dich behalten?","a":"Er soll es wissen","b":"Für mich behalten","img":null,"answers":{}},{"id":86,"player":"frau","cat":"gefuehle","q":"Würdest du lieber die Beziehung zu deinem Mann als Fundament sehen und den Liebhaber als Extra oder beides gleichwertig?","a":"Mann als Fundament","b":"Beides gleichwertig","img":null,"answers":{}},{"id":87,"player":"frau","cat":"gefuehle","q":"Würdest du lieber dass dein Mann dich genauso liebt nachdem du einen anderen hattest oder dass er es als Zeichen von Vertrauen sieht?","a":"Genauso liebt wie vorher","b":"Als Vertrauen & Stärke","img":null,"answers":{}},{"id":88,"player":"mann","cat":"gefuehle","q":"Würdest du deine Frau noch genauso lieben nachdem sie einen anderen Mann intim hatte oder ändert sich etwas in dir?","a":"Genauso lieben","b":"Etwas ändert sich","img":null,"answers":{}},{"id":89,"player":"mann","cat":"gefuehle","q":"Würdest du lieber deine Eifersucht offen ansprechen oder lieber selbst damit umgehen?","a":"Offen ansprechen","b":"Selbst verarbeiten","img":null,"answers":{}},{"id":90,"player":"mann","cat":"gefuehle","q":"Würdest du lieber sofort wissen wenn sie Gefühle für den Liebhaber entwickelt oder warten bis sie es selbst sagt?","a":"Sofort wissen","b":"Warten bis sie es sagt","img":null,"answers":{}},{"id":91,"player":"mann","cat":"gefuehle","q":"Würdest du lieber mit deiner Eifersucht kämpfen und innerlich wachsen oder die Situation stoppen bevor es zu viel wird?","a":"Kämpfen & wachsen","b":"Stoppen wenn zu viel","img":null,"answers":{}},{"id":92,"player":"mann","cat":"gefuehle","q":"Würdest du lieber nach einem schwierigen Abend sofort reden oder erst schlafen und am Morgen sprechen?","a":"Sofort reden","b":"Erst schlafen","img":null,"answers":{}},{"id":93,"player":"mann","cat":"gefuehle","q":"Würdest du lieber dass sie dir nach jedem Treffen ihre Gefühle beschreibt oder nur die sachlichen Fakten nennt?","a":"Gefühle beschreiben","b":"Nur Fakten","img":null,"answers":{}},{"id":94,"player":"mann","cat":"gefuehle","q":"Würdest du lieber dass eure Liebesbeziehung durch das Thema tiefer wird oder dass Gefühle klar davon getrennt bleiben?","a":"Beziehung wird tiefer","b":"Klar getrennt halten","img":null,"answers":{}},{"id":95,"player":"beide","cat":"gefuehle","q":"Würdest du lieber über Eifersucht sprechen wie über ein normales Gefühl oder so tun als wäre sie nicht da?","a":"Normal ansprechen","b":"Ignorieren & verdrängen","img":null,"answers":{}},{"id":96,"player":"beide","cat":"gefuehle","q":"Würdest du lieber eine feste Nachsorge-Routine nach jedem Treffen oder je nach Stimmung entscheiden?","a":"Feste Routine","b":"Je nach Stimmung","img":null,"answers":{}},{"id":100,"player":"frau","cat":"erotik","q":"Würdest du lieber nur noch Vaginalsex mit dem anderen Mann oder lieber alles andere außer das?","a":"Nur vaginal","b":"Alles andere","img":null,"answers":{}},{"id":101,"player":"frau","cat":"erotik","q":"Würdest du lieber einen Mann nur mit deinem Mund zum Höhepunkt bringen oder nur mit deiner Hand?","a":"Mit dem Mund","b":"Mit der Hand","img":null,"answers":{}},{"id":102,"player":"frau","cat":"erotik","q":"Würdest du lieber einen ganzen Abend nur verwöhnt werden - Oral, Massage, alles - oder nur selbst aktiv sein?","a":"Nur verwöhnt werden","b":"Nur selbst aktiv","img":null,"answers":{}},{"id":103,"player":"frau","cat":"erotik","q":"Würdest du lieber einen Dreier mit zwei Männern oder mit einem Mann und einer Frau?","a":"Zwei Männer (MMF)","b":"Mann & Frau (FFM)","img":null,"answers":{}},{"id":104,"player":"frau","cat":"erotik","q":"Würdest du lieber ungeschützt mit einem sehr vertrauten Liebhaber oder immer mit Kondom auch bei Fremden?","a":"Vertraut & ungeschützt","b":"Immer mit Kondom","img":null,"answers":{}},{"id":105,"player":"frau","cat":"erotik","q":"Würdest du lieber von ihm von hinten oder von vorne genommen werden?","a":"Von hinten","b":"Von vorne","img":null,"answers":{}},{"id":106,"player":"frau","cat":"erotik","q":"Würdest du lieber von einem Mann während des Aktes sehr dominierend angesprochen werden oder in den höchsten Tönen gelobt?","a":"Dominant & direkt","b":"Gelobt & vergöttert","img":null,"answers":{}},{"id":107,"player":"frau","cat":"erotik","q":"Würdest du lieber selbst schmutzige Dinge flüstern oder zuhören wie er dir ins Ohr sagt was er gleich mit dir macht?","a":"Selbst flüstern","b":"Ihm zuhören","img":null,"answers":{}},{"id":108,"player":"frau","cat":"erotik","q":"Würdest du lieber laut stöhnen dürfen oder komplett still bleiben müssen?","a":"Laut stöhnen","b":"Komplett still","img":null,"answers":{}},{"id":109,"player":"frau","cat":"erotik","q":"Würdest du lieber dass er in deinen Mund kommt oder auf deinen Körper?","a":"In den Mund","b":"Auf den Körper","img":null,"answers":{}},{"id":110,"player":"frau","cat":"erotik","q":"Würdest du lieber nach dem Sex gemeinsam einschlafen ohne zu duschen oder sofort duschen gehen?","a":"So einschlafen","b":"Sofort duschen","img":null,"answers":{}},{"id":111,"player":"frau","cat":"erotik","q":"Würdest du lieber heimlich unter dem Tisch im Restaurant einen Mann mit der Hand verwöhnen oder ein vibrierendes Ei tragen während er dich anblickt?","a":"Mit der Hand verwöhnen","b":"Vibrierendes Ei tragen","img":null,"answers":{}},{"id":112,"player":"frau","cat":"erotik","q":"Würdest du lieber beim Sex im Freien von einem fremden Paar beobachtet werden oder von einem einzelnen älteren Mann?","a":"Fremdes Paar","b":"Älterer Mann allein","img":null,"answers":{}},{"id":113,"player":"frau","cat":"erotik","q":"Würdest du lieber nie wieder Oralsex geben aber dafür immer empfangen oder umgekehrt?","a":"Nur empfangen","b":"Nur geben","img":null,"answers":{}},{"id":114,"player":"frau","cat":"erotik","q":"Würdest du lieber zum Höhepunkt kommen nur mit dem Wasserstrahl der Duschbrause oder nur mit einem Vibrator?","a":"Duschbrause","b":"Vibrator","img":null,"answers":{}},{"id":115,"player":"frau","cat":"erotik","q":"Würdest du lieber eine Woche erregt sein aber nicht kommen dürfen oder jeden Tag dreimal kommen aber immer allein?","a":"Erregt aber nicht kommen","b":"Dreimal täglich aber allein","img":null,"answers":{}},{"id":116,"player":"mann","cat":"erotik","q":"Würdest du lieber deine Frau beim anderen Mann oral verwöhnen sehen oder beim Eindringen zuschauen?","a":"Beim Oral zuschauen","b":"Beim Eindringen zuschauen","img":null,"answers":{}},{"id":117,"player":"mann","cat":"erotik","q":"Würdest du lieber dass sie dem anderen einen bläst während du zuschaust oder dass du ihr zusehen musst wie sie reitet?","a":"Oral zuschauen","b":"Beim Reiten zuschauen","img":null,"answers":{}},{"id":118,"player":"mann","cat":"erotik","q":"Würdest du lieber dass sie ihn mit Kondom nimmt und du danach noch ran darfst oder ohne Kondom aber du bist danach dran?","a":"Mit Kondom & ich danach","b":"Ohne Kondom & ich danach","img":null,"answers":{}},{"id":120,"player":"frau","cat":"fetisch","q":"Würdest du lieber dominant gefesselt werden oder deinen Partner fesseln und kontrollieren?","a":"Gefesselt werden","b":"Fesseln & kontrollieren","img":null,"answers":{}},{"id":121,"player":"frau","cat":"fetisch","q":"Würdest du lieber die Submissive-Rolle einnehmen oder die Dominant-Rolle?","a":"Submissive","b":"Dominant","img":null,"answers":{}},{"id":122,"player":"frau","cat":"fetisch","q":"Würdest du lieber eine Stunde mit einem professionellen Dom spielen oder eine Stunde Submissive zu einer Domina sein?","a":"Mit einem Dom","b":"Bei einer Domina","img":null,"answers":{}},{"id":123,"player":"frau","cat":"fetisch","q":"Würdest du lieber in einer Umkleidekabine beim Sex erwischt werden oder im Aufzug?","a":"Umkleidekabine","b":"Aufzug","img":null,"answers":{}},{"id":124,"player":"frau","cat":"fetisch","q":"Würdest du lieber anonym vor zahlendem Publikum masturbieren oder einen Quickie mit einem Fremden in einer dunklen Club-Ecke?","a":"Anonym vor Publikum","b":"Quickie im Club","img":null,"answers":{}},{"id":125,"player":"frau","cat":"fetisch","q":"Würdest du lieber herausfinden dass dein Mann heimlich deine Unterwäsche trägt oder dass er monatlich Geld an Webcam-Girls zahlt?","a":"Trägt meine Unterwäsche","b":"Zahlt an Webcam-Girls","img":null,"answers":{}},{"id":126,"player":"frau","cat":"fetisch","q":"Würdest du lieber einen erotischen Traum von deinem Schwager haben oder von deinem Chef - beides nur Fantasie?","a":"Schwager","b":"Chef","img":null,"answers":{}},{"id":127,"player":"frau","cat":"fetisch","q":"Würdest du lieber ein Keuschheitsspiel mit deinem Mann spielen - er trägt den Gürtel - oder er bestimmt wann du kommen darfst?","a":"Er trägt den Gürtel","b":"Er bestimmt meinen Höhepunkt","img":null,"answers":{}},{"id":128,"player":"frau","cat":"fetisch","q":"Würdest du lieber ein aufreizendes Foto von dir an einen fremden Mann schicken oder ein kurzes Video?","a":"Aufreizendes Foto","b":"Kurzes Video","img":null,"answers":{}},{"id":129,"player":"mann","cat":"fetisch","q":"Würdest du lieber einen Keuschheitsgürtel tragen während deine Frau beim Liebhaber ist oder freie Hand haben?","a":"Keuschheitsgürtel tragen","b":"Freie Hand","img":null,"answers":{}},{"id":130,"player":"mann","cat":"fetisch","q":"Würdest du lieber verbal gedemütigt werden - kleiner Schwanz, schlechter Liebhaber - oder still zugucken ohne Worte?","a":"Verbal gedemütigt","b":"Still zugucken","img":null,"answers":{}},{"id":131,"player":"mann","cat":"fetisch","q":"Würdest du lieber dass sie den Schlüssel zum Keuschheitsgürtel dem Liebhaber gibt oder selbst behält?","a":"Liebhaber bekommt ihn","b":"Sie behält ihn","img":null,"answers":{}},{"id":132,"player":"beide","cat":"fetisch","q":"Würdest du lieber Rollenspiele in eure Cuckold-Dynamik einbauen oder es immer real und ohne Spiel halten?","a":"Mit Rollenspielen","b":"Immer real","img":null,"answers":{}},{"id":140,"player":"beide","cat":"absurd","q":"Würdest du lieber jedes Mal wenn du flirtest Konfetti vom Himmel fallen sehen oder Trompetenmusik hören?","a":"Konfetti","b":"Trompetenmusik","img":null,"answers":{}},{"id":141,"player":"beide","cat":"absurd","q":"Würdest du lieber beim Höhepunkt immer laut niesen müssen oder jedes Mal laut Mahlzeit rufen?","a":"Niesen","b":"Mahlzeit rufen","img":null,"answers":{}},{"id":142,"player":"beide","cat":"absurd","q":"Würdest du lieber nie wieder Schokolade essen oder nie wieder ein Bad nehmen?","a":"Kein Schokolade","b":"Nie Bad nehmen","img":null,"answers":{}},{"id":143,"player":"beide","cat":"absurd","q":"Würdest du lieber die Gedanken deiner Mutter hören können oder die deiner besten Freundin?","a":"Mutter","b":"Beste Freundin","img":null,"answers":{}},{"id":144,"player":"beide","cat":"absurd","q":"Würdest du lieber für einen Tag unsichtbar sein oder fliegen können?","a":"Unsichtbar","b":"Fliegen","img":null,"answers":{}},{"id":145,"player":"beide","cat":"absurd","q":"Würdest du lieber immer barfuß laufen müssen oder immer High Heels tragen?","a":"Barfuß","b":"High Heels","img":null,"answers":{}},{"id":146,"player":"beide","cat":"absurd","q":"Würdest du lieber für immer nur Orgasmen haben die 10 Sekunden dauern aber extrem intensiv sind oder eine Minute dauern aber nur halb so intensiv?","a":"10 Sekunden extrem","b":"1 Minute mittel","img":null,"answers":{}},{"id":147,"player":"beide","cat":"absurd","q":"Würdest du lieber beim Küssen immer Schluckauf bekommen oder immer niesen müssen?","a":"Schluckauf","b":"Niesen","img":null,"answers":{}},{"id":148,"player":"beide","cat":"absurd","q":"Würdest du lieber dass dein Handy alle Nachrichten laut mit Roboterstimme vorliest oder dass du selbst nie flüstern kannst - nur schreien?","a":"Roboterstimme","b":"Immer schreien","img":null,"answers":{}},{"id":149,"player":"beide","cat":"absurd","q":"Würdest du lieber deinen Job für ein Jahr aufgeben aber mit Traumpartner auf Weltreise oder arbeiten bleiben aber nie wieder Urlaub?","a":"Weltreise ohne Job","b":"Arbeiten ohne Urlaub","img":null,"answers":{}},{"id":150,"player":"beide","cat":"absurd","q":"Würdest du lieber dass dein Haustier alle deine Geheimnisse kennt oder dein Nachbar?","a":"Haustier weiß alles","b":"Nachbar weiß alles","img":null,"answers":{}},{"id":200,"player":"frau","cat":"gefuehle","q":"Merkst du dass deine Eifersucht oft mehr mit deinem eigenen Selbstwert zu tun hat - oder wirklich mit seinem Verhalten?","a":"Meist mein Selbstwert","b":"Meist sein Verhalten","img":null,"answers":{}},{"id":201,"player":"frau","cat":"gefuehle","q":"Wenn er mit jemand anderem schläft - achtest du mehr auf emotionale Exklusivität wie Verlieben oder auf rein körperliche Handlungen?","a":"Emotionale Exklusivität","b":"Körperliche Handlungen","img":null,"answers":{}},{"id":202,"player":"frau","cat":"gefuehle","q":"Verwechselst du manchmal \"er geht gut mit Eifersucht um\" damit dass er kaum reagiert - oder damit dass er ehrlich reagiert und dann bei dir bleibt?","a":"Kaum reagieren = gut","b":"Ehrlich reagieren & bleiben = gut","img":null,"answers":{}},{"id":203,"player":"frau","cat":"gefuehle","q":"Willst du einen Partner der Eifersucht nie zeigt - oder einen der sie zeigen, benennen und regulieren kann?","a":"Niemals Eifersucht zeigen","b":"Zeigen, benennen & regulieren","img":null,"answers":{}},{"id":204,"player":"frau","cat":"gefuehle","q":"Was wäre schlimmer für dich - dass er mit jemand anderem kommt oder dass er jemand anderen dabei küsst?","a":"Mit jemand anderem kommen","b":"Jemand anderen küssen","img":null,"answers":{}},{"id":210,"player":"frau","cat":"gefuehle","q":"Wie reagiert er wenn du von früheren Sexerlebnissen mit anderen Männern erzählst - Neugier, Wut, Abwertung oder Desinteresse?","a":"Neugier & Offenheit","b":"Wut, Abwertung oder Desinteresse","img":null,"answers":{}},{"id":211,"player":"frau","cat":"gefuehle","q":"Kann er sagen \"Das löst etwas in mir aus\" ohne sofort Vorwürfe zu machen oder Kontrolle zu fordern?","a":"Ja - er benennt es ruhig","b":"Nein - er macht Vorwürfe","img":null,"answers":{}},{"id":212,"player":"frau","cat":"gefuehle","q":"Hat er bewusst zugelassen dass du mit jemand anderem schläfst - und kam danach ehrlich mit seinen Gefühlen zu dir statt mit passiv-aggressiven Kommentaren?","a":"Ehrlich & direkt","b":"Passiv-aggressiv","img":null,"answers":{}},{"id":213,"player":"frau","cat":"gefuehle","q":"Was tut er wenn Eifersucht hochkommt - Rückzug, Anklage, körperliche Annäherung oder offene Frage nach Sicherheit?","a":"Annäherung & offene Frage","b":"Rückzug oder Anklage","img":null,"answers":{}},{"id":214,"player":"frau","cat":"gefuehle","q":"Ab wann ist Eifersucht bei ihm berechtigt - und ab wann ist sie ein Zeichen von eigener Unsicherheit die er nicht verarbeitet hat?","a":"Er unterscheidet das gut","b":"Er erkennt den Unterschied nicht","img":null,"answers":{}},{"id":215,"player":"frau","cat":"gefuehle","q":"Wenn er nichts dagegen hätte dass du mit einem anderen Mann schläfst - ist das echte Großzügigkeit oder eher emotionale Gleichgültigkeit?","a":"Echte Großzügigkeit","b":"Emotionale Gleichgültigkeit","img":null,"answers":{}},{"id":216,"player":"frau","cat":"gefuehle","q":"Kann er gleichzeitig neugierig auf deine sexuelle Freiheit sein UND verletzlich genug um dir zu sagen \"Jetzt brauche ich Nähe von dir\"?","a":"Ja - beides zusammen","b":"Nein - nur eines von beidem","img":null,"answers":{}},{"id":217,"player":"frau","cat":"gefuehle","q":"Wie geht er mit einem Flirt von dir auf einer Party um den er zufällig sieht - schreitet er ein, zieht sich zurück oder bleibt er ruhig und spricht dich später an?","a":"Ruhig & spricht mich später an","b":"Einschreiten oder Rückzug","img":null,"answers":{}},{"id":218,"player":"frau","cat":"gefuehle","q":"Kannst du ihm eine offene Fantasie von dir mit einem anderen erzählen - ohne dass er sofort den Sex bewertet oder dich beschämt?","a":"Ja - er hört zu","b":"Nein - er bewertet oder beschämt","img":null,"answers":{}},{"id":219,"player":"frau","cat":"gefuehle","q":"Würde er dir erlauben mit einem anderen zu schlafen - aber dann wochenlang kalt und distanziert sein? Wäre das für dich akzeptabel?","a":"Nein - das wäre ein Problem","b":"Ich könnte damit umgehen","img":null,"answers":{}},{"id":220,"player":"mann","cat":"gefuehle","q":"Kannst du sagen: \"Das war schwer für mich - aber ich will dass du frei bist. Hilf mir bitte danach dich wieder nah zu fühlen\" - oder ist das zu viel verlangt?","a":"Ja - das kann ich sagen","b":"Das ist zu viel für mich","img":null,"answers":{}},{"id":221,"player":"mann","cat":"gefuehle","q":"Was wäre schlimmer für dich - dass sie mit einem anderen kommt oder dass sie ihn dabei küsst?","a":"Mit jemand anderem kommen","b":"Jemand anderen küssen","img":null,"answers":{}},{"id":222,"player":"mann","cat":"gefuehle","q":"Wenn du keine Eifersucht spürst wenn sie mit einem anderen ist - bist du dann wirklich entspannt oder fühlst du dich innerlich distanziert von ihr?","a":"Wirklich entspannt","b":"Innerlich distanziert","img":null,"answers":{}},{"id":223,"player":"mann","cat":"gefuehle","q":"Kannst du deine Eifersucht benennen ohne sie zu einer Waffe gegen sie zu machen?","a":"Ja - ich benenne sie ruhig","b":"Schwierig - ich werde vorwurfsvoll","img":null,"answers":{}},{"id":224,"player":"mann","cat":"gefuehle","q":"Wenn sie nach einem Treffen mit dem Liebhaber nach Hause kommt und du siehst ihr an dass es schön war - was passiert in dir?","a":"Ich bin neugierig und nah bei ihr","b":"Ich ziehe mich zurück","img":null,"answers":{}},{"id":225,"player":"mann","cat":"gefuehle","q":"Kannst du gleichzeitig stolz auf ihre Freiheit sein UND verletzlich genug um zu sagen \"Ich brauche jetzt deine Nähe\"?","a":"Ja - beides geht zusammen","b":"Nein - ich zeige keine Verletzlichkeit","img":null,"answers":{}},{"id":226,"player":"mann","cat":"gefuehle","q":"Wenn sie sagt sie fühlt sich beim Liebhaber wertgeschätzt und besonders - löst das in dir Eifersucht aus oder Stolz oder beides?","a":"Stolz überwiegt","b":"Eifersucht überwiegt","img":null,"answers":{}},{"id":227,"player":"mann","cat":"gefuehle","q":"Würdest du lieber dass sie dir sagt \"Er ist besser als du\" und du weißt es ist wahr - oder dass sie es denkt aber nie sagt?","a":"Lieber offen und ehrlich","b":"Lieber für sich behalten","img":null,"answers":{}},{"id":230,"player":"mann","cat":"gefuehle","q":"Du zeigst Eifersucht wenn sie mit anderen schreibt - aber kannst du selbst lueckenlos erklaeren wo du jeden Abend warst? Ist deine Eifersucht wirklich Erotik oder ist sie Kontrolle?","a":"Ehrlich: es ist Kontrolle","b":"Es ist echte Erotik","img":null,"answers":{}},{"id":231,"player":"mann","cat":"gefuehle","q":"Wenn sie nach einem Treffen sagt er war zaertlicher als du - kannst du das annehmen und bei ihr bleiben oder bricht dann etwas in dir?","a":"Ich kann es annehmen","b":"Es bricht etwas in mir","img":null,"answers":{}},{"id":232,"player":"mann","cat":"gefuehle","q":"Was waere schlimmer fuer dich: Dass ein anderer sie zum Schreien bringt - oder dass sie danach merkt wie wenig sie dich eigentlich noch braucht?","a":"Dass sie ihn geniesst","b":"Dass sie mich nicht mehr braucht","img":null,"answers":{}},{"id":233,"player":"mann","cat":"gefuehle","q":"Du willst entspannt zuschauen - aber nur solange du sicher bist dass er ihr weniger gibt als du. Was passiert in dir wenn du diese Sicherheit nicht mehr hast?","a":"Ich bleibe trotzdem dabei","b":"Dann will ich es nicht mehr","img":null,"answers":{}},{"id":234,"player":"mann","cat":"gefuehle","q":"Wenn sie beim anderen Dinge tut die sie bei dir nie wollte - bleibt deine Lust bestehen oder schlaegt sie in etwas anderes um?","a":"Lust bleibt bestehen","b":"Sie schlaegt in etwas anderes um","img":null,"answers":{}},{"id":235,"player":"mann","cat":"gefuehle","q":"Wenn nach dem dritten Treffen keine Eifersucht mehr kommt sondern nur noch Gleichgueltigkeit von ihrer Seite - haelt dein Ego das aus?","a":"Ja - ich halte das aus","b":"Nein - das waere zu viel","img":null,"answers":{}},{"id":236,"player":"mann","cat":"gefuehle","q":"Verlangst du von ihr totale Offenheit - weisst aber selbst nicht immer wo du warst oder mit wem du geschrieben hast? Ist das Augenhoehe?","a":"Nein - das ist nicht Augenhoehe","b":"Ja - ich bin selbst offen","img":null,"answers":{}},{"id":237,"player":"mann","cat":"gefuehle","q":"Wenn sie sagt er kuemmert sich um mich danach aber du nicht - was tust du mit diesem Satz? Rechtfertigst du dich oder fragst du was sie braucht?","a":"Ich frage was sie braucht","b":"Ich rechtfertige mich","img":null,"answers":{}},{"id":238,"player":"mann","cat":"gefuehle","q":"Cuckold bedeutet dass sie wirklich frei ist - auch frei dich zu verlassen wenn sie merkt was fehlt. Kannst du mit dieser echten Freiheit leben oder willst du heimlich die Faeden behalten?","a":"Ich kann mit echter Freiheit leben","b":"Ich will heimlich die Faeden behalten","img":null,"answers":{}},{"id":239,"player":"mann","cat":"gefuehle","q":"Wenn sie dich fragt warst du treu - kannst du ohne Zoegern mit Ja antworten? Und wenn nicht - hast du dann das Recht eifersuechtg zu sein?","a":"Ja - ich war treu","b":"Nein - ich war es nicht immer","img":null,"answers":{}},{"id":240,"player":"frau","cat":"gefuehle","q":"Wenn er Cuckold spielen will aber bei einer harmlosen Nachricht von dir schon eifersuechtg wird - was sagt dir das ueber seine wirkliche Bereitschaft?","a":"Er ist noch nicht bereit","b":"Es ist normale Spannung","img":null,"answers":{}},{"id":241,"player":"frau","cat":"gefuehle","q":"Wenn er dir sexuelle Freiheit anbietet aber selbst nicht transparent ist wo er ist und mit wem - vertraust du ihm dann wirklich?","a":"Nein - kein Vertrauen ohne Transparenz","b":"Ja - ich vertraue ihm trotzdem","img":null,"answers":{}},{"id":242,"player":"frau","cat":"gefuehle","q":"Glaubst du dass sein Wunsch nach dem Cuckold-Lifestyle wirklich erotische Neugier ist - oder ist es eine clevere Art dir Freiheit zu geben waehrend er selbst tut was er will?","a":"Echte Neugier","b":"Clevere Ablenkung","img":null,"answers":{}},{"id":243,"player":"frau","cat":"gefuehle","q":"Wenn er nach eurem Spiel wochenlang kalt und distanziert ist ohne darueber zu reden - ist das fuer dich ein Zeichen dass er damit umgeht oder dass er es bereut?","a":"Er kommt damit nicht klar","b":"Er verarbeitet es still","img":null,"answers":{}},{"id":244,"player":"frau","cat":"gefuehle","q":"Wuerdest du einem Mann deine sexuelle Freiheit zeigen der dir nicht sagen kann wo er letzte Woche wirklich war?","a":"Nein - Vertrauen zuerst","b":"Ja - das ist getrennt","img":null,"answers":{}},{"id":245,"player":"frau","cat":"gefuehle","q":"Wenn er sagt ich will dass du frei bist aber seine Eifersucht zeigt er nur wenn du wirklich frei bist - was stimmt dann wirklich?","a":"Seine Eifersucht zeigt die Wahrheit","b":"Er meint es trotzdem ehrlich","img":null,"answers":{}},{"id":300,"player":"frau","cat":"cuckold","q":"Du hast das Recht Lust zu empfangen und sie zu zeigen. Würdest du lieber diese Freiheit voll annehmen oder dich kleiner machen als du bist?","a":"Ich nehme sie voll an","b":"Ich mache mich kleiner","img":null,"answers":{}},{"id":301,"player":"frau","cat":"cuckold","q":"Dein Verlangen nach einem anderen Mann macht dich nicht zu einer schlechten Frau. Würdest du lieber dazu stehen oder es weiter verstecken?","a":"Ich stehe dazu","b":"Ich verstecke es noch","img":null,"answers":{}},{"id":302,"player":"frau","cat":"cuckold","q":"Wenn du mit einem anderen Mann schläfst und es genießt - verdienst du dieses Genießen. Würdest du lieber ohne Schuldgefühle zurückkommen oder dich hinterher rechtfertigen müssen?","a":"Ohne Schuldgefühle","b":"Ich würde mich rechtfertigen","img":null,"answers":{}},{"id":303,"player":"frau","cat":"cuckold","q":"Du bist nicht sein Besitz. Würdest du lieber eine Beziehung in der deine Lust willkommen ist oder eine in der sie geduldet wird?","a":"Willkommen & gefeiert","b":"Geduldet & kontrolliert","img":null,"answers":{}},{"id":304,"player":"frau","cat":"cuckold","q":"Wenn du merkst dass du den anderen wirklich genießt - würdest du lieber dazu stehen und es deinem Mann sagen oder so tun als wäre es nichts?","a":"Ich stehe dazu und sage es","b":"Ich tue so als wäre es nichts","img":null,"answers":{}},{"id":305,"player":"frau","cat":"liebhaber","q":"Du darfst bei einem anderen Mann Dinge fühlen die du bei deinem Mann nicht fühlst - das ist kein Verrat sondern Menschlichkeit. Würdest du lieber diese Gefühle annehmen oder sie bekämpfen?","a":"Annehmen & verstehen","b":"Bekämpfen & verdrängen","img":null,"answers":{}},{"id":306,"player":"frau","cat":"liebhaber","q":"Wenn dein Liebhaber dir gibt was dir fehlt - Dominanz, Zärtlichkeit, Intensität - hast du das Recht danach zu verlangen. Würdest du lieber direkt sagen was du willst oder es stumm hinnehmen?","a":"Direkt sagen was ich will","b":"Stumm hinnehmen","img":null,"answers":{}},{"id":307,"player":"frau","cat":"liebhaber","q":"Du musst dich nicht zwischen Sicherheit und Leidenschaft entscheiden - beides ist möglich. Würdest du lieber aktiv beides einfordern oder dich mit einem begnügen?","a":"Beides aktiv einfordern","b":"Mit einem begnügen","img":null,"answers":{}},{"id":308,"player":"frau","cat":"liebhaber","q":"Wenn du nach einem Treffen mit dem Liebhaber leuchtende Augen hast - das ist kein Grund zur Scham. Würdest du lieber dieses Leuchten zeigen oder verstecken?","a":"Zeigen & dazu stehen","b":"Verstecken aus Scham","img":null,"answers":{}},{"id":309,"player":"frau","cat":"liebhaber","q":"Dein Körper gehört dir. Würdest du lieber selbst entscheiden wem du ihn gibst und wann - oder warten bis er es erlaubt?","a":"Ich entscheide selbst","b":"Ich warte auf seine Erlaubnis","img":null,"answers":{}},{"id":310,"player":"frau","cat":"gefuehle","q":"Wenn du merkst dass du beim Liebhaber aufblühst - ist das eine Information über dich, nicht über deinen Mann. Würdest du lieber diese Information annehmen oder ignorieren?","a":"Annehmen & verstehen","b":"Ignorieren","img":null,"answers":{}},{"id":311,"player":"frau","cat":"gefuehle","q":"Du hast das Recht auf Wertschätzung, Dominanz, Geborgenheit und Leidenschaft gleichzeitig. Würdest du lieber danach verlangen oder dich damit abfinden dass du nur einen Teil bekommst?","a":"Ich verlange alles","b":"Ich begnüge mich","img":null,"answers":{}},{"id":312,"player":"frau","cat":"gefuehle","q":"Wenn du dich beim Liebhaber zum ersten Mal wirklich gesehen fühlst - würdest du lieber ehrlich mit dir sein was das bedeutet oder es wegdiskutieren?","a":"Ehrlich mit mir sein","b":"Wegdiskutieren","img":null,"answers":{}},{"id":320,"player":"mann","cat":"cuckold","q":"Wenn du sagst du willst Cuckold sein aber kontrollierst jeden ihrer Schritte - was bist du dann wirklich: ein Cuckold oder ein Kontrollfreak mit erotischer Verpackung?","a":"Ich muss das ehrlich prüfen","b":"Ich bin wirklich bereit","img":null,"answers":{}},{"id":321,"player":"mann","cat":"cuckold","q":"Wenn sie nach Hause kommt und du siehst dass es ihr gut geht mit ihm - kannst du das aushalten ohne es ihr später als Waffe zu benutzen?","a":"Ja - ich benutze es nicht","b":"Ich weiß es nicht ehrlich","img":null,"answers":{}},{"id":322,"player":"mann","cat":"cuckold","q":"Hast du ihr jemals gesagt was du wirklich brauchst nach einem Treffen - oder versteckst du deine Verletzlichkeit hinter Schweigen oder sarkastischen Kommentaren?","a":"Ich sage was ich brauche","b":"Ich verstecke es","img":null,"answers":{}},{"id":323,"player":"mann","cat":"cuckold","q":"Wenn sie beim anderen lacht, stöhnt, weint vor Lust - und du weißt sie meint es - bleibt dein Herz offen oder zieht es sich zu?","a":"Mein Herz bleibt offen","b":"Es zieht sich zu","img":null,"answers":{}},{"id":324,"player":"mann","cat":"cuckold","q":"Bist du bereit ihr zu sagen ich brauche dich danach nah bei mir ohne dich dabei klein zu fühlen - oder ist dir dein Ego wichtiger als deine echte Verbindung zu ihr?","a":"Ich sage es - Ego egal","b":"Ego ist mir wichtiger","img":null,"answers":{}},{"id":325,"player":"mann","cat":"liebhaber","q":"Wenn er ihr in einem Abend mehr gibt als du in einem Monat - was machst du mit dieser Erkenntnis: lernst du daraus oder wirst du sauer auf sie?","a":"Ich lerne daraus","b":"Ich werde sauer auf sie","img":null,"answers":{}},{"id":326,"player":"mann","cat":"liebhaber","q":"Hast du sie je gefragt was ihr wirklich fehlt - oder hoffst du dass der Cuckold-Lifestyle die Frage ersetzt die du dir nicht traust zu stellen?","a":"Ich habe gefragt","b":"Ich vermeide die Frage","img":null,"answers":{}},{"id":327,"player":"mann","cat":"liebhaber","q":"Wenn sie sagt er berührt mich anders als du - ist deine erste Reaktion Neugier und Lernwille oder Kränkung und Rückzug?","a":"Neugier & Lernwille","b":"Kränkung & Rückzug","img":null,"answers":{}},{"id":330,"player":"mann","cat":"erotik","q":"Wenn sie beim anderen schreit und du es hörst - bist du ehrlich genug zuzugeben was das wirklich in dir auslöst, oder erzählst du dir eine Geschichte darüber?","a":"Ich bin ehrlich mit mir","b":"Ich erzähle mir eine Geschichte","img":null,"answers":{}},{"id":331,"player":"mann","cat":"erotik","q":"Wenn sie mit dem anderen Dinge macht die sie dir verweigert hat - kannst du das ohne Groll tragen oder wirst du es ihr irgendwann vorwerfen?","a":"Ohne Groll","b":"Ich werde es vorwerfen","img":null,"answers":{}},{"id":332,"player":"mann","cat":"erotik","q":"Bist du in der Lage nach dem Treffen mit ihr intim zu sein ohne innerlich Bilder von ihm zu bekämpfen - oder lässt du sie bewusst zu?","a":"Ich lasse sie bewusst zu","b":"Ich kämpfe sie weg","img":null,"answers":{}},{"id":400,"player":"frau","cat":"anfaenger","q":"Wenn du weisst dass ein fremder Mann dich begehrt und dein Mann es weiss - wuerdest du lieber dieses Gefuehl geniessen oder es schnell abwuergen?","a":"Geniessen und zeigen","b":"Schnell abwuergen","img":null,"answers":{}},{"id":401,"player":"frau","cat":"anfaenger","q":"Wuerdest du lieber deinem Mann ein Foto schicken waehrend du mit einem anderen flirtest - damit er weiss was passiert - oder es fuer dich behalten?","a":"Foto schicken","b":"Fuer mich behalten","img":null,"answers":{}},{"id":402,"player":"frau","cat":"anfaenger","q":"Wenn ein fremder Mann dich im Club anmacht und du spuerst echte Anziehung - wuerdest du lieber deinem Mann danach alles erzaehlen oder nur das Ergebnis?","a":"Alles erzaehlen","b":"Nur das Ergebnis","img":null,"answers":{}},{"id":403,"player":"frau","cat":"anfaenger","q":"Wuerdest du lieber das erste Mal mit Alkohol um die Hemmungen zu senken oder lieber nuechtern damit es wirklich deine Entscheidung ist?","a":"Mit etwas Alkohol","b":"Nuechtern & bewusst","img":null,"answers":{}},{"id":404,"player":"frau","cat":"anfaenger","q":"Wenn du das erste Mal mit einem anderen Mann kuesst - wuerdest du lieber dass dein Mann zuschaut oder es nicht weiss?","a":"Er schaut zu","b":"Er weiss es nicht","img":null,"answers":{}},{"id":405,"player":"frau","cat":"anfaenger","q":"Wuerdest du lieber deine Fantasien erst im Rollenspiel mit deinem Mann ausprobieren oder direkt in die Realitaet gehen?","a":"Erst Rollenspiel","b":"Direkt Realitaet","img":null,"answers":{}},{"id":406,"player":"mann","cat":"anfaenger","q":"Wuerdest du lieber deine Frau beim ersten Mal begleiten und alles miterleben oder ihr die volle Freiheit lassen und danach reden?","a":"Begleiten & miterleben","b":"Volle Freiheit & danach reden","img":null,"answers":{}},{"id":407,"player":"mann","cat":"anfaenger","q":"Wenn sie vom ersten Treffen zurueckkommt und du siehst dass sie erregt und gluecklich ist - was machst du als erstes?","a":"Sie kuesst und nah bei ihr sein","b":"Fragen stellen","img":null,"answers":{}},{"id":408,"player":"mann","cat":"anfaenger","q":"Wuerdest du lieber dass sie beim ersten Mal einen Mann waehlt den du kennst oder einen voelligen Fremden?","a":"Jemanden den ich kenne","b":"Voelligen Fremden","img":null,"answers":{}},{"id":409,"player":"beide","cat":"anfaenger","q":"Wuerdest du lieber gemeinsam einen Erotikfilm schauen um das Thema zu eroeffnen oder lieber direkt offen darueber reden?","a":"Film zusammen schauen","b":"Direkt reden","img":null,"answers":{}},{"id":410,"player":"frau","cat":"fetisch","q":"Wuerdest du lieber von ihm an den Haaren gezogen werden waehrend er dich von hinten nimmt oder lieber mit einem Tuch verbunden werden sodass du nichts siehst?","a":"An den Haaren gezogen","b":"Verbunden & blind","img":null,"answers":{}},{"id":411,"player":"frau","cat":"fetisch","q":"Wuerdest du lieber dass er dich anspuckt im Eifer des Gefechts oder dass er dich wuergend am Hals haelt - beides nur wenn du es willst?","a":"Anspucken","b":"Wuergegriff am Hals","img":null,"answers":{}},{"id":412,"player":"frau","cat":"fetisch","q":"Wuerdest du lieber in einer Gangbang-Fantasie die Hauptrolle spielen - mehrere Maenner nur fuer dich - oder lieber Zuschauerin bei anderen sein?","a":"Hauptrolle fuer mich","b":"Zuschauerin","img":null,"answers":{}},{"id":413,"player":"frau","cat":"fetisch","q":"Wuerdest du lieber ein Wochenende lang die Sklavin eines Mannes spielen der alle Regeln setzt oder lieber selbst die Herrin sein die alles bestimmt?","a":"Seine Sklavin","b":"Selbst die Herrin","img":null,"answers":{}},{"id":414,"player":"frau","cat":"fetisch","q":"Wuerdest du lieber dass er dich mit einem Spiegel zwingt zuzusehen wenn er dich nimmt oder lieber die Augen verbunden haben damit du nur fuehlen kannst?","a":"Zusehen im Spiegel","b":"Verbunden nur fuehlen","img":null,"answers":{}},{"id":415,"player":"frau","cat":"fetisch","q":"Wuerdest du lieber ein erotisches Video von dir machen das nur ihr beide je sehen werden oder lieber keines aber dafuer Fotos?","a":"Video nur fuer uns","b":"Nur Fotos","img":null,"answers":{}},{"id":416,"player":"mann","cat":"fetisch","q":"Wuerdest du lieber zusehen wie sie von zwei Maennern gleichzeitig genommen wird oder lieber selbst einer der zwei sein?","a":"Nur zuschauen","b":"Selbst einer der zwei sein","img":null,"answers":{}},{"id":417,"player":"mann","cat":"fetisch","q":"Wuerdest du lieber ihr sagen was sie beim Liebhaber tun soll - als stiller Regisseur - oder ihr voellige Freiheit lassen?","a":"Stiller Regisseur","b":"Voellige Freiheit","img":null,"answers":{}},{"id":420,"player":"beide","cat":"absurd","q":"Wuerdest du lieber beim Sex immer Fahrstuhlmusik im Hintergrund hoeren oder immer einen Kommentator der alles beschreibt?","a":"Fahrstuhlmusik","b":"Sportkommentator","img":null,"answers":{}},{"id":421,"player":"beide","cat":"absurd","q":"Wuerdest du lieber dass dein Orgasmus jedes Mal von Feuerwerk begleitet wird oder von einer Herde Enten die quaken?","a":"Feuerwerk","b":"Quakende Enten","img":null,"answers":{}},{"id":422,"player":"beide","cat":"absurd","q":"Wuerdest du lieber fuer den Rest des Lebens nur noch Sex im Stehen haben oder nur noch liegend - keine andere Position moeglich?","a":"Nur noch im Stehen","b":"Nur noch liegend","img":null,"answers":{}},{"id":423,"player":"beide","cat":"absurd","q":"Wuerdest du lieber dass dein Partner nach dem Sex immer sofort einschlaeft wie ein Lichtschalter oder immer mindestens eine Stunde reden will?","a":"Sofort schlafen","b":"Eine Stunde reden","img":null,"answers":{}},{"id":424,"player":"beide","cat":"absurd","q":"Wuerdest du lieber unsichtbar sein aber immer nach Knoblauch riechen oder sichtbar aber immer einen bunten Clownshut tragen muessen?","a":"Unsichtbar mit Knoblauch","b":"Sichtbar mit Clownshut","img":null,"answers":{}},{"id":425,"player":"beide","cat":"absurd","q":"Wuerdest du lieber dass dein Telefon bei jeder erotischen Nachricht die du schreibst laut den Text vorliest oder dass es sie automatisch an deine Mutter weiterleitet?","a":"Laut vorlesen","b":"An Mutter weiterleiten","img":null,"answers":{}},{"id":426,"player":"beide","cat":"absurd","q":"Wuerdest du lieber bei jedem Kuss automatisch das Lied Atemlos durch die Nacht hoeren oder immer die Tagesschau-Melodie?","a":"Atemlos","b":"Tagesschau-Melodie","img":null,"answers":{}},{"id":427,"player":"beide","cat":"absurd","q":"Wuerdest du lieber dass dein Liebesleben als Doku im Fernsehen laeuft - anonym aber erkennbar fuer Freunde - oder als Roman veroffentlicht wird?","a":"Als TV-Doku","b":"Als Roman","img":null,"answers":{}},{"id":428,"player":"beide","cat":"absurd","q":"Wuerdest du lieber fuer immer nur noch Sex bei Vollmond haben oder nur noch wenn es regnet?","a":"Nur bei Vollmond","b":"Nur wenn es regnet","img":null,"answers":{}},{"id":429,"player":"beide","cat":"absurd","q":"Wuerdest du lieber dass dein Haustier bei jedem Kuss ein Lied pfeift oder dass es applaudiert?","a":"Ein Lied pfeift","b":"Applaudiert","img":null,"answers":{}},{"id":500,"player":"mann","cat":"keuschheit","q":"Wuerdest du lieber einen Peniskaefig tragen waehrend sie beim Liebhaber ist und weisst dass er frei ist was du nicht bist - oder lieber ohne?","a":"Mit Kaefig","b":"Ohne Kaefig","img":null,"answers":{}},{"id":501,"player":"mann","cat":"keuschheit","q":"Wuerdest du lieber den Schluessel zum Kaefig ihr geben oder dem Liebhaber - sodass nur er entscheiden kann wann du wieder raus darfst?","a":"Ihr geben","b":"Dem Liebhaber geben","img":null,"answers":{}},{"id":502,"player":"mann","cat":"keuschheit","q":"Wuerdest du lieber eine Woche im Kaefig verbringen und weisst sie trifft ihn zweimal - oder drei Tage und weisst du wirst danach nicht ran duerfen?","a":"Eine Woche Kaefig","b":"Drei Tage ohne danach","img":null,"answers":{}},{"id":503,"player":"mann","cat":"keuschheit","q":"Wuerdest du lieber dass sie dir den Kaefig anlegt und dabei laechelt weil sie weiss was sie gleich tut - oder dass sie es schweigend und ernst tut?","a":"Laechelnd","b":"Schweigend & ernst","img":null,"answers":{}},{"id":504,"player":"mann","cat":"keuschheit","q":"Wuerdest du lieber im Kaefig neben ihr schlafen nachdem sie vom Liebhaber kommt - riechen und spueren was war - oder in einem anderen Zimmer?","a":"Neben ihr schlafen","b":"Anderes Zimmer","img":null,"answers":{}},{"id":505,"player":"mann","cat":"keuschheit","q":"Wuerdest du lieber dass sie dir sagt wie es war waehrend du im Kaefig sitzt und nichts tun kannst - oder schweigt sie dabei?","a":"Sie erzaehlt es mir","b":"Sie schweigt","img":null,"answers":{}},{"id":506,"player":"mann","cat":"keuschheit","q":"Wuerdest du lieber nach einer Woche Kaefig von ihr befreit werden und sie nimmt dich sofort - oder erst nach drei weiteren Tagen Warten?","a":"Sofort nach Kaefig","b":"Noch drei Tage warten","img":null,"answers":{}},{"id":507,"player":"frau","cat":"keuschheit","q":"Wuerdest du lieber deinem Mann den Kaefig anlegen und den Schluessel selbst behalten - oder ihn dem Liebhaber uebergeben als Zeichen wer gerade die Kontrolle hat?","a":"Selbst behalten","b":"Liebhaber bekommt ihn","img":null,"answers":{}},{"id":508,"player":"frau","cat":"keuschheit","q":"Wuerdest du lieber deinen Mann im Kaefig wissen waehrend du beim Liebhaber bist - und das Wissen geniesst du - oder stoert dich das?","a":"Ich geniesse das Wissen","b":"Es stoert mich","img":null,"answers":{}},{"id":509,"player":"frau","cat":"keuschheit","q":"Wuerdest du lieber nach dem Treffen nach Hause kommen und ihm zeigen dass du gut bedient wurdest - waehrend er im Kaefig nicht kann - oder ihn sofort befreien?","a":"Erst zeigen was war","b":"Sofort befreien","img":null,"answers":{}},{"id":510,"player":"frau","cat":"liebhaber","q":"Wuerdest du lieber einen Mann mit 18 cm der nach 3 Minuten fertig ist oder einen mit 13 cm der 30 Minuten durchhaelt?","a":"18 cm - 3 Minuten","b":"13 cm - 30 Minuten","img":null,"answers":{}},{"id":511,"player":"frau","cat":"liebhaber","q":"Wuerdest du lieber einen Mann unter 12 cm der genau weiss wo er druecken muss oder einen ueber 20 cm der keine Ahnung hat was er tut?","a":"Unter 12 cm aber gekonnt","b":"Ueber 20 cm aber ungekonnt","img":null,"answers":{}},{"id":512,"player":"frau","cat":"liebhaber","q":"Wuerdest du lieber dass er 15 Minuten lang sehr intensiv ist und dann aufhoert oder 45 Minuten lang gleichmaessig aber weniger intensiv?","a":"15 Minuten sehr intensiv","b":"45 Minuten gleichmaessig","img":null,"answers":{}},{"id":513,"player":"frau","cat":"liebhaber","q":"Wuerdest du lieber einen Mann der genau die richtige Groesse hat um dich voll auszufuellen aber schnell kommt oder einen der etwas kleiner ist aber mehrmals kommen kann?","a":"Volle Ausfuellung - einmal","b":"Etwas kleiner - mehrmals","img":null,"answers":{}},{"id":514,"player":"frau","cat":"liebhaber","q":"Wuerdest du lieber ueber 20 cm haben und weisst es tut am Anfang weh - oder exakt 15 cm die perfekt passen ohne Schmerz?","a":"Ueber 20 cm mit Schmerz","b":"Perfekte 15 cm ohne Schmerz","img":null,"answers":{}},{"id":515,"player":"frau","cat":"liebhaber","q":"Wuerdest du lieber einen Mann der eine Stunde lang macht was du willst ohne selbst zu kommen - oder einen der nach 10 Minuten kommt aber dich dreimal zum Hoehepunkt bringt?","a":"Stundenlang fuer mich","b":"10 Minuten aber dreimal fuer mich","img":null,"answers":{}},{"id":516,"player":"frau","cat":"liebhaber","q":"Wuerdest du lieber dass er so gross ist dass du es am naechsten Tag noch sputest oder lieber dass du danach sofort wieder koennttest?","a":"Noch am naechsten Tag spueren","b":"Sofort wieder koennen","img":null,"answers":{}},{"id":517,"player":"frau","cat":"liebhaber","q":"Wuerdest du lieber einen Mann der genau weiss wie er seinen Finger einsetzt und dich damit zum Hoehepunkt bringt bevor er ueberhaupt anfaengt oder einen der sofort eindringen will?","a":"Erst Finger - dann mehr","b":"Sofort eindringen","img":null,"answers":{}},{"id":518,"player":"frau","cat":"liebhaber","q":"Wuerdest du lieber dass er sehr dick ist aber nur durchschnittlich lang - oder sehr lang aber duenn?","a":"Dick aber nicht so lang","b":"Lang aber duenn","img":null,"answers":{}},{"id":519,"player":"frau","cat":"liebhaber","q":"Wuerdest du lieber mit einem Mann schlafen der exakt zweimal so gross ist wie dein Mann - oder einem der exakt gleich gross ist aber dreimal so ausdauernd?","a":"Doppelt so gross","b":"Gleich gross - dreifach ausdauernd","img":null,"answers":{}},{"id":520,"player":"frau","cat":"liebhaber","q":"Wuerdest du lieber einen Mann der dich fragt ob es gut ist alle zwei Minuten - oder einen der einfach weiss wann er was tun soll ohne zu fragen?","a":"Fragt alle zwei Minuten","b":"Weiss es ohne zu fragen","img":null,"answers":{}},{"id":521,"player":"frau","cat":"liebhaber","q":"Wuerdest du lieber einen Mann der beim Sex immer schneller wird bis zum Ende oder einen der das Tempo wechselt - mal langsam mal hart - je nach deiner Reaktion?","a":"Immer schneller","b":"Tempo nach meiner Reaktion","img":null,"answers":{}},{"id":522,"player":"frau","cat":"liebhaber","q":"Wuerdest du lieber einen Mann der dich erst eine Stunde lang verwöhnt bis du fleht und dann erst eindringt oder einen der direkt und hart loslegt?","a":"Erst eine Stunde verwoehn","b":"Direkt und hart","img":null,"answers":{}},{"id":530,"player":"mann","cat":"liebhaber","q":"Wenn sie dir sagt er hat 18 cm und du weisst du hast 14 - wuerdest du lieber genau wissen wie es sich anfuehlt fuer sie oder es nicht wissen?","a":"Genau wissen","b":"Lieber nicht wissen","img":null,"answers":{}},{"id":531,"player":"mann","cat":"liebhaber","q":"Wuerdest du lieber dass sie nach dem Treffen sagt er war groesser als ich dachte - oder er war kleiner als erwartet?","a":"Groesser als erwartet","b":"Kleiner als erwartet","img":null,"answers":{}},{"id":532,"player":"mann","cat":"liebhaber","q":"Wuerdest du lieber dass sie dir nach dem Sex mit ihm zeigt wie er sich angefuehlt hat - mit den Haenden als Groessenvergleich - oder lieber nicht?","a":"Ja zeig mir","b":"Lieber nicht","img":null,"answers":{}},{"id":533,"player":"mann","cat":"liebhaber","q":"Wenn er eine Stunde mit ihr braucht und du weisst du schaffst 15 Minuten - wuerdest du lieber zuschauen oder draussen warten?","a":"Zuschauen","b":"Draussen warten","img":null,"answers":{}},{"id":534,"player":"mann","cat":"liebhaber","q":"Wuerdest du lieber von ihr hoeren er hat laenger gehalten als du je koennttest - und das erregt dich - oder macht dich das eher klein?","a":"Es erregt mich","b":"Es macht mich klein","img":null,"answers":{}},{"id":540,"player":"beide","cat":"keuschheit","q":"Wuerdest du lieber Keuschheit als dauerhaftes Element in eure Beziehung einbauen oder nur als gelegentliches Spiel?","a":"Dauerhaftes Element","b":"Nur gelegentlich","img":null,"answers":{}},{"id":541,"player":"frau","cat":"keuschheit","q":"Wuerdest du lieber die volle Kontrolle ueber seinen Kaefig haben - Schluessel immer bei dir - oder ihm manchmal die Illusion der Kontrolle lassen?","a":"Volle Kontrolle bei mir","b":"Ihm manchmal Illusion lassen","img":null,"answers":{}},{"id":542,"player":"frau","cat":"keuschheit","q":"Wuerdest du lieber ihm erlauben sich selbst zu befriedigen waehrend du beim Liebhaber bist - oder soll er warten bis du entscheidest?","a":"Er darf selbst","b":"Er wartet auf mich","img":null,"answers":{}},{"id":550,"player":"mann","cat":"keuschheit","q":"Wuerdest du lieber den Kaefig freiwillig anlegen oder lieber dass sie ihn anlegt ohne dich vorher zu fragen?","a":"Freiwillig selbst","b":"Sie legt ihn an ohne Frage","img":null,"answers":{}},{"id":551,"player":"mann","cat":"keuschheit","q":"Wuerdest du lieber im Kaefig erregt sein und nichts tun koennen waehrend sie neben dir liegt - oder lieber im anderen Zimmer schlafen?","a":"Neben ihr - erregt und hilflos","b":"Anderes Zimmer","img":null,"answers":{}},{"id":552,"player":"mann","cat":"keuschheit","q":"Wuerdest du lieber dass sie dir sagt wie lange noch - und es laenger ist als du dachtest - oder dass sie gar nichts sagt und du nicht weisst wann es endet?","a":"Sie sagt wie lange","b":"Kein Wort - volle Ungewissheit","img":null,"answers":{}},{"id":553,"player":"frau","cat":"keuschheit","q":"Wuerdest du lieber ihm sagen er kommt erst wieder raus wenn der Liebhaber es erlaubt - oder wenn du selbst Lust hast ihn zu befreien?","a":"Wenn Liebhaber es erlaubt","b":"Wenn ich Lust habe","img":null,"answers":{}},{"id":554,"player":"frau","cat":"keuschheit","q":"Wuerdest du lieber ihm den Kaefig tagsüber anlegen damit er den ganzen Tag daran denkt was du tust - oder nur nachts?","a":"Tagsüber","b":"Nur nachts","img":null,"answers":{}},{"id":555,"player":"frau","cat":"keuschheit","q":"Wuerdest du lieber dass er im Kaefig zuschauen muss oder dass er draussen wartet und sich vorstellt was passiert?","a":"Im Kaefig zuschauen","b":"Draussen vorstellen","img":null,"answers":{}},{"id":556,"player":"beide","cat":"keuschheit","q":"Wuerdest du lieber Keuschheit mit einem festen Zeitplan - z.B. immer montags frei - oder komplett nach ihrer Laune ohne Plan?","a":"Fester Zeitplan","b":"Nach ihrer Laune","img":null,"answers":{}},{"id":600,"player":"mann","cat":"wannabe","q":"Wenn sie nach Hause kommt und riecht nach einem anderen Mann - kannst du sie trotzdem kussen ohne innerlich wegzulaufen?","a":"Ja - ich kann es","b":"Nein - das waere zu viel","img":null,"answers":{}},{"id":601,"player":"mann","cat":"wannabe","q":"Wuerdest du ihr erlauben mit einem anderen zu schlafen und danach NICHTS von ihr verlangen - kein Bericht, keine Erklaerung, keine Rechtfertigung?","a":"Ja - sie schuldet mir nichts","b":"Nein - ich brauche Details oder Sicherheit","img":null,"answers":{}},{"id":602,"player":"mann","cat":"wannabe","q":"Wenn sie sagt der andere war heute besser als du je warst - kannst du das hoeren ohne es ihr spaeter vorzuwerfen?","a":"Ja - und ich bleibe ruhig","b":"Nein - das wuerde mich verfolgen","img":null,"answers":{}},{"id":603,"player":"mann","cat":"wannabe","q":"Hast du schon mal erlebt dass Eifersucht in dir hochkam und du sie trotzdem ruhig beiseitegelegt hast ohne Schweigen, Kälte oder Vorwuerfe?","a":"Ja - habe ich schon geschafft","b":"Nein - Eifersucht kontrolliert mich","img":null,"answers":{}},{"id":604,"player":"mann","cat":"wannabe","q":"Kannst du ihr nach dem Treffen Naehe geben - kussen, halten, fragen wie es ihr geht - ohne dabei an ihn zu denken?","a":"Ja - sie steht im Mittelpunkt","b":"Nein - ich koennte nicht abschalten","img":null,"answers":{}},{"id":605,"player":"mann","cat":"wannabe","q":"Wenn sie sagt sie will ihn wiedersehen naechste Woche - kannst du ja sagen und es wirklich so meinen?","a":"Ja - ich kann es so meinen","b":"Ja sagen aber innerlich nein meinen","img":null,"answers":{}},{"id":606,"player":"mann","cat":"wannabe","q":"Bist du bereit Verantwortung zu uebernehmen wenn es dir mal nicht gut geht damit - ohne ihr die Schuld zu geben?","a":"Ja - meine Gefuehle sind meine Aufgabe","b":"Nein - sie muesste es dann einschraenken","img":null,"answers":{}},{"id":607,"player":"mann","cat":"wannabe","q":"Wenn du zusiehst und merkst du wirst nicht erregt sondern nur verletzt - kannst du in dem Moment stoppen ohne Wut auf sie?","a":"Ja - stoppen ohne Wut","b":"Nein - ich wuerde Wut auf sie schieben","img":null,"answers":{}},{"id":608,"player":"mann","cat":"wannabe","q":"Hast du dir schon konkret vorgestellt wie es sich anfuehlt wenn ein anderer Mann sie zum Hoehepunkt bringt - und kannst du damit leben?","a":"Ja - ich habe es mir vorgestellt und es geht","b":"Nein - in der Theorie ja in der Realitaet nein","img":null,"answers":{}},{"id":609,"player":"mann","cat":"wannabe","q":"Wenn Freunde oder Familie es herausfinden wuerden - wuerdest du zu ihr stehen oder dich distanzieren?","a":"Ich stehe zu ihr - egal was andere denken","b":"Ich wuerde mich distanzieren","img":null,"answers":{}},{"id":610,"player":"mann","cat":"wannabe","q":"Kannst du ihre sexuelle Freiheit wirklich als Geschenk sehen das ihr gehoert - oder fuehlt es sich heimlich wie ein Verlust fuer dich an?","a":"Als ihr Geschenk - nicht mein Verlust","b":"Heimlich als Verlust","img":null,"answers":{}},{"id":611,"player":"mann","cat":"wannabe","q":"Wenn sie emotional aufgeloest nach Hause kommt weil es ein intensives Erlebnis war - kannst du einfach da sein ohne es zu analysieren?","a":"Ja - einfach da sein","b":"Nein - ich muesste sofort verstehen was war","img":null,"answers":{}},{"id":612,"player":"mann","cat":"wannabe","q":"Wuerdest du ihr erlauben den Liebhaber zu kussen - echter Kuss, lange, zaertlich - obwohl du weisst dass das mehr als nur Sex bedeutet?","a":"Ja - ich verbiete ihr nichts","b":"Kuss waere eine Grenze fuer mich","img":null,"answers":{}},{"id":613,"player":"mann","cat":"wannabe","q":"Wenn du merkst dass du Cuckold sein willst damit SIE gluecklich ist - und nicht nur wegen deiner eigenen Erregung - dann bist du auf dem richtigen Weg. Stimmts?","a":"Ja - es geht mir um ihr Glueck","b":"Ehrlich: es geht mir hauptsaechlich um meine Erregung","img":null,"answers":{}},{"id":614,"player":"mann","cat":"wannabe","q":"Kannst du ihr nach einem Treffen sagen ich bin stolz auf dich und das wirklich so meinen - ohne Unterton?","a":"Ja - echter Stolz","b":"Nein - ich koennte es nicht so meinen","img":null,"answers":{}},{"id":615,"player":"mann","cat":"wannabe","q":"Wenn das Ganze nach drei Monaten aufhoert weil sie es nicht mehr will - kannst du das akzeptieren ohne Vorwuerfe?","a":"Ja - ihre Entscheidung","b":"Nein - ich wuerde es schwer nehmen","img":null,"answers":{}},{"id":616,"player":"frau","cat":"wannabe","q":"Wenn er eifersuechtg wird und schweigt statt zu reden - glaubst du dass er wirklich bereit ist oder nur glaubt es zu sein?","a":"Er glaubt es nur","b":"Er ist wirklich bereit","img":null,"answers":{}},{"id":617,"player":"frau","cat":"wannabe","q":"Hat er dir schon mal etwas gesagt das schwer war fuer ihn - und dabei nicht kontrollierend oder vorwurfsvoll geklungen?","a":"Ja - das hat er schon geschafft","b":"Nein - er wird immer kontrollierend","img":null,"answers":{}},{"id":618,"player":"frau","cat":"wannabe","q":"Wenn du ihn beobachtest wenn andere Maenner mit dir flirten - was siehst du in ihm: echte Neugier und Stolz oder versteckte Anspannung und Kontrolle?","a":"Echte Neugier und Stolz","b":"Versteckte Anspannung und Kontrolle","img":null,"answers":{}},{"id":619,"player":"frau","cat":"wannabe","q":"Glaubst du dass er nach dem ersten echten Treffen bei dir bleibt - oder dass er es bereut und dir die Schuld gibt?","a":"Er bleibt und traegt es","b":"Er wird mir die Schuld geben","img":null,"answers":{}},{"id":620,"player":"frau","cat":"wannabe","q":"Wenn du ihm sagst was dir beim anderen gefallen hat - hört er wirklich zu oder wartet er nur darauf dass du aufhoerst?","a":"Er hoert wirklich zu","b":"Er wartet nur dass ich aufhoere","img":null,"answers":{}},{"id":621,"player":"frau","cat":"wannabe","q":"Ist er ein echter Cuckold der dir Freiheit schenkt weil er dich liebt - oder ein Wannabe der Cuckold spielt weil er hofft dass es seine eigene Untreue rechtfertigt?","a":"Echter Cuckold aus Liebe","b":"Wannabe mit versteckter Agenda","img":null,"answers":{}},{"id":622,"player":"frau","cat":"wannabe","q":"Wenn du ehrlich bist - verdient er dieses Vertrauen das Cuckold-Sein braucht? Heute, so wie er ist?","a":"Ja - er verdient es","b":"Noch nicht - er muss noch wachsen","img":null,"answers":{}}]</script>
+
+<script>
+(function(){
+  var DEFAULT_PW = "liebesspiel";
+  var state = {
+    player: "frau",
+    cat: "all",
+    idx: 0,
+    filtered: [],
+    editCat: "all"
+  };
+
+  var CATS = {
+    anfaenger: "Anfaenger",
+    cuckold: "Cuckold und Hotwife",
+    liebhaber: "Der Liebhaber",
+    gefuehle: "Gefuehle und Eifersucht",
+    erotik: "Erotik und Handlungen",
+    fetisch: "Fetisch und Tabu",
+    keuschheit: "Keuschheit und Kaefig",
+    wannabe: "Cuckold Test",
+    absurd: "Absurd und Witzig"
+  };
+
+  function getDefaultQs(){
+    var raw = document.getElementById("data").textContent;
+    var arr = JSON.parse(raw);
+    for (var i=0;i<arr.length;i++){
+      arr[i].img = null;
+      arr[i].answers = {};
+    }
+    return arr;
+  }
+
+  function getQs(){
+    try {
+      var s = localStorage.getItem("wdl_questions");
+      if (s){
+        var p = JSON.parse(s);
+        if (p && p.length) return p;
+      }
+    } catch(e){}
+    var def = getDefaultQs();
+    saveQs(def);
+    return def;
+  }
+
+  function saveQs(qs){
+    localStorage.setItem("wdl_questions", JSON.stringify(qs));
+  }
+
+  function getPw(){
+    return localStorage.getItem("wdl_pw") || DEFAULT_PW;
+  }
+
+  function savePw(pw){
+    localStorage.setItem("wdl_pw", pw);
+  }
+
+  function login(){
+    var pw = document.getElementById("pwInput").value;
+    if (pw === getPw()){
+      document.getElementById("login").style.display = "none";
+      document.getElementById("selector").style.display = "flex";
+    } else {
+      document.getElementById("loginErr").textContent = "Falsches Passwort. Standard: liebesspiel";
+    }
+  }
+
+  function logout(){
+    document.getElementById("selector").style.display = "none";
+    document.getElementById("app").style.display = "none";
+    document.getElementById("login").style.display = "flex";
+    document.getElementById("pwInput").value = "";
+    document.getElementById("loginErr").textContent = "";
+  }
+
+  function resetPw(){
+    localStorage.removeItem("wdl_pw");
+    document.getElementById("loginErr").style.color = "#6ec9a9";
+    document.getElementById("loginErr").textContent = "Zurueckgesetzt. Passwort: liebesspiel";
+    document.getElementById("pwInput").value = "";
+  }
+
+  function openWdl(){
+    document.getElementById("selector").style.display = "none";
+    document.getElementById("app").style.display = "block";
+    initApp();
+  }
+
+  function initApp(){
+    setupCatDropdown();
+    renderCatFilter();
+    renderEditFilter();
+    buildFiltered();
+    renderQ();
+    renderList();
+    renderResults();
+  }
+
+  function setupCatDropdown(){
+    var sel = document.getElementById("nCat");
+    sel.innerHTML = "";
+    for (var k in CATS){
+      var o = document.createElement("option");
+      o.value = k;
+      o.textContent = CATS[k];
+      sel.appendChild(o);
+    }
+  }
+
+  function showTab(tab){
+    var tabs = ["play","edit","results","settings"];
+    for (var i=0;i<tabs.length;i++){
+      document.getElementById("pane-"+tabs[i]).style.display = tabs[i]===tab ? "block" : "none";
+    }
+    var btns = document.querySelectorAll(".tab");
+    for (var j=0;j<btns.length;j++){
+      btns[j].classList.toggle("active", btns[j].getAttribute("data-tab")===tab);
+    }
+    if (tab==="results") renderResults();
+    if (tab==="edit") renderList();
+  }
+
+  function setPlayer(p){
+    state.player = p;
+    var btns = document.querySelectorAll("[data-player]");
+    for (var i=0;i<btns.length;i++){
+      btns[i].classList.toggle("active", btns[i].getAttribute("data-player")===p);
+    }
+    state.cat = "all";
+    state.idx = 0;
+    renderCatFilter();
+    buildFiltered();
+    renderQ();
+  }
+
+  function renderCatFilter(){
+    var el = document.getElementById("catFilter");
+    el.innerHTML = "";
+    var b = document.createElement("button");
+    b.className = "cb" + (state.cat==="all"?" active":"");
+    b.textContent = "Alle";
+    b.onclick = function(){ setCat("all"); };
+    el.appendChild(b);
+    for (var k in CATS){
+      (function(key){
+        var b = document.createElement("button");
+        b.className = "cb" + (state.cat===key?" active":"");
+        b.textContent = CATS[key];
+        b.onclick = function(){ setCat(key); };
+        el.appendChild(b);
+      })(k);
+    }
+  }
+
+  function setCat(c){
+    state.cat = c;
+    state.idx = 0;
+    renderCatFilter();
+    buildFiltered();
+    renderQ();
+  }
+
+  function buildFiltered(){
+    var qs = getQs();
+    state.filtered = qs.filter(function(q){
+      var pm = q.player === state.player || q.player === "beide";
+      var cm = state.cat === "all" || q.cat === state.cat;
+      return pm && cm;
+    });
+  }
+
+  function renderQ(){
+    var qt = document.getElementById("qText");
+    var qc = document.getElementById("qCat");
+    var qi = document.getElementById("qImg");
+    var or = document.getElementById("optionsRow");
+    var pi = document.getElementById("progressInfo");
+
+    if (!state.filtered.length){
+      qt.textContent = "Keine Fragen in dieser Kategorie.";
+      qc.textContent = "";
+      qi.style.display = "none";
+      or.innerHTML = "";
+      pi.textContent = "";
+      return;
+    }
+    if (state.idx >= state.filtered.length) state.idx = 0;
+    var q = state.filtered[state.idx];
+    qc.textContent = CATS[q.cat] || q.cat;
+    qt.textContent = q.q;
+    pi.textContent = "Frage " + (state.idx+1) + " von " + state.filtered.length;
+    if (q.img){ qi.src = q.img; qi.style.display = "block"; } else { qi.style.display = "none"; }
+
+    var sa = q.answers && q.answers[state.player];
+    or.innerHTML = "";
+    var bA = document.createElement("button");
+    bA.className = "opt" + (sa==="a"?" sel-a":"");
+    bA.textContent = "A: " + q.a;
+    bA.onclick = function(){ saveAnswer("a"); };
+    or.appendChild(bA);
+
+    var bB = document.createElement("button");
+    bB.className = "opt" + (sa==="b"?" sel-b":"");
+    bB.textContent = "B: " + q.b;
+    bB.onclick = function(){ saveAnswer("b"); };
+    or.appendChild(bB);
+  }
+
+  function saveAnswer(ans){
+    var qs = getQs();
+    var q = state.filtered[state.idx];
+    for (var i=0;i<qs.length;i++){
+      if (qs[i].id === q.id){
+        if (!qs[i].answers) qs[i].answers = {};
+        qs[i].answers[state.player] = ans;
+        saveQs(qs);
+        state.filtered[state.idx] = qs[i];
+        break;
+      }
+    }
+    renderQ();
+    setTimeout(nextQ, 400);
+  }
+
+  function nextQ(){
+    state.idx = (state.idx + 1) % state.filtered.length;
+    renderQ();
+  }
+
+  function prevQ(){
+    state.idx = (state.idx - 1 + state.filtered.length) % state.filtered.length;
+    renderQ();
+  }
+
+  function shuffleQ(){
+    state.filtered.sort(function(){ return Math.random() - 0.5; });
+    state.idx = 0;
+    renderQ();
+  }
+
+  function renderEditFilter(){
+    var el = document.getElementById("editFilter");
+    el.innerHTML = "";
+    var b = document.createElement("button");
+    b.className = "cb" + (state.editCat==="all"?" active":"");
+    b.textContent = "Alle";
+    b.onclick = function(){ state.editCat = "all"; renderEditFilter(); renderList(); };
+    el.appendChild(b);
+    for (var k in CATS){
+      (function(key){
+        var b = document.createElement("button");
+        b.className = "cb" + (state.editCat===key?" active":"");
+        b.textContent = CATS[key];
+        b.onclick = function(){ state.editCat = key; renderEditFilter(); renderList(); };
+        el.appendChild(b);
+      })(k);
+    }
+  }
+
+  function renderList(){
+    var qs = getQs().filter(function(q){
+      return state.editCat === "all" || q.cat === state.editCat;
+    });
+    var el = document.getElementById("qList");
+    el.innerHTML = "";
+    if (!qs.length){
+      el.innerHTML = "<p style='color:#7a6e7a;'>Keine Fragen.</p>";
+      return;
+    }
+    for (var i=0;i<qs.length;i++){
+      (function(q){
+        var d = document.createElement("div");
+        d.className = "q-item";
+        var pl = q.player==="frau"?"Frau":q.player==="mann"?"Mann":"Beide";
+        d.innerHTML =
+          "<div class='q-item-meta'>" + (CATS[q.cat]||q.cat) + " - " + pl + "</div>" +
+          "<div class='q-item-text'></div>" +
+          "<div class='q-item-opts'></div>" +
+          "<div class='q-item-actions'></div>";
+        d.querySelector(".q-item-text").textContent = q.q;
+        d.querySelector(".q-item-opts").textContent = "A: " + q.a + "  |  B: " + q.b;
+        var actions = d.querySelector(".q-item-actions");
+
+        var fileInput = document.createElement("input");
+        fileInput.type = "file";
+        fileInput.accept = "image/*";
+        fileInput.style.display = "none";
+        fileInput.onchange = function(e){
+          var f = e.target.files[0]; if (!f) return;
+          var r = new FileReader();
+          r.onload = function(ev){
+            var qs2 = getQs();
+            for (var j=0;j<qs2.length;j++){
+              if (qs2[j].id === q.id){ qs2[j].img = ev.target.result; break; }
+            }
+            saveQs(qs2);
+            renderList();
+            buildFiltered();
+          };
+          r.readAsDataURL(f);
+        };
+        actions.appendChild(fileInput);
+
+        if (q.img){
+          var img = document.createElement("img");
+          img.src = q.img;
+          img.style.width = "60px";
+          img.style.height = "40px";
+          img.style.objectFit = "cover";
+          img.style.borderRadius = "4px";
+          actions.appendChild(img);
+        }
+
+        var imgBtn = document.createElement("button");
+        imgBtn.className = "btn-small btn-ghost";
+        imgBtn.textContent = q.img ? "Bild ersetzen" : "Bild";
+        imgBtn.onclick = function(){ fileInput.click(); };
+        actions.appendChild(imgBtn);
+
+        if (q.img){
+          var rmBtn = document.createElement("button");
+          rmBtn.className = "btn-small btn-ghost";
+          rmBtn.textContent = "Bild weg";
+          rmBtn.onclick = function(){
+            var qs2 = getQs();
+            for (var j=0;j<qs2.length;j++){
+              if (qs2[j].id === q.id){ qs2[j].img = null; break; }
+            }
+            saveQs(qs2);
+            renderList();
+            buildFiltered();
+          };
+          actions.appendChild(rmBtn);
+        }
+
+        var delBtn = document.createElement("button");
+        delBtn.className = "btn-small btn-red";
+        delBtn.textContent = "X";
+        delBtn.onclick = function(){
+          if (!confirm("Frage loeschen?")) return;
+          saveQs(getQs().filter(function(x){ return x.id !== q.id; }));
+          renderList();
+          buildFiltered();
+        };
+        actions.appendChild(delBtn);
+
+        el.appendChild(d);
+      })(qs[i]);
+    }
+  }
+
+  function addQ(){
+    var player = document.getElementById("nPlayer").value;
+    var cat = document.getElementById("nCat").value;
+    var q = document.getElementById("nQ").value.trim();
+    var a = document.getElementById("nA").value.trim();
+    var b = document.getElementById("nB").value.trim();
+    if (!q || !a || !b){ alert("Bitte alle Felder ausfuellen."); return; }
+    var qs = getQs();
+    var maxId = 0;
+    for (var i=0;i<qs.length;i++){ if (qs[i].id > maxId) maxId = qs[i].id; }
+    qs.push({ id: maxId+1, player: player, cat: cat, q: q, a: a, b: b, img: null, answers: {} });
+    saveQs(qs);
+    document.getElementById("nQ").value = "";
+    document.getElementById("nA").value = "";
+    document.getElementById("nB").value = "";
+    renderList();
+    buildFiltered();
+    alert("Frage hinzugefuegt!");
+  }
+
+  function renderResults(){
+    var qs = getQs();
+    var answered = qs.filter(function(q){
+      return q.answers && Object.keys(q.answers).length > 0;
+    });
+    var el = document.getElementById("resultsContent");
+    if (!answered.length){
+      el.innerHTML = "<p style='color:#7a6e7a;'>Noch keine Antworten. Spiele zuerst!</p>";
+      return;
+    }
+
+    // Group answers by person
+    function getAnswersFor(person){
+      var results = { wishes: {}, limits: {}, unsure: {} };
+      for (var k in CATS){
+        results.wishes[k] = [];
+        results.limits[k] = [];
+        results.unsure[k] = [];
+      }
+      for (var i=0;i<answered.length;i++){
+        var q = answered[i];
+        var ans = q.answers[person];
+        if (!ans) continue;
+        var chosen = ans === "a" ? q.a : q.b;
+        var rejected = ans === "a" ? q.b : q.a;
+        if (!results.wishes[q.cat]) {
+          results.wishes[q.cat] = [];
+          results.limits[q.cat] = [];
+        }
+        results.wishes[q.cat].push({ q: q.q, chosen: chosen });
+        results.limits[q.cat].push({ q: q.q, rejected: rejected });
+      }
+      return results;
+    }
+
+    function getStats(person){
+      var count = 0;
+      for (var i=0;i<answered.length;i++){
+        if (answered[i].answers[person]) count++;
+      }
+      return count;
+    }
+
+    function getAgreement(){
+      var agree = 0, disagree = 0, onlyOne = 0, both = 0;
+      var conflicts = [];
+      for (var i=0;i<answered.length;i++){
+        var q = answered[i];
+        var fa = q.answers["frau"];
+        var ma = q.answers["mann"];
+        if (fa && ma){
+          both++;
+          if (fa === ma) agree++;
+          else {
+            disagree++;
+            conflicts.push({
+              q: q.q,
+              cat: q.cat,
+              frau: fa === "a" ? q.a : q.b,
+              mann: ma === "a" ? q.a : q.b
+            });
+          }
+        } else if (fa || ma){
+          onlyOne++;
+        }
+      }
+      return { agree: agree, disagree: disagree, both: both, conflicts: conflicts };
+    }
+
+    var frauStats = getStats("frau");
+    var mannStats = getStats("mann");
+    var agree = getAgreement();
+
+    var html = "";
+
+    // Summary header
+    html += "<div class='result-card' style='margin-bottom:20px;'>";
+    html += "<h3 style='color:#c9a96e;'>Zusammenfassung</h3>";
+    html += "<div style='display:flex;gap:20px;flex-wrap:wrap;margin-top:10px;'>";
+    html += "<div><div style='font-size:1.5rem;color:#c9a96e;font-weight:bold;'>" + frauStats + "</div><div style='font-size:0.8rem;color:#7a6e7a;'>Frau beantwortet</div></div>";
+    html += "<div><div style='font-size:1.5rem;color:#8b5e8b;font-weight:bold;'>" + mannStats + "</div><div style='font-size:0.8rem;color:#7a6e7a;'>Mann beantwortet</div></div>";
+    if (agree.both > 0){
+      var aPct = Math.round(agree.agree / agree.both * 100);
+      html += "<div><div style='font-size:1.5rem;color:#6ec9a9;font-weight:bold;'>" + aPct + "%</div><div style='font-size:0.8rem;color:#7a6e7a;'>Uebereinstimmung</div></div>";
+      html += "<div><div style='font-size:1.5rem;color:#c96e6e;font-weight:bold;'>" + agree.disagree + "</div><div style='font-size:0.8rem;color:#7a6e7a;'>Konfliktthemen</div></div>";
+    }
+    html += "</div></div>";
+
+    // Tabs for Frau / Mann / Vergleich
+    html += "<div style='display:flex;gap:6px;margin-bottom:16px;flex-wrap:wrap;'>";
+    html += "<button class='cb active' onclick='window.showResultView(\"frau\")' id='rv-frau'>Wuensche Frau</button>";
+    html += "<button class='cb' onclick='window.showResultView(\"mann\")' id='rv-mann'>Wuensche Mann</button>";
+    html += "<button class='cb' onclick='window.showResultView(\"conflict\")' id='rv-conflict'>Wo ihr unterschiedlich denkt</button>";
+    html += "</div>";
+
+    html += "<div id='resultView'></div>";
+
+    el.innerHTML = html;
+
+    // Render initial view
+    window.resultsData = {
+      frau: getAnswersFor("frau"),
+      mann: getAnswersFor("mann"),
+      conflicts: agree.conflicts
+    };
+
+    window.showResultView = function(view){
+      var btns = ["frau","mann","conflict"];
+      for (var i=0;i<btns.length;i++){
+        var b = document.getElementById("rv-"+btns[i]);
+        if (b) b.classList.toggle("active", btns[i]===view);
+      }
+      var rv = document.getElementById("resultView");
+      var h = "";
+
+      if (view === "conflict"){
+        var c = window.resultsData.conflicts;
+        if (!c.length){
+          h = "<p style='color:#7a6e7a;padding:20px;text-align:center;'>Keine Konflikte gefunden - entweder seid ihr euch einig, oder es haben noch nicht beide geantwortet.</p>";
+        } else {
+          h = "<div style='color:#7a6e7a;font-size:0.85rem;margin-bottom:12px;'>Hier denkt ihr unterschiedlich - das sind gute Gespraechsthemen:</div>";
+          var byCat = {};
+          for (var i=0;i<c.length;i++){
+            var cat = c[i].cat;
+            if (!byCat[cat]) byCat[cat] = [];
+            byCat[cat].push(c[i]);
+          }
+          for (var k in byCat){
+            h += "<div class='result-card' style='margin-bottom:14px;'>";
+            h += "<h3 style='color:#c96e6e;'>" + (CATS[k]||k) + "</h3>";
+            for (var j=0;j<byCat[k].length;j++){
+              var item = byCat[k][j];
+              h += "<div style='padding:10px 0;border-bottom:1px solid #2e2535;'>";
+              h += "<div style='font-size:0.9rem;margin-bottom:6px;'></div>";
+              h += "<div style='display:flex;gap:12px;flex-wrap:wrap;margin-top:6px;'>";
+              h += "<div style='flex:1;min-width:140px;background:rgba(201,169,110,0.08);padding:8px;border-radius:6px;'><div style='font-size:0.7rem;color:#c9a96e;'>SIE</div><div style='font-size:0.85rem;'></div></div>";
+              h += "<div style='flex:1;min-width:140px;background:rgba(139,94,139,0.08);padding:8px;border-radius:6px;'><div style='font-size:0.7rem;color:#8b5e8b;'>ER</div><div style='font-size:0.85rem;'></div></div>";
+              h += "</div></div>";
+            }
+            h += "</div>";
+          }
+          rv.innerHTML = h;
+          // Now fill text contents safely
+          var cards = rv.querySelectorAll(".result-card");
+          var idx = 0;
+          for (var ck in byCat){
+            var entries = cards[idx].querySelectorAll("[style*='border-bottom']");
+            for (var je=0;je<byCat[ck].length;je++){
+              var qDiv = entries[je].querySelector("div:nth-child(1)");
+              qDiv.textContent = byCat[ck][je].q;
+              var boxes = entries[je].querySelectorAll("[style*='border-radius:6px']");
+              boxes[0].querySelectorAll("div")[1].textContent = byCat[ck][je].frau;
+              boxes[1].querySelectorAll("div")[1].textContent = byCat[ck][je].mann;
+            }
+            idx++;
+          }
+          return;
+        }
+      } else {
+        var data = window.resultsData[view];
+        var color = view === "frau" ? "#c9a96e" : "#8b5e8b";
+        var label = view === "frau" ? "Was sie sich wuenscht" : "Was er sich wuenscht";
+        h = "<div style='color:#7a6e7a;font-size:0.85rem;margin-bottom:12px;'>" + label + " - sortiert nach Kategorie. Jede Auswahl zeigt was gewaehlt wurde.</div>";
+
+        var anyShown = false;
+        for (var k in CATS){
+          var items = data.wishes[k] || [];
+          if (!items.length) continue;
+          anyShown = true;
+          h += "<div class='result-card' style='margin-bottom:14px;'>";
+          h += "<h3 style='color:" + color + ";'>" + CATS[k] + " <span style='font-size:0.75rem;color:#7a6e7a;font-weight:normal;'>(" + items.length + ")</span></h3>";
+          for (var i=0;i<items.length;i++){
+            h += "<div style='padding:8px 0;border-bottom:1px solid #2e2535;'>";
+            h += "<div style='font-size:0.8rem;color:#7a6e7a;margin-bottom:4px;'></div>";
+            h += "<div style='font-size:0.9rem;color:" + color + ";'><span style='color:#7a6e7a;'>Waehlt: </span></div>";
+            h += "</div>";
+          }
+          h += "</div>";
+        }
+        if (!anyShown){
+          h = "<p style='color:#7a6e7a;padding:20px;text-align:center;'>Noch keine Antworten von " + (view==="frau"?"ihr":"ihm") + ".</p>";
+        }
+      }
+
+      rv.innerHTML = h;
+
+      // Fill text content safely (not via innerHTML to avoid HTML injection)
+      if (view !== "conflict"){
+        var data2 = window.resultsData[view];
+        var cards = rv.querySelectorAll(".result-card");
+        var cIdx = 0;
+        for (var kk in CATS){
+          var its = data2.wishes[kk] || [];
+          if (!its.length) continue;
+          var entries = cards[cIdx].querySelectorAll("[style*='border-bottom']");
+          for (var ii=0;ii<its.length;ii++){
+            var divs = entries[ii].querySelectorAll("div");
+            divs[0].textContent = its[ii].q;
+            divs[1].querySelector("span").textContent = "Waehlt: ";
+            divs[1].appendChild(document.createTextNode(its[ii].chosen));
+          }
+          cIdx++;
+        }
+      }
+    };
+
+    window.showResultView("frau");
+  }
+
+  function changePw(){
+    var p1 = document.getElementById("newPw1").value;
+    var p2 = document.getElementById("newPw2").value;
+    if (!p1 || p1 !== p2){
+      document.getElementById("pwMsg").textContent = "Passwoerter stimmen nicht ueberein.";
+      return;
+    }
+    savePw(p1);
+    document.getElementById("pwMsg").textContent = "Gespeichert!";
+    document.getElementById("newPw1").value = "";
+    document.getElementById("newPw2").value = "";
+  }
+
+  function resetAnswers(){
+    if (!confirm("Alle Antworten loeschen?")) return;
+    var qs = getQs();
+    for (var i=0;i<qs.length;i++){ qs[i].answers = {}; }
+    saveQs(qs);
+    alert("Antworten zurueckgesetzt.");
+  }
+
+  function resetAll(){
+    if (!confirm("Alle Daten loeschen und neu laden?")) return;
+    localStorage.removeItem("wdl_questions");
+    var def = getDefaultQs();
+    saveQs(def);
+    buildFiltered();
+    renderQ();
+    renderList();
+    renderResults();
+    alert(def.length + " Fragen neu geladen!");
+  }
+
+  // Wire up events
+  document.getElementById("loginBtn").onclick = login;
+  document.getElementById("pwInput").addEventListener("keydown", function(e){
+    if (e.key === "Enter") login();
+  });
+  document.getElementById("resetLink").onclick = function(e){
+    e.preventDefault();
+    resetPw();
+  };
+  document.getElementById("openWdl").onclick = openWdl;
+  document.getElementById("openEropoly").onclick = function(){
+    window.location.href = "https://cbh555555.github.io/CBH/";
+  };
+  document.getElementById("openAdvet").onclick = function(){
+    window.location.href = "https://cbh555555.github.io/Advet/";
+  };
+  document.getElementById("logoutBtn").onclick = logout;
+  document.getElementById("backBtn").onclick = function(){
+    document.getElementById("app").style.display = "none";
+    document.getElementById("selector").style.display = "flex";
+  };
+
+  var tabBtns = document.querySelectorAll(".tab");
+  for (var i=0;i<tabBtns.length;i++){
+    (function(btn){
+      btn.onclick = function(){ showTab(btn.getAttribute("data-tab")); };
+    })(tabBtns[i]);
+  }
+
+  var playerBtns = document.querySelectorAll("[data-player]");
+  for (var j=0;j<playerBtns.length;j++){
+    (function(btn){
+      btn.onclick = function(){ setPlayer(btn.getAttribute("data-player")); };
+    })(playerBtns[j]);
+  }
+
+  document.getElementById("prevBtn").onclick = prevQ;
+  document.getElementById("nextBtn").onclick = nextQ;
+  document.getElementById("shuffleBtn").onclick = shuffleQ;
+  document.getElementById("addBtn").onclick = addQ;
+  document.getElementById("savePwBtn").onclick = changePw;
+  document.getElementById("resetAnsBtn").onclick = resetAnswers;
+  document.getElementById("resetAllBtn").onclick = resetAll;
+})();
+</script>
+</body>
+</html>
