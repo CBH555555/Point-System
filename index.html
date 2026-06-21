@@ -3,8 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
-  <title>Punkte-System – Liebe ist gut, einsatz ist besser.</title>
+  <title>Punkte-System – Liebe ist gut, Einsatz ist besser.</title>
   <style>
+    /* ===== Grundlagen ===== */
     :root {
       --bg: #0d0d0d;
       --card-bg: #1a0a0a;
@@ -31,7 +32,8 @@
     h1 { font-size: 1.8rem; }
     h2 { font-size: 1.3rem; }
 
-    .header {
+    /* ===== Header ===== */
+    header {
       display: flex;
       flex-wrap: wrap;
       justify-content: space-between;
@@ -51,6 +53,7 @@
       text-align: right;
     }
 
+    /* ===== Buttons ===== */
     button {
       background: var(--accent);
       color: white;
@@ -60,16 +63,19 @@
       font-size: 1rem;
       cursor: pointer;
       transition: 0.2s;
-      margin: 4px;
       font-weight: 600;
       box-shadow: 0 4px 10px rgba(255,45,85,0.4);
       touch-action: manipulation;
       white-space: nowrap;
+      min-height: 44px;
+      min-width: 44px;
     }
     button:hover { background: #d41c40; }
     button:active { transform: scale(0.96); }
     button:disabled { background: #555; cursor: not-allowed; box-shadow: none; }
+    button:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
 
+    /* ===== Karten ===== */
     .card {
       background: var(--card-bg);
       border-radius: var(--radius);
@@ -79,6 +85,7 @@
       border: 1px solid #2a0000;
     }
 
+    /* ===== Tabellen ===== */
     table {
       width: 100%;
       border-collapse: collapse;
@@ -101,6 +108,7 @@
     }
     tr:hover { background: rgba(255,45,85,0.05); }
 
+    /* ===== Formulare ===== */
     input, textarea, select {
       background: #1a1a1a;
       border: 1px solid #444;
@@ -112,16 +120,28 @@
       box-sizing: border-box;
       -webkit-appearance: none;
     }
-
-    .editable-cell {
-      cursor: text;
-      display: inline-block;
-      padding: 2px 4px;
-      border-bottom: 1px dashed transparent;
-      min-width: 60px;
+    input:focus-visible, textarea:focus-visible, select:focus-visible {
+      outline: 2px solid var(--accent);
     }
-    .editable-cell:hover { border-color: var(--accent); }
 
+    /* ===== Editierbare Zellen (Input-Ersatz) ===== */
+    .editable-cell {
+      cursor: pointer;
+      display: inline-block;
+      padding: 4px 6px;
+      border-radius: 4px;
+      min-width: 40px;
+      border: 1px solid transparent;
+      transition: border 0.2s;
+    }
+    .editable-cell:hover { border-color: var(--accent); background: rgba(255,45,85,0.1); }
+    .editable-cell .edit-icon {
+      font-size: 0.7rem;
+      margin-left: 4px;
+      opacity: 0.5;
+    }
+
+    /* ===== Badges ===== */
     .punkte-badge {
       background: var(--gold);
       color: #0d0d0d;
@@ -131,30 +151,6 @@
       display: inline-block;
       font-size: 0.9rem;
     }
-
-    .flex { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
-
-    .log-entry {
-      font-family: monospace;
-      background: #2a000015;
-      padding: 8px;
-      border-radius: 6px;
-      margin: 4px 0;
-      font-size: 0.8rem;
-    }
-
-    .tab-btn {
-      background: var(--accent2);
-      color: white;
-      box-shadow: none;
-      font-size: 0.9rem;
-      padding: 10px 14px;
-    }
-    .tab-btn.active { background: var(--accent); }
-
-    hr { border-color: rgba(255,255,255,0.05); margin: 15px 0; }
-    .sync-status { font-size: 0.75rem; color: var(--muted); }
-
     .cuckold-tag {
       background: var(--accent);
       color: white;
@@ -166,7 +162,32 @@
       vertical-align: middle;
     }
 
-    /* Modal */
+    /* ===== Flex ===== */
+    .flex { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+
+    /* ===== Log ===== */
+    .log-entry {
+      font-family: monospace;
+      background: #2a000015;
+      padding: 8px;
+      border-radius: 6px;
+      margin: 4px 0;
+      font-size: 0.8rem;
+    }
+
+    /* ===== Tabs ===== */
+    .tab-btn {
+      background: var(--accent2);
+      color: white;
+      box-shadow: none;
+      font-size: 0.9rem;
+      padding: 10px 14px;
+      min-height: 44px;
+    }
+    .tab-btn.active { background: var(--accent); }
+    .tab-btn:focus-visible { outline: 2px solid var(--gold); }
+
+    /* ===== Modal ===== */
     .modal {
       display: none;
       position: fixed;
@@ -201,14 +222,41 @@
       margin-top: 16px;
     }
 
-    /* Mobile optimizations */
+    /* ===== Toast ===== */
+    #toastContainer {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      max-width: 320px;
+    }
+    .toast {
+      background: #222;
+      color: #fff;
+      padding: 12px 18px;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+      border-left: 4px solid var(--accent);
+      animation: slideIn 0.3s ease;
+    }
+    .toast.success { border-left-color: var(--green); }
+    .toast.error { border-left-color: var(--accent); }
+    @keyframes slideIn {
+      from { transform: translateX(100%); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+
+    /* ===== Mobile ===== */
     @media (max-width: 600px) {
       body { padding: 8px; }
-      .header { flex-direction: column; align-items: flex-start; }
+      header { flex-direction: column; align-items: flex-start; }
       .konto { text-align: left; font-size: 1.8rem; }
       table { font-size: 0.75rem; }
       th, td { padding: 8px 4px; }
-      button { padding: 10px 14px; font-size: 0.9rem; }
+      button { padding: 10px 14px; font-size: 0.9rem; min-height: 44px; }
       .tab-btn { font-size: 0.8rem; padding: 8px 10px; }
       h1 { font-size: 1.5rem; }
       h2 { font-size: 1.1rem; }
@@ -216,72 +264,80 @@
   </style>
 </head>
 <body>
-  <div class="header">
+  <!-- Toast-Container -->
+  <div id="toastContainer"></div>
+
+  <!-- Header -->
+  <header>
     <div>
       <h1>🖤 Punkte-System <span style="font-size:0.7em;">Cuckold Edition</span></h1>
       <p style="margin:0; font-size:0.9rem;">Ehemann sammelt Punkte · Ehefrau bewertet · Wiederholbar</p>
-      <button style="background:#555; font-size:0.8rem; padding:8px 14px;" onclick="manuellSynchronisieren()">🔄 Sync</button>
+      <button id="syncBtn" style="background:#555; font-size:0.8rem; padding:8px 14px;">🔄 Sync</button>
       <span id="syncStatus" class="sync-status"></span>
     </div>
     <div class="konto" id="kontoAnzeige">0 Punkte</div>
-  </div>
+  </header>
 
+  <!-- Tab-Leiste -->
   <div class="flex" style="margin-bottom: 12px; overflow-x: auto;">
-    <button class="tab-btn active" onclick="switchTab('aufgaben')">📋 Aufgaben</button>
-    <button class="tab-btn" onclick="switchTab('einloesungen')">🎁 Einlösungen</button>
-    <button class="tab-btn" onclick="switchTab('neu')">➕ Neu</button>
-    <button class="tab-btn" onclick="switchTab('log')">📜 Verlauf</button>
-    <button class="tab-btn" onclick="switchTab('regeln')">⚠️ Regeln</button>
+    <button class="tab-btn active" data-tab="aufgaben">📋 Aufgaben</button>
+    <button class="tab-btn" data-tab="einloesungen">🎁 Einlösungen</button>
+    <button class="tab-btn" data-tab="neu">➕ Neu</button>
+    <button class="tab-btn" data-tab="log">📜 Verlauf</button>
+    <button class="tab-btn" data-tab="regeln">⚠️ Regeln</button>
   </div>
 
-  <div id="tab-aufgaben" class="tab-content card">
-    <h2>Aufgaben für den Ehemann <span class="cuckold-tag">Sammle Punkte</span></h2>
-    <p style="font-size:0.8rem; color:var(--muted);">✅ = Erledigt melden | ⭐ = Qualität (1-10) & Punkte vergeben | Danach wieder offen</p>
-    <div style="overflow-x: auto;">
-      <table><thead><tr><th>Aufgabe</th><th>Pkte</th><th>Status</th><th>Aktion</th></tr></thead><tbody id="aufgabenBody"></tbody></table>
-    </div>
-  </div>
+  <!-- Hauptinhalt -->
+  <main>
+    <section id="tab-aufgaben" class="tab-content card">
+      <h2>Aufgaben für den Ehemann <span class="cuckold-tag">Sammle Punkte</span></h2>
+      <p style="font-size:0.8rem; color:var(--muted);">✅ = Erledigt melden | ⭐ = Qualität (1-10) & Punkte vergeben | Danach wieder offen</p>
+      <div style="overflow-x: auto;">
+        <table><thead><tr><th>Aufgabe</th><th>Pkte</th><th>Status</th><th>Aktion</th></tr></thead><tbody id="aufgabenBody"></tbody></table>
+      </div>
+    </section>
 
-  <div id="tab-einloesungen" class="tab-content card" style="display:none;">
-    <h2>Einlösekatalog – Cuckold & Hardcore <span class="cuckold-tag">Punkte ausgeben</span></h2>
-    <p style="font-size:0.8rem; color:var(--muted);">Einfach auf 💰 klicken und bestätigen – keine weiteren Warnungen.</p>
-    <div style="overflow-x: auto;">
-      <table><thead><tr><th>Einlösung</th><th>Kosten</th><th>Notiz</th><th>Aktion</th></tr></thead><tbody id="einloesungenBody"></tbody></table>
-    </div>
-  </div>
+    <section id="tab-einloesungen" class="tab-content card" style="display:none;">
+      <h2>Einlösekatalog – Cuckold & Hardcore <span class="cuckold-tag">Punkte ausgeben</span></h2>
+      <p style="font-size:0.8rem; color:var(--muted);">Einfach auf 💰 klicken und bestätigen – keine weiteren Warnungen.</p>
+      <div style="overflow-x: auto;">
+        <table><thead><tr><th>Einlösung</th><th>Kosten</th><th>Notiz</th><th>Aktion</th></tr></thead><tbody id="einloesungenBody"></tbody></table>
+      </div>
+    </section>
 
-  <div id="tab-neu" class="tab-content card" style="display:none;">
-    <h2>Neuen Eintrag hinzufügen</h2>
-    <select id="neuerTyp">
-      <option value="aufgabe">Aufgabe (Ehemann sammelt Punkte)</option>
-      <option value="einloesung">Einlösung (Ehemann gibt Punkte aus)</option>
-    </select><br><br>
-    <input type="text" id="neuerText" placeholder="Beschreibung"><br><br>
-    <label>Punkte (Richtwert) / Kosten:</label>
-    <input type="number" id="neuerPunkte" value="10" min="1"><br><br>
-    <label>Notiz (optional):</label>
-    <input type="text" id="neuerHinweis" placeholder="z.B. Cuckold, Hardcore"><br><br>
-    <button onclick="neuenEintragHinzufuegen()">Speichern</button>
-  </div>
+    <section id="tab-neu" class="tab-content card" style="display:none;">
+      <h2>Neuen Eintrag hinzufügen</h2>
+      <select id="neuerTyp">
+        <option value="aufgabe">Aufgabe (Ehemann sammelt Punkte)</option>
+        <option value="einloesung">Einlösung (Ehemann gibt Punkte aus)</option>
+      </select><br><br>
+      <input type="text" id="neuerText" placeholder="Beschreibung"><br><br>
+      <label>Punkte (Richtwert) / Kosten:</label>
+      <input type="number" id="neuerPunkte" value="10" min="1"><br><br>
+      <label>Notiz (optional):</label>
+      <input type="text" id="neuerHinweis" placeholder="z.B. Cuckold, Hardcore"><br><br>
+      <button id="speichernNeu">Speichern</button>
+    </section>
 
-  <div id="tab-log" class="tab-content card" style="display:none;">
-    <h2>Letzte Aktivitäten</h2>
-    <div id="logContainer">Keine Einträge</div>
-  </div>
+    <section id="tab-log" class="tab-content card" style="display:none;">
+      <h2>Letzte Aktivitäten</h2>
+      <div id="logContainer">Keine Einträge</div>
+    </section>
 
-  <div id="tab-regeln" class="tab-content card" style="display:none;">
-    <h2> Wichtige Regeln & Safewords</h2>
-    <div style="background:#ff2d5525; border-left:4px solid #ff2d55; padding:10px; margin:8px 0;">
-      <strong>🛑 Safeword:</strong> „ROT“ = sofortiger Abbruch aller Aktivitäten.
-    </div>
-    <h3>Grundregeln</h3>
-    <ul style="padding-left:20px;">
-      <li>Alles einvernehmlich, Vetorecht für beide jederzeit.</li>
-      <li>Safer Sex ist Pflicht (Kondome, Lecktücher).</li>
-      <li>Nach intensiven Sessions: Aftercare einplanen.</li>
-      <li>Der Ehemann kann jederzeit aus der Cuckold-Rolle aussteigen.</li>
-    </ul>
-  </div>
+    <section id="tab-regeln" class="tab-content card" style="display:none;">
+      <h2>Wichtige Regeln & Safewords</h2>
+      <div style="background:#ff2d5525; border-left:4px solid #ff2d55; padding:10px; margin:8px 0;">
+        <strong>🛑 Safeword:</strong> „ROT“ = sofortiger Abbruch aller Aktivitäten.
+      </div>
+      <h3>Grundregeln</h3>
+      <ul style="padding-left:20px;">
+        <li>Alles einvernehmlich, Vetorecht für beide jederzeit.</li>
+        <li>Safer Sex ist Pflicht (Kondome, Lecktücher).</li>
+        <li>Nach intensiven Sessions: Aftercare einplanen.</li>
+        <li>Der Ehemann kann jederzeit aus der Cuckold-Rolle aussteigen.</li>
+      </ul>
+    </section>
+  </main>
 
   <!-- Bewertungs-Modal -->
   <div id="bewertungsModal" class="modal">
@@ -295,321 +351,547 @@
       <label>Kommentar:</label>
       <textarea id="modalKommentar" rows="2" placeholder="z.B. 'Fast perfekt, aber Massage war zu kurz'"></textarea>
       <div class="modal-buttons">
-        <button onclick="bewertungSpeichern()">Speichern</button>
-        <button style="background:#555;" onclick="modalSchliessen()">Abbrechen</button>
+        <button id="modalSpeichern">Speichern</button>
+        <button id="modalAbbrechen" style="background:#555;">Abbrechen</button>
       </div>
     </div>
   </div>
 
   <script>
-    // ==================== KONFIGURATION ====================
-    const BIN_ID = "6a36c9e0f5f4af5e29151a52";
-    const MASTER_KEY = "$2a$10$RXS/6UhoYPTh7nq/AcLtEeSOld4i4UdPbE25C2m90QuyLRxaGrLgS";
+    (function() {
+      'use strict';
 
-    // ==================== DATEN & SYNC ====================
-    let lokaleDaten = { aufgaben: [], einloesungen: [], konto: 0, log: [] };
-    let aktuelleVersion = null;
-    let bewertungsAufgabeId = null;
+      // ============================
+      // 1. KONFIGURATION
+      // ============================
+      const CONFIG = {
+        BIN_ID: '6a36c9e0f5f4af5e29151a52',
+        MASTER_KEY: '$2a$10$RXS/6UhoYPTh7nq/AcLtEeSOld4i4UdPbE25C2m90QuyLRxaGrLgS', // ACHTUNG: Nur für lokale Tests!
+        API_BASE: 'https://api.jsonbin.io/v3/b/6a36c9e0f5f4af5e29151a52',
+        PIN: '0000' // Einfacher Schutz – bei Bedarf ändern oder deaktivieren
+      };
 
-    const API_BASE = `https://api.jsonbin.io/v3/b/${BIN_ID}`;
-    const HEADERS = {
-      "X-Master-Key": MASTER_KEY,
-      "Content-Type": "application/json"
-    };
-
-    async function datenLaden() {
-      try {
-        document.getElementById('syncStatus').textContent = ' (lade...)';
-        const res = await fetch(`${API_BASE}/latest`, { headers: HEADERS });
-        if (!res.ok) throw new Error("Laden fehlgeschlagen");
-        const json = await res.json();
-        aktuelleVersion = json.record.version;
-        const data = json.record;
-        if (!data.aufgaben && !data.einloesungen) {
-          initialisiereStandardDaten();
-          await datenSpeichern(true);
-        } else {
-          lokaleDaten = data;
-        }
-        renderAlles();
-        document.getElementById('syncStatus').textContent = ' ✅';
-      } catch (e) {
-        console.error(e);
-        document.getElementById('syncStatus').textContent = ' ❌';
-        renderAlles();
+      // ============================
+      // 2. HELFER
+      // ============================
+      function genId() {
+        return Date.now().toString(36) + Math.random().toString(36).substr(2);
       }
-    }
 
-    async function datenSpeichern(initial = false) {
-      try {
-        if (!initial) {
-          const latest = await fetch(`${API_BASE}/latest`, { headers: HEADERS });
-          if (latest.ok) {
-            const latestData = await latest.json();
-            if (latestData.record.version !== aktuelleVersion) {
-              alert('⚠️ Daten auf anderem Gerät geändert. Neu laden...');
-              location.reload();
+      function esc(text) {
+        return String(text).replace(/[&<>"]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[m]);
+      }
+
+      function now() {
+        return new Date().toLocaleString('de-DE');
+      }
+
+      // Toast-System
+      function showToast(message, type = 'info') {
+        const container = document.getElementById('toastContainer');
+        const toast = document.createElement('div');
+        toast.className = `toast ${type}`;
+        toast.textContent = message;
+        container.appendChild(toast);
+        setTimeout(() => {
+          toast.style.opacity = '0';
+          toast.style.transition = 'opacity 0.3s';
+          setTimeout(() => toast.remove(), 300);
+        }, 3000);
+      }
+
+      // ============================
+      // 3. DATA MANAGER
+      // ============================
+      const DataManager = {
+        lokaleDaten: { aufgaben: [], einloesungen: [], konto: 0, log: [] },
+        aktuelleVersion: null,
+
+        // API-Header
+        getHeaders(extra = {}) {
+          return {
+            'X-Master-Key': CONFIG.MASTER_KEY,
+            'Content-Type': 'application/json',
+            ...extra
+          };
+        },
+
+        // Standarddaten anlegen
+        initDefaultData() {
+          this.lokaleDaten = {
+            aufgaben: [
+              { id: genId(), text: 'Sie ungestört ausschlafen lassen, Frühstück übernehmen', punkte: 6, status: 'offen' },
+              { id: genId(), text: 'Frühstück ans Bett bringen (Blume, Briefchen)', punkte: 5, status: 'offen' },
+              { id: genId(), text: 'Küche komplett aufräumen + saugen', punkte: 8, status: 'offen' },
+              { id: genId(), text: 'Warmes Bad einlassen (Kerzen, Musik, Getränk)', punkte: 12, status: 'offen' },
+              { id: genId(), text: '30-Minuten-Ganzkörpermassage', punkte: 15, status: 'offen' },
+              { id: genId(), text: 'Liebesbrief oder erotische Notiz schreiben', punkte: 4, status: 'offen' },
+              { id: genId(), text: 'Date-Abend planen (Restaurant reservieren)', punkte: 10, status: 'offen' },
+              { id: genId(), text: 'Ihr Lieblingsessen kochen und servieren', punkte: 10, status: 'offen' },
+              { id: genId(), text: 'Fußmassage nach langem Tag', punkte: 6, status: 'offen' },
+              { id: genId(), text: 'Hausarbeit abnehmen, die sie sonst macht', punkte: 8, status: 'offen' },
+              { id: genId(), text: 'Gemeinsamen Ausflug komplett organisieren', punkte: 25, status: 'offen' },
+              { id: genId(), text: 'Überraschungs-Picknick', punkte: 20, status: 'offen' },
+              { id: genId(), text: 'Ganzen Tag nur für sie da sein (Handy aus)', punkte: 30, status: 'offen' },
+              { id: genId(), text: 'Wohnung saugen und wischen', punkte: 12, status: 'offen' },
+              { id: genId(), text: 'Badezimmer komplett putzen', punkte: 15, status: 'offen' },
+              { id: genId(), text: 'Ihr Dessous kaufen (ihre Größe, Kassenbon aufheben)', punkte: 18, status: 'offen' },
+              { id: genId(), text: 'Erotisches Foto von sich selbst schicken (nur für sie)', punkte: 8, status: 'offen' },
+              { id: genId(), text: 'Sie oral verwöhnen bis zum Höhepunkt', punkte: 20, status: 'offen' },
+              { id: genId(), text: 'Keuschheitsgürtel tragen (1 Tag)', punkte: 25, status: 'offen' },
+              { id: genId(), text: 'Ihr die Füße küssen und massieren', punkte: 10, status: 'offen' }
+            ],
+            einloesungen: [
+              { id: genId(), text: 'Gemeinsam Porno ansehen (sie sucht aus)', kosten: 10, hinweis: '' },
+              { id: genId(), text: 'Sie holt ihm einen runter (Handjob)', kosten: 15, hinweis: '' },
+              { id: genId(), text: 'Blowjob von ihr (bis zum Höhepunkt)', kosten: 25, hinweis: '' },
+              { id: genId(), text: 'Geschlechtsverkehr nach seinen Vorlieben', kosten: 40, hinweis: '' },
+              { id: genId(), text: 'Verwöhnabend für ihn (Bad, Massage, Oral, Sex)', kosten: 80, hinweis: '' },
+              { id: genId(), text: 'Sie erzählt ihm eine frühere Sex-Geschichte (real oder Fantasie)', kosten: 30, hinweis: 'Light' },
+              { id: genId(), text: 'Sie trägt aufreizende Kleidung in der Öffentlichkeit', kosten: 25, hinweis: 'Light' },
+              { id: genId(), text: 'Sie schreibt mit einem anderen Mann (anzüglich)', kosten: 40, hinweis: 'Cuckold-Light' },
+              { id: genId(), text: 'Sie flirtet in seiner Anwesenheit mit einem anderen Mann', kosten: 120, hinweis: 'C' },
+              { id: genId(), text: 'Sie tanzt eng mit einem anderen Mann (kein Küssen)', kosten: 100, hinweis: 'C' },
+              { id: genId(), text: 'Sie küsst einen anderen Mann (vor seinen Augen)', kosten: 180, hinweis: 'C' },
+              { id: genId(), text: 'Sie gibt einem anderen Mann einen Handjob', kosten: 200, hinweis: 'C' },
+              { id: genId(), text: 'Sie gibt einem anderen Mann einen Blowjob', kosten: 250, hinweis: 'C' },
+              { id: genId(), text: 'Er darf zuschauen, wie sie mit einem anderen Mann schläft', kosten: 350, hinweis: 'C' },
+              { id: genId(), text: 'Sie hat Sex mit einem anderen Mann (er wartet im Nebenraum)', kosten: 400, hinweis: 'Hardcore' },
+              { id: genId(), text: 'Sie hat Sex mit einem anderen Mann (er schaut zu)', kosten: 450, hinweis: 'Hardcore' },
+              { id: genId(), text: 'Sie macht ein Sex-Date aus, er darf nur hören (Tür zu)', kosten: 500, hinweis: 'Extrem' },
+              { id: genId(), text: 'Cleanup – er leckt sie nach dem Sex mit einem anderen', kosten: 350, hinweis: 'C' },
+              { id: genId(), text: 'Er bleibt 24h im Keuschheitsgürtel (sie hat den Schlüssel)', kosten: 50, hinweis: 'Femdom' },
+              { id: genId(), text: 'Sie bestimmt 48h komplett über seine Orgasmen', kosten: 100, hinweis: 'Femdom' },
+              { id: genId(), text: 'Er muss ihr zuschauen, während sie sich selbst befriedigt', kosten: 40, hinweis: 'Tease & Denial' }
+            ],
+            konto: 0,
+            log: []
+          };
+        },
+
+        // Laden vom Server
+        async load() {
+          try {
+            document.getElementById('syncStatus').textContent = ' (lade...)';
+            const res = await fetch(`${CONFIG.API_BASE}/latest`, { headers: this.getHeaders() });
+            if (!res.ok) throw new Error(`HTTP ${res.status}`);
+            const json = await res.json();
+            this.aktuelleVersion = json.record.version;
+            const data = json.record;
+            if (!data.aufgaben || !data.einloesungen) {
+              this.initDefaultData();
+              await this.save(true);
+            } else {
+              this.lokaleDaten = data;
+            }
+            document.getElementById('syncStatus').textContent = ' ✅';
+            return true;
+          } catch (e) {
+            console.error('Load error:', e);
+            document.getElementById('syncStatus').textContent = ' ❌';
+            showToast('Fehler beim Laden – verwende lokale Daten.', 'error');
+            // Falls keine Daten vorhanden, initialisieren
+            if (!this.lokaleDaten.aufgaben || !this.lokaleDaten.einloesungen) {
+              this.initDefaultData();
+            }
+            return false;
+          }
+        },
+
+        // Speichern mit Konfliktbehandlung
+        async save(initial = false) {
+          try {
+            // Bei initialem Speichern keine Versionsprüfung
+            if (!initial) {
+              // Aktuelle Version vom Server holen
+              const latestRes = await fetch(`${CONFIG.API_BASE}/latest`, { headers: this.getHeaders() });
+              if (latestRes.ok) {
+                const latest = await latestRes.json();
+                if (latest.record.version !== this.aktuelleVersion) {
+                  // Konflikt – Benutzer entscheiden lassen
+                  const choice = confirm(
+                    'Die Daten auf dem Server wurden von einem anderen Gerät geändert.\n' +
+                    'Möchtest du deine lokalen Änderungen verwerfen und die Server-Daten laden?\n' +
+                    '(OK = Server-Daten laden, Abbrechen = Server überschreiben)'
+                  );
+                  if (choice) {
+                    // Lokale Daten durch Server-Daten ersetzen
+                    this.lokaleDaten = latest.record;
+                    this.aktuelleVersion = latest.record.version;
+                    showToast('Server-Daten wurden geladen.', 'info');
+                    UIRenderer.renderAlles(this.lokaleDaten);
+                    return;
+                  } else {
+                    // Wir überschreiben den Server – aber wir müssen die neueste Version als Basis nehmen
+                    // Dazu setzen wir die Version auf die des Servers, aber behalten lokale Daten
+                    this.aktuelleVersion = latest.record.version;
+                  }
+                }
+              }
+            }
+
+            const putHeaders = this.getHeaders();
+            if (this.aktuelleVersion) putHeaders['X-Bin-Version'] = this.aktuelleVersion;
+            const res = await fetch(CONFIG.API_BASE, {
+              method: 'PUT',
+              headers: putHeaders,
+              body: JSON.stringify(this.lokaleDaten)
+            });
+            if (!res.ok) {
+              const errText = await res.text();
+              throw new Error(`Speichern fehlgeschlagen (${res.status}): ${errText}`);
+            }
+            const result = await res.json();
+            this.aktuelleVersion = result.record.version;
+            document.getElementById('syncStatus').textContent = ' ✅';
+            showToast('Gespeichert.', 'success');
+          } catch (e) {
+            console.error('Save error:', e);
+            document.getElementById('syncStatus').textContent = ' ❌';
+            showToast('Fehler beim Speichern – bitte später erneut versuchen.', 'error');
+            // Bei schwerwiegendem Fehler könnte man hier neu laden, aber wir lassen es
+          }
+        },
+
+        // Hilfsmethoden für Datenänderungen
+        addAufgabe(text, punkte) {
+          const neu = { id: genId(), text, punkte: parseInt(punkte) || 0, status: 'offen' };
+          this.lokaleDaten.aufgaben.push(neu);
+          return neu;
+        },
+        addEinloesung(text, kosten, hinweis) {
+          const neu = { id: genId(), text, kosten: parseInt(kosten) || 0, hinweis: hinweis || '' };
+          this.lokaleDaten.einloesungen.push(neu);
+          return neu;
+        },
+        deleteEintrag(id, typ) {
+          if (typ === 'aufgabe') {
+            this.lokaleDaten.aufgaben = this.lokaleDaten.aufgaben.filter(x => x.id !== id);
+          } else {
+            this.lokaleDaten.einloesungen = this.lokaleDaten.einloesungen.filter(x => x.id !== id);
+          }
+        },
+        findAufgabe(id) { return this.lokaleDaten.aufgaben.find(x => x.id === id); },
+        findEinloesung(id) { return this.lokaleDaten.einloesungen.find(x => x.id === id); },
+        addLog(text) {
+          this.lokaleDaten.log.push({ text, time: now() });
+        },
+        updateKonto(änderung) {
+          this.lokaleDaten.konto = (this.lokaleDaten.konto || 0) + änderung;
+        }
+      };
+
+      // ============================
+      // 4. UI RENDERER
+      // ============================
+      const UIRenderer = {
+        // Haupt-Renderfunktion
+        renderAlles(daten) {
+          this.renderKonto(daten.konto);
+          this.renderAufgaben(daten.aufgaben);
+          this.renderEinloesungen(daten.einloesungen);
+          this.renderLog(daten.log);
+        },
+
+        renderKonto(konto) {
+          document.getElementById('kontoAnzeige').textContent = (konto || 0) + ' Punkte';
+        },
+
+        renderAufgaben(aufgaben) {
+          const tbody = document.getElementById('aufgabenBody');
+          tbody.innerHTML = '';
+          (aufgaben || []).forEach(a => {
+            let zusatzInfo = '';
+            if (a.lastQuality) {
+              zusatzInfo = `<br><small style="color:var(--gold);">⭐ ${a.lastQuality}/10</small>`;
+              if (a.lastComment) zusatzInfo += `<br><small style="color:var(--muted);">💬 ${esc(a.lastComment)}</small>`;
+            }
+            const statusSymbol = a.status === 'erledigt_unbewertet' ? '🟡' : '🔵';
+            tbody.innerHTML += `
+              <tr data-id="${a.id}" data-typ="aufgabe">
+                <td><span class="editable-cell" data-field="text">${esc(a.text)}</span>${zusatzInfo}</td>
+                <td><span class="punkte-badge editable-cell" data-field="punkte">${a.punkte || 0}</span></td>
+                <td>${statusSymbol}</td>
+                <td class="flex">
+                  ${a.status === 'offen' ? `<button class="action-erledigt" data-id="${a.id}">✅</button>` : ''}
+                  ${a.status === 'erledigt_unbewertet' ? `<button class="action-bewerten" data-id="${a.id}">⭐</button>` : ''}
+                  <button class="action-loeschen" data-id="${a.id}" data-typ="aufgabe" style="background:#555;">🗑</button>
+                </td>
+              </tr>`;
+          });
+          // Event-Listener für editierbare Zellen (Klick -> Input)
+          tbody.querySelectorAll('.editable-cell').forEach(cell => {
+            cell.addEventListener('click', this.onEditableClick.bind(this));
+          });
+        },
+
+        renderEinloesungen(einloesungen) {
+          const tbody = document.getElementById('einloesungenBody');
+          tbody.innerHTML = '';
+          (einloesungen || []).forEach(e => {
+            tbody.innerHTML += `
+              <tr data-id="${e.id}" data-typ="einloesung">
+                <td><span class="editable-cell" data-field="text">${esc(e.text)}</span></td>
+                <td><span class="punkte-badge editable-cell" data-field="kosten">${e.kosten || 0}</span></td>
+                <td>${esc(e.hinweis || '')}</td>
+                <td class="flex">
+                  <button class="action-einloesen" data-id="${e.id}" ${(DataManager.lokaleDaten.konto || 0) < (e.kosten || 0) ? 'disabled' : ''}>💰</button>
+                  <button class="action-loeschen" data-id="${e.id}" data-typ="einloesung" style="background:#555;">🗑</button>
+                </td>
+              </tr>`;
+          });
+          tbody.querySelectorAll('.editable-cell').forEach(cell => {
+            cell.addEventListener('click', this.onEditableClick.bind(this));
+          });
+        },
+
+        renderLog(log) {
+          const container = document.getElementById('logContainer');
+          container.innerHTML = '';
+          (log || []).slice().reverse().slice(0, 20).forEach(e => {
+            container.innerHTML += `<div class="log-entry">[${e.time}] ${esc(e.text)}</div>`;
+          });
+          if (container.innerHTML === '') container.textContent = 'Keine Einträge';
+        },
+
+        // Editierbare Zellen: Klick öffnet Input-Feld
+        onEditableClick(e) {
+          const cell = e.currentTarget;
+          if (cell.dataset.editing === 'true') return;
+          const field = cell.dataset.field;
+          const tr = cell.closest('tr');
+          const id = tr.dataset.id;
+          const typ = tr.dataset.typ; // 'aufgabe' oder 'einloesung'
+          const aktuellerWert = cell.textContent.trim();
+          const input = document.createElement('input');
+          input.type = (field === 'punkte' || field === 'kosten') ? 'number' : 'text';
+          input.value = aktuellerWert;
+          input.style.width = '100%';
+          input.style.background = '#333';
+          input.style.color = 'white';
+          input.style.border = '1px solid var(--accent)';
+          input.style.borderRadius = '4px';
+          input.style.padding = '4px';
+          cell.innerHTML = '';
+          cell.appendChild(input);
+          cell.dataset.editing = 'true';
+          input.focus();
+          input.select();
+
+          const speichern = () => {
+            const neuerWert = input.value.trim();
+            const liste = typ === 'aufgabe' ? DataManager.lokaleDaten.aufgaben : DataManager.lokaleDaten.einloesungen;
+            const eintrag = liste.find(x => x.id === id);
+            if (!eintrag) return;
+            if (field === 'punkte' || field === 'kosten') {
+              const num = parseInt(neuerWert) || 0;
+              eintrag[field] = num;
+            } else {
+              eintrag[field] = neuerWert;
+            }
+            DataManager.addLog(`Wert von „${eintrag.text || eintrag.id}“ bearbeitet.`);
+            DataManager.save().then(() => {
+              UIRenderer.renderAlles(DataManager.lokaleDaten);
+            });
+          };
+
+          const abbrechen = () => {
+            cell.innerHTML = aktuellerWert;
+            cell.dataset.editing = 'false';
+            // Re-Bind click event
+            cell.addEventListener('click', UIRenderer.onEditableClick.bind(UIRenderer));
+          };
+
+          input.addEventListener('blur', speichern);
+          input.addEventListener('keydown', (ev) => {
+            if (ev.key === 'Enter') { ev.preventDefault(); input.blur(); }
+            if (ev.key === 'Escape') { ev.preventDefault(); abbrechen(); }
+          });
+          // Damit der Klick nicht erneut feuert
+          e.stopPropagation();
+        }
+      };
+
+      // ============================
+      // 5. APP - INIT & EVENT BINDING
+      // ============================
+      const App = {
+        init() {
+          // PIN-Abfrage (optional)
+          if (CONFIG.PIN) {
+            const eingabe = prompt('Bitte PIN eingeben:', '');
+            if (eingabe !== CONFIG.PIN) {
+              document.body.innerHTML = '<h1 style="color:red;">Zugriff verweigert – falsche PIN.</h1>';
               return;
             }
           }
+
+          // Daten laden
+          DataManager.load().then(() => {
+            UIRenderer.renderAlles(DataManager.lokaleDaten);
+            this.bindEvents();
+            this.bindTabEvents();
+          });
+
+          // Sync-Button
+          document.getElementById('syncBtn').addEventListener('click', () => {
+            DataManager.load().then(() => {
+              UIRenderer.renderAlles(DataManager.lokaleDaten);
+              showToast('Synchronisiert.', 'success');
+            });
+          });
+        },
+
+        bindEvents() {
+          // Tab-Wechsel
+          document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+              const tabName = btn.dataset.tab;
+              document.querySelectorAll('.tab-content').forEach(el => el.style.display = 'none');
+              document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+              document.getElementById(`tab-${tabName}`).style.display = 'block';
+              btn.classList.add('active');
+            });
+          });
+
+          // Neu speichern
+          document.getElementById('speichernNeu').addEventListener('click', () => {
+            const typ = document.getElementById('neuerTyp').value;
+            const text = document.getElementById('neuerText').value.trim();
+            const punkte = parseInt(document.getElementById('neuerPunkte').value) || 0;
+            const hinweis = document.getElementById('neuerHinweis').value.trim();
+            if (!text) { showToast('Bitte Beschreibung eingeben.', 'error'); return; }
+            if (typ === 'aufgabe') {
+              DataManager.addAufgabe(text, punkte);
+            } else {
+              DataManager.addEinloesung(text, punkte, hinweis);
+            }
+            DataManager.addLog(`Neuer Eintrag: ${text}`);
+            document.getElementById('neuerText').value = '';
+            document.getElementById('neuerHinweis').value = '';
+            DataManager.save().then(() => {
+              UIRenderer.renderAlles(DataManager.lokaleDaten);
+              showToast('Eintrag hinzugefügt.', 'success');
+            });
+          });
+
+          // Event-Delegation für Tabellen-Aktionen
+          document.querySelector('#tab-aufgaben tbody').addEventListener('click', (e) => {
+            const btn = e.target.closest('button');
+            if (!btn) return;
+            const id = btn.dataset.id;
+            if (!id) return;
+
+            if (btn.classList.contains('action-erledigt')) {
+              const a = DataManager.findAufgabe(id);
+              if (a) {
+                a.status = 'erledigt_unbewertet';
+                DataManager.addLog(`Ehemann meldet „${a.text}“ erledigt.`);
+                DataManager.save().then(() => UIRenderer.renderAlles(DataManager.lokaleDaten));
+              }
+            } else if (btn.classList.contains('action-bewerten')) {
+              this.openBewertungsModal(id);
+            } else if (btn.classList.contains('action-loeschen')) {
+              const typ = btn.dataset.typ;
+              if (confirm('Wirklich löschen?')) {
+                DataManager.deleteEintrag(id, typ);
+                DataManager.addLog('Eintrag gelöscht.');
+                DataManager.save().then(() => UIRenderer.renderAlles(DataManager.lokaleDaten));
+              }
+            }
+          });
+
+          document.querySelector('#tab-einloesungen tbody').addEventListener('click', (e) => {
+            const btn = e.target.closest('button');
+            if (!btn) return;
+            const id = btn.dataset.id;
+            if (!id) return;
+
+            if (btn.classList.contains('action-einloesen')) {
+              const eintrag = DataManager.findEinloesung(id);
+              if (!eintrag || (DataManager.lokaleDaten.konto || 0) < (eintrag.kosten || 0)) {
+                showToast('Nicht genügend Punkte.', 'error');
+                return;
+              }
+              if (confirm(`„${eintrag.text}“ für ${eintrag.kosten} Punkte einlösen?`)) {
+                DataManager.updateKonto(-eintrag.kosten);
+                DataManager.addLog(`Ehemann löst ein: „${eintrag.text}“ (${eintrag.kosten} P.).`);
+                DataManager.save().then(() => UIRenderer.renderAlles(DataManager.lokaleDaten));
+              }
+            } else if (btn.classList.contains('action-loeschen')) {
+              const typ = btn.dataset.typ;
+              if (confirm('Wirklich löschen?')) {
+                DataManager.deleteEintrag(id, typ);
+                DataManager.addLog('Eintrag gelöscht.');
+                DataManager.save().then(() => UIRenderer.renderAlles(DataManager.lokaleDaten));
+              }
+            }
+          });
+
+          // Modal
+          document.getElementById('modalSpeichern').addEventListener('click', () => this.bewertungSpeichern());
+          document.getElementById('modalAbbrechen').addEventListener('click', () => this.modalSchliessen());
+          // Klick außerhalb schließt Modal
+          document.getElementById('bewertungsModal').addEventListener('click', (e) => {
+            if (e.target === e.currentTarget) this.modalSchliessen();
+          });
+        },
+
+        bindTabEvents() {
+          // Tab-Wechsel (bereits oben)
+        },
+
+        // Bewertungs-Modal
+        _bewertungsAufgabeId: null,
+
+        openBewertungsModal(id) {
+          const a = DataManager.findAufgabe(id);
+          if (!a) return;
+          this._bewertungsAufgabeId = id;
+          document.getElementById('modalAufgabenText').textContent = a.text;
+          document.getElementById('modalPunkte').value = a.punkte || 10;
+          document.getElementById('modalQualitaet').value = a.lastQuality || 8;
+          document.getElementById('modalKommentar').value = '';
+          document.getElementById('bewertungsModal').classList.add('active');
+        },
+
+        modalSchliessen() {
+          document.getElementById('bewertungsModal').classList.remove('active');
+          this._bewertungsAufgabeId = null;
+        },
+
+        bewertungSpeichern() {
+          if (!this._bewertungsAufgabeId) return;
+          const a = DataManager.findAufgabe(this._bewertungsAufgabeId);
+          if (!a) return;
+          const punkte = parseInt(document.getElementById('modalPunkte').value) || 0;
+          const qualitaet = parseInt(document.getElementById('modalQualitaet').value) || 8;
+          const kommentar = document.getElementById('modalKommentar').value.trim();
+          if (punkte <= 0) { showToast('Bitte positive Punkte vergeben.', 'error'); return; }
+          if (qualitaet < 1 || qualitaet > 10) { showToast('Qualität muss zwischen 1 und 10 liegen.', 'error'); return; }
+
+          DataManager.updateKonto(punkte);
+          a.lastQuality = qualitaet;
+          a.lastComment = kommentar;
+          a.status = 'offen';
+          DataManager.addLog(`Frau vergibt ${punkte} P. für „${a.text}“ (Qualität: ${qualitaet}/10)${kommentar ? ' – ' + kommentar : ''}`);
+          this.modalSchliessen();
+          DataManager.save().then(() => UIRenderer.renderAlles(DataManager.lokaleDaten));
         }
-        const putHeaders = { ...HEADERS };
-        if (aktuelleVersion) putHeaders["X-Bin-Version"] = aktuelleVersion;
-        const res = await fetch(API_BASE, {
-          method: 'PUT',
-          headers: putHeaders,
-          body: JSON.stringify(lokaleDaten)
-        });
-        if (!res.ok) throw new Error("Speichern fehlgeschlagen");
-        const result = await res.json();
-        aktuelleVersion = result.record.version;
-        document.getElementById('syncStatus').textContent = ' ✅';
-      } catch (e) {
-        console.error(e);
-        document.getElementById('syncStatus').textContent = ' ❌';
-        alert('Fehler beim Speichern. Neu laden...');
-        location.reload();
-      }
-    }
-
-    async function manuellSynchronisieren() {
-      await datenLaden();
-    }
-
-    function initialisiereStandardDaten() {
-      lokaleDaten = {
-        aufgaben: [
-          { id: genId(), text: 'Sie ungestört ausschlafen lassen, Frühstück übernehmen', punkte: 6, status: 'offen' },
-          { id: genId(), text: 'Frühstück ans Bett bringen (Blume, Briefchen)', punkte: 5, status: 'offen' },
-          { id: genId(), text: 'Küche komplett aufräumen + saugen', punkte: 8, status: 'offen' },
-          { id: genId(), text: 'Warmes Bad einlassen (Kerzen, Musik, Getränk)', punkte: 12, status: 'offen' },
-          { id: genId(), text: '30-Minuten-Ganzkörpermassage', punkte: 15, status: 'offen' },
-          { id: genId(), text: 'Liebesbrief oder erotische Notiz schreiben', punkte: 4, status: 'offen' },
-          { id: genId(), text: 'Date-Abend planen (Restaurant reservieren)', punkte: 10, status: 'offen' },
-          { id: genId(), text: 'Ihr Lieblingsessen kochen und servieren', punkte: 10, status: 'offen' },
-          { id: genId(), text: 'Fußmassage nach langem Tag', punkte: 6, status: 'offen' },
-          { id: genId(), text: 'Hausarbeit abnehmen, die sie sonst macht', punkte: 8, status: 'offen' },
-          { id: genId(), text: 'Gemeinsamen Ausflug komplett organisieren', punkte: 25, status: 'offen' },
-          { id: genId(), text: 'Überraschungs-Picknick', punkte: 20, status: 'offen' },
-          { id: genId(), text: 'Ganzen Tag nur für sie da sein (Handy aus)', punkte: 30, status: 'offen' },
-          { id: genId(), text: 'Wohnung saugen und wischen', punkte: 12, status: 'offen' },
-          { id: genId(), text: 'Badezimmer komplett putzen', punkte: 15, status: 'offen' },
-          { id: genId(), text: 'Ihr Dessous kaufen (ihre Größe, Kassenbon aufheben)', punkte: 18, status: 'offen' },
-          { id: genId(), text: 'Erotisches Foto von sich selbst schicken (nur für sie)', punkte: 8, status: 'offen' },
-          { id: genId(), text: 'Sie oral verwöhnen bis zum Höhepunkt', punkte: 20, status: 'offen' },
-          { id: genId(), text: 'Keuschheitsgürtel tragen (1 Tag)', punkte: 25, status: 'offen' },
-          { id: genId(), text: 'Ihr die Füße küssen und massieren', punkte: 10, status: 'offen' }
-        ],
-        einloesungen: [
-          { id: genId(), text: 'Gemeinsam Porno ansehen (sie sucht aus)', kosten: 10, hinweis: '' },
-          { id: genId(), text: 'Sie holt ihm einen runter (Handjob)', kosten: 15, hinweis: '' },
-          { id: genId(), text: 'Blowjob von ihr (bis zum Höhepunkt)', kosten: 25, hinweis: '' },
-          { id: genId(), text: 'Geschlechtsverkehr nach seinen Vorlieben', kosten: 40, hinweis: '' },
-          { id: genId(), text: 'Verwöhnabend für ihn (Bad, Massage, Oral, Sex)', kosten: 80, hinweis: '' },
-          { id: genId(), text: 'Sie erzählt ihm eine frühere Sex-Geschichte (real oder Fantasie)', kosten: 30, hinweis: 'Light' },
-          { id: genId(), text: 'Sie trägt aufreizende Kleidung in der Öffentlichkeit', kosten: 25, hinweis: 'Light' },
-          { id: genId(), text: 'Sie schreibt mit einem anderen Mann (anzüglich)', kosten: 40, hinweis: 'Cuckold-Light' },
-          { id: genId(), text: 'Sie flirtet in seiner Anwesenheit mit einem anderen Mann', kosten: 120, hinweis: 'C' },
-          { id: genId(), text: 'Sie tanzt eng mit einem anderen Mann (kein Küssen)', kosten: 100, hinweis: 'C' },
-          { id: genId(), text: 'Sie küsst einen anderen Mann (vor seinen Augen)', kosten: 180, hinweis: 'C' },
-          { id: genId(), text: 'Sie gibt einem anderen Mann einen Handjob', kosten: 200, hinweis: 'C' },
-          { id: genId(), text: 'Sie gibt einem anderen Mann einen Blowjob', kosten: 250, hinweis: 'C' },
-          { id: genId(), text: 'Er darf zuschauen, wie sie mit einem anderen Mann schläft', kosten: 350, hinweis: 'C' },
-          { id: genId(), text: 'Sie hat Sex mit einem anderen Mann (er wartet im Nebenraum)', kosten: 400, hinweis: 'Hardcore' },
-          { id: genId(), text: 'Sie hat Sex mit einem anderen Mann (er schaut zu)', kosten: 450, hinweis: 'Hardcore' },
-          { id: genId(), text: 'Sie macht ein Sex-Date aus, er darf nur hören (Tür zu)', kosten: 500, hinweis: 'Extrem' },
-          { id: genId(), text: 'Cleanup – er leckt sie nach dem Sex mit einem anderen', kosten: 350, hinweis: 'C' },
-          { id: genId(), text: 'Er bleibt 24h im Keuschheitsgürtel (sie hat den Schlüssel)', kosten: 50, hinweis: 'Femdom' },
-          { id: genId(), text: 'Sie bestimmt 48h komplett über seine Orgasmen', kosten: 100, hinweis: 'Femdom' },
-          { id: genId(), text: 'Er muss ihr zuschauen, während sie sich selbst befriedigt', kosten: 40, hinweis: 'Tease & Denial' }
-        ],
-        konto: 0,
-        log: []
       };
-    }
 
-    function genId() { return Date.now().toString(36) + Math.random().toString(36).substr(2); }
+      // ============================
+      // 6. START
+      // ============================
+      // Sicherheitshinweis in der Konsole
+      console.warn(
+        '⚠️ Sicherheitshinweis: Der Master-Key für JSONBin ist im Client-Code sichtbar.\n' +
+        'Dies ist nur für lokale Tests geeignet. In Produktion sollte ein Proxy-Server verwendet werden.'
+      );
 
-    // ==================== RENDERING ====================
-    function renderAlles() {
-      document.getElementById('kontoAnzeige').textContent = (lokaleDaten.konto || 0) + ' Punkte';
-      renderAufgaben();
-      renderEinloesungen();
-      renderLog();
-    }
-
-    function renderAufgaben() {
-      const tbody = document.getElementById('aufgabenBody');
-      tbody.innerHTML = '';
-      (lokaleDaten.aufgaben || []).forEach(a => {
-        let zusatzInfo = '';
-        if (a.lastQuality) {
-          zusatzInfo = `<br><small style="color:var(--gold);">⭐ ${a.lastQuality}/10</small>`;
-          if (a.lastComment) zusatzInfo += `<br><small style="color:var(--muted);">💬 ${esc(a.lastComment)}</small>`;
-        }
-        tbody.innerHTML += `
-          <tr>
-            <td><span class="editable-cell" data-id="${a.id}" data-field="text" data-typ="aufgabe">${esc(a.text)}</span>${zusatzInfo}</td>
-            <td><span class="punkte-badge editable-cell" data-id="${a.id}" data-field="punkte" data-typ="aufgabe">${a.punkte||0}</span></td>
-            <td>${a.status === 'erledigt_unbewertet' ? '🟡' : '🔵'}</td>
-            <td class="flex">
-              ${a.status === 'offen' ? `<button onclick="erledigt('${a.id}')">✅</button>` : ''}
-              ${a.status === 'erledigt_unbewertet' ? `<button onclick="bewertungsModalOeffnen('${a.id}')">⭐</button>` : ''}
-              <button style="background:#555;" onclick="loeschen('${a.id}','aufgabe')">🗑</button>
-            </td>
-          </tr>`;
-      });
-      editableAktivieren();
-    }
-
-    function renderEinloesungen() {
-      const tbody = document.getElementById('einloesungenBody');
-      tbody.innerHTML = '';
-      (lokaleDaten.einloesungen || []).forEach(e => {
-        tbody.innerHTML += `
-          <tr>
-            <td><span class="editable-cell" data-id="${e.id}" data-field="text" data-typ="einloesung">${esc(e.text)}</span></td>
-            <td><span class="punkte-badge editable-cell" data-id="${e.id}" data-field="kosten" data-typ="einloesung">${e.kosten||0}</span></td>
-            <td>${esc(e.hinweis||'')}</td>
-            <td class="flex">
-              <button onclick="einloesen('${e.id}')" ${(lokaleDaten.konto||0) < (e.kosten||0) ? 'disabled' : ''}>💰</button>
-              <button style="background:#555;" onclick="loeschen('${e.id}','einloesung')">🗑</button>
-            </td>
-          </tr>`;
-      });
-      editableAktivieren();
-    }
-
-    function renderLog() {
-      const container = document.getElementById('logContainer');
-      container.innerHTML = '';
-      (lokaleDaten.log || []).slice().reverse().slice(0,20).forEach(e => {
-        container.innerHTML += `<div class="log-entry">[${e.time}] ${e.text}</div>`;
-      });
-      if (container.innerHTML === '') container.textContent = 'Keine Einträge';
-    }
-
-    function esc(text) { return String(text).replace(/[&<>"]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'})[m]); }
-
-    function editableAktivieren() {
-      document.querySelectorAll('.editable-cell').forEach(cell => {
-        cell.contentEditable = 'true';
-        cell.onblur = speichereEdit;
-        cell.onkeydown = (e) => { if (e.key === 'Enter') { e.preventDefault(); cell.blur(); } };
-      });
-    }
-
-    // ==================== AKTIONEN ====================
-    function erledigt(id) {
-      const a = lokaleDaten.aufgaben.find(x => x.id === id);
-      if (!a) return;
-      a.status = 'erledigt_unbewertet';
-      log(`Ehemann meldet „${a.text}“ erledigt.`);
-      datenSpeichern().then(renderAlles);
-    }
-
-    function bewertungsModalOeffnen(id) {
-      const a = lokaleDaten.aufgaben.find(x => x.id === id);
-      if (!a) return;
-      bewertungsAufgabeId = id;
-      document.getElementById('modalAufgabenText').textContent = a.text;
-      document.getElementById('modalPunkte').value = a.punkte || 10;
-      document.getElementById('modalQualitaet').value = a.lastQuality || 8;
-      document.getElementById('modalKommentar').value = '';
-      document.getElementById('bewertungsModal').classList.add('active');
-    }
-
-    function modalSchliessen() {
-      document.getElementById('bewertungsModal').classList.remove('active');
-      bewertungsAufgabeId = null;
-    }
-
-    function bewertungSpeichern() {
-      if (!bewertungsAufgabeId) return;
-      const a = lokaleDaten.aufgaben.find(x => x.id === bewertungsAufgabeId);
-      if (!a) return;
-      const punkte = parseInt(document.getElementById('modalPunkte').value) || 0;
-      const qualitaet = parseInt(document.getElementById('modalQualitaet').value) || 8;
-      const kommentar = document.getElementById('modalKommentar').value.trim();
-      if (punkte <= 0) { alert('Bitte positive Punkte vergeben.'); return; }
-      if (qualitaet < 1 || qualitaet > 10) { alert('Qualität muss zwischen 1 und 10 liegen.'); return; }
-
-      lokaleDaten.konto = (lokaleDaten.konto || 0) + punkte;
-      a.lastQuality = qualitaet;
-      a.lastComment = kommentar;
-      a.status = 'offen';  // Wiederholbar
-
-      log(`Frau vergibt ${punkte} P. für „${a.text}“ (Qualität: ${qualitaet}/10)${kommentar ? ' – ' + kommentar : ''}`);
-      modalSchliessen();
-      datenSpeichern().then(renderAlles);
-    }
-
-    function einloesen(id) {
-      const e = lokaleDaten.einloesungen.find(x => x.id === id);
-      if (!e || (lokaleDaten.konto||0) < (e.kosten||0)) return;
-      if (!confirm(`„${e.text}“ für ${e.kosten} Punkte einlösen?`)) return;
-      lokaleDaten.konto -= e.kosten;
-      log(`Ehemann löst ein: „${e.text}“ (${e.kosten} P.).`);
-      datenSpeichern().then(renderAlles);
-    }
-
-    function speichereEdit(e) {
-      const cell = e.target;
-      const id = cell.dataset.id;
-      const field = cell.dataset.field;
-      const typ = cell.dataset.typ;
-      const wert = cell.textContent.trim();
-      if (!id || !field) return;
-      const liste = typ === 'aufgabe' ? lokaleDaten.aufgaben : lokaleDaten.einloesungen;
-      const eintrag = liste.find(x => x.id === id);
-      if (!eintrag) return;
-      if (field === 'punkte' || field === 'kosten') {
-        eintrag[field] = parseInt(wert) || 0;
-      } else {
-        eintrag[field] = wert;
-      }
-      log(`Wert von „${eintrag.text||eintrag.id}“ bearbeitet.`);
-      datenSpeichern().then(renderAlles);
-    }
-
-    function loeschen(id, typ) {
-      if (!confirm('Wirklich löschen?')) return;
-      if (typ === 'aufgabe') lokaleDaten.aufgaben = lokaleDaten.aufgaben.filter(x => x.id !== id);
-      else lokaleDaten.einloesungen = lokaleDaten.einloesungen.filter(x => x.id !== id);
-      log(`Eintrag gelöscht.`);
-      datenSpeichern().then(renderAlles);
-    }
-
-    function neuenEintragHinzufuegen() {
-      const typ = document.getElementById('neuerTyp').value;
-      const text = document.getElementById('neuerText').value.trim();
-      const punkte = parseInt(document.getElementById('neuerPunkte').value) || 0;
-      const hinweis = document.getElementById('neuerHinweis').value.trim();
-      if (!text) { alert('Text fehlt'); return; }
-      if (typ === 'aufgabe') {
-        lokaleDaten.aufgaben.push({ id: genId(), text, punkte, status: 'offen' });
-      } else {
-        lokaleDaten.einloesungen.push({ id: genId(), text, kosten: punkte, hinweis });
-      }
-      document.getElementById('neuerText').value = '';
-      document.getElementById('neuerHinweis').value = '';
-      log(`Neuer Eintrag: ${text}`);
-      datenSpeichern().then(renderAlles);
-    }
-
-    function log(text) {
-      if (!lokaleDaten.log) lokaleDaten.log = [];
-      lokaleDaten.log.push({ text, time: new Date().toLocaleString('de-DE') });
-    }
-
-    function switchTab(name) {
-      document.querySelectorAll('.tab-content').forEach(el => el.style.display = 'none');
-      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-      document.getElementById('tab-' + name).style.display = 'block';
-      event.target.classList.add('active');
-    }
-
-    datenLaden();
+      // App initialisieren
+      document.addEventListener('DOMContentLoaded', () => App.init());
+    })();
   </script>
 </body>
 </html>
