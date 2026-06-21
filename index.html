@@ -5,377 +5,980 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
   <title>Punkte-System – Liebe ist gut, Einsatz ist besser.</title>
   <style>
-    /* ===== Grundlagen ===== */
+    /* ============================
+       GLOBALE VARIABLEN & RESET
+       ============================ */
     :root {
-      --bg: #0d0d0d;
-      --card-bg: #1a0a0a;
+      --bg: #0b0a0a;
+      --card-bg: #151010;
+      --card-border: #2d1414;
       --accent: #ff2d55;
-      --accent2: #4a0000;
-      --text: #eee;
-      --muted: #ccc;
-      --gold: #f0c27b;
+      --accent-glow: rgba(255, 45, 85, 0.3);
+      --accent2: #6b1a2a;
+      --text: #f0ecec;
+      --text-muted: #b0a8a8;
+      --gold: #f5d78a;
+      --gold-glow: rgba(245, 215, 138, 0.2);
       --green: #2ecc71;
-      --radius: 16px;
-      --shadow: 0 8px 20px rgba(0,0,0,0.6);
+      --radius: 18px;
+      --shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+      --transition: 0.25s ease;
+      --font: 'Segoe UI', system-ui, -apple-system, 'Helvetica Neue', sans-serif;
     }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
     body {
-      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      font-family: var(--font);
       background: var(--bg);
       color: var(--text);
-      padding: 10px;
-      max-width: 1000px;
-      margin: auto;
+      padding: 12px;
+      max-width: 1100px;
+      margin: 0 auto;
       -webkit-tap-highlight-color: transparent;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
     }
-    h1, h2, h3 { color: var(--accent); margin: 0.5em 0 0.3em; }
-    h1 { font-size: 1.8rem; }
-    h2 { font-size: 1.3rem; }
 
-    /* ===== Header ===== */
+    /* ============================
+       HEADER
+       ============================ */
     header {
       display: flex;
       flex-wrap: wrap;
       justify-content: space-between;
       align-items: center;
-      background: var(--card-bg);
-      padding: 16px;
+      background: linear-gradient(145deg, #1c0c0c, #120808);
+      padding: 18px 20px;
       border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      margin-bottom: 16px;
-      border: 1px solid var(--accent2);
-      gap: 10px;
+      box-shadow: var(--shadow), inset 0 0 60px rgba(255, 45, 85, 0.05);
+      border: 1px solid var(--card-border);
+      margin-bottom: 18px;
+      gap: 12px;
+      position: relative;
+      overflow: hidden;
     }
-    .konto {
-      font-size: 2rem;
-      font-weight: bold;
-      color: var(--gold);
-      text-align: right;
+    header::after {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -10%;
+      width: 200px;
+      height: 200px;
+      background: radial-gradient(circle, rgba(255, 45, 85, 0.08) 0%, transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
     }
 
-    /* ===== Buttons ===== */
-    button {
-      background: var(--accent);
-      color: white;
-      border: none;
-      padding: 12px 20px;
+    .header-left {
+      flex: 1 1 200px;
+      z-index: 1;
+    }
+    .header-left h1 {
+      font-size: 1.7rem;
+      font-weight: 700;
+      color: var(--accent);
+      letter-spacing: -0.5px;
+      line-height: 1.2;
+      margin: 0;
+    }
+    .header-left h1 span {
+      font-size: 0.6em;
+      font-weight: 400;
+      color: var(--text-muted);
+      display: inline-block;
+      margin-left: 4px;
+    }
+    .header-left p {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin: 4px 0 8px;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      z-index: 1;
+    }
+    .header-actions button {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid #3a2a2a;
+      color: var(--text);
+      padding: 6px 14px;
       border-radius: 30px;
-      font-size: 1rem;
+      font-size: 0.8rem;
       cursor: pointer;
-      transition: 0.2s;
-      font-weight: 600;
-      box-shadow: 0 4px 10px rgba(255,45,85,0.4);
-      touch-action: manipulation;
-      white-space: nowrap;
-      min-height: 44px;
-      min-width: 44px;
+      transition: var(--transition);
+      backdrop-filter: blur(4px);
+      min-height: 38px;
     }
-    button:hover { background: #d41c40; }
-    button:active { transform: scale(0.96); }
-    button:disabled { background: #555; cursor: not-allowed; box-shadow: none; }
-    button:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+    .header-actions button:hover {
+      background: rgba(255, 45, 85, 0.15);
+      border-color: var(--accent);
+    }
+    .header-actions button:active {
+      transform: scale(0.95);
+    }
+    .header-actions .sync-status {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      margin-left: 2px;
+    }
 
-    /* ===== Karten ===== */
+    /* Konto-Anzeige */
+    .konto-wrap {
+      background: linear-gradient(135deg, #1f0f0f, #2a1212);
+      padding: 8px 18px 8px 22px;
+      border-radius: 60px;
+      border: 1px solid rgba(255, 215, 0, 0.2);
+      box-shadow: 0 0 30px rgba(245, 215, 138, 0.05);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      z-index: 1;
+      flex-shrink: 0;
+    }
+    .konto-wrap .label {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--text-muted);
+      opacity: 0.7;
+    }
+    .konto-wrap .konto {
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--gold);
+      text-shadow: 0 0 20px var(--gold-glow);
+      line-height: 1;
+    }
+
+    /* ============================
+       TABS
+       ============================ */
+    .tab-bar {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 16px;
+      overflow-x: auto;
+      padding: 2px 0 6px;
+      scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+    }
+    .tab-bar::-webkit-scrollbar {
+      display: none;
+    }
+
+    .tab-btn {
+      flex: 0 0 auto;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid #2a1a1a;
+      color: var(--text-muted);
+      padding: 10px 16px;
+      border-radius: 40px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+      min-height: 44px;
+      white-space: nowrap;
+      backdrop-filter: blur(4px);
+    }
+    .tab-btn:hover {
+      background: rgba(255, 45, 85, 0.08);
+      color: #fff;
+    }
+    .tab-btn.active {
+      background: var(--accent);
+      color: #fff;
+      border-color: var(--accent);
+      box-shadow: 0 4px 20px rgba(255, 45, 85, 0.3);
+    }
+    .tab-btn:active {
+      transform: scale(0.95);
+    }
+    .tab-btn:focus-visible {
+      outline: 2px solid var(--gold);
+      outline-offset: 2px;
+    }
+
+    /* ============================
+       KARTEN (Cards)
+       ============================ */
     .card {
       background: var(--card-bg);
       border-radius: var(--radius);
-      padding: 16px;
+      padding: 18px 16px;
       margin-bottom: 16px;
       box-shadow: var(--shadow);
-      border: 1px solid #2a0000;
+      border: 1px solid var(--card-border);
+      transition: var(--transition);
+    }
+    .card:hover {
+      border-color: #3d1e1e;
     }
 
-    /* ===== Tabellen ===== */
+    .card h2 {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--accent);
+      margin: 0 0 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .card h2 .tag {
+      background: var(--accent);
+      color: #fff;
+      font-size: 0.55rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      padding: 2px 12px;
+      border-radius: 40px;
+      letter-spacing: 0.5px;
+    }
+    .card .sub {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+    }
+
+    /* ============================
+       TABELLEN
+       ============================ */
+    .table-wrap {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      margin: 0 -4px;
+      padding: 0 4px;
+      border-radius: var(--radius);
+    }
+
     table {
       width: 100%;
       border-collapse: collapse;
-      margin-top: 8px;
-      font-size: 0.9rem;
+      font-size: 0.85rem;
+      min-width: 480px;
     }
+
     th {
-      background: var(--accent2);
-      padding: 12px 6px;
+      background: rgba(255, 45, 85, 0.08);
+      padding: 12px 8px;
       text-align: left;
-      color: white;
       font-weight: 600;
-      font-size: 0.85rem;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-muted);
+      border-bottom: 1px solid #2a1a1a;
     }
+
     td {
-      padding: 10px 6px;
-      border-bottom: 1px solid rgba(255,255,255,0.05);
+      padding: 12px 8px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.03);
       vertical-align: middle;
+      line-height: 1.4;
+    }
+    tr:last-child td {
+      border-bottom: none;
+    }
+    tr:hover td {
+      background: rgba(255, 45, 85, 0.03);
+    }
+
+    /* ============================
+       BADGES / PUNKTE
+       ============================ */
+    .punkte-badge {
+      background: linear-gradient(135deg, #f5d78a, #e8c06a);
+      color: #1a0a0a;
+      padding: 2px 12px;
+      border-radius: 40px;
+      font-weight: 800;
       font-size: 0.85rem;
-    }
-    tr:hover { background: rgba(255,45,85,0.05); }
-
-    /* ===== Formulare ===== */
-    input, textarea, select {
-      background: #1a1a1a;
-      border: 1px solid #444;
-      color: white;
-      border-radius: 8px;
-      padding: 10px 12px;
-      font-size: 1rem;
-      width: 100%;
-      box-sizing: border-box;
-      -webkit-appearance: none;
-    }
-    input:focus-visible, textarea:focus-visible, select:focus-visible {
-      outline: 2px solid var(--accent);
+      display: inline-block;
+      min-width: 36px;
+      text-align: center;
+      box-shadow: 0 2px 8px rgba(245, 215, 138, 0.2);
     }
 
-    /* ===== Editierbare Zellen (Input-Ersatz) ===== */
+    .status-indicator {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 0.7rem;
+      font-weight: 600;
+    }
+    .status-indicator .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+    .status-indicator .dot.open {
+      background: #3a8aff;
+      box-shadow: 0 0 8px rgba(58, 138, 255, 0.4);
+    }
+    .status-indicator .dot.pending {
+      background: #f1c40f;
+      box-shadow: 0 0 8px rgba(241, 196, 15, 0.4);
+    }
+
+    /* ============================
+       BUTTONS IN TABELLEN
+       ============================ */
+    .action-group {
+      display: flex;
+      gap: 4px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .action-group button {
+      background: rgba(255, 255, 255, 0.05);
+      border: none;
+      color: var(--text);
+      padding: 6px 10px;
+      border-radius: 30px;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: var(--transition);
+      min-height: 38px;
+      min-width: 38px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid transparent;
+    }
+    .action-group button:hover {
+      background: rgba(255, 45, 85, 0.12);
+      border-color: rgba(255, 45, 85, 0.2);
+    }
+    .action-group button:active {
+      transform: scale(0.92);
+    }
+    .action-group button:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+      transform: none;
+    }
+    .action-group button.danger {
+      background: rgba(255, 0, 0, 0.08);
+    }
+    .action-group button.danger:hover {
+      background: rgba(255, 0, 0, 0.2);
+      border-color: rgba(255, 0, 0, 0.3);
+    }
+
+    /* ============================
+       EDITIERBARE ZELLEN
+       ============================ */
     .editable-cell {
       cursor: pointer;
       display: inline-block;
-      padding: 4px 6px;
+      padding: 2px 6px;
       border-radius: 4px;
-      min-width: 40px;
       border: 1px solid transparent;
-      transition: border 0.2s;
+      transition: var(--transition);
+      position: relative;
     }
-    .editable-cell:hover { border-color: var(--accent); background: rgba(255,45,85,0.1); }
-    .editable-cell .edit-icon {
-      font-size: 0.7rem;
+    .editable-cell:hover {
+      border-color: var(--accent);
+      background: rgba(255, 45, 85, 0.06);
+    }
+    .editable-cell .edit-hint {
+      font-size: 0.6rem;
+      opacity: 0.3;
       margin-left: 4px;
-      opacity: 0.5;
+      transition: var(--transition);
+    }
+    .editable-cell:hover .edit-hint {
+      opacity: 0.8;
     }
 
-    /* ===== Badges ===== */
-    .punkte-badge {
-      background: var(--gold);
-      color: #0d0d0d;
-      padding: 4px 10px;
-      border-radius: 20px;
-      font-weight: bold;
-      display: inline-block;
-      font-size: 0.9rem;
+    /* ============================
+       FORMULAR (Neu)
+       ============================ */
+    .form-group {
+      margin-bottom: 14px;
     }
-    .cuckold-tag {
+    .form-group label {
+      display: block;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+      letter-spacing: 0.3px;
+    }
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      padding: 12px 14px;
+      background: #1a1111;
+      border: 1px solid #2d1a1a;
+      border-radius: 12px;
+      color: #fff;
+      font-size: 1rem;
+      transition: var(--transition);
+      font-family: inherit;
+    }
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(255, 45, 85, 0.15);
+    }
+    .form-group textarea {
+      resize: vertical;
+      min-height: 60px;
+    }
+
+    .btn-primary {
       background: var(--accent);
-      color: white;
-      padding: 2px 8px;
-      border-radius: 10px;
-      font-size: 0.65rem;
-      font-weight: bold;
-      margin-left: 6px;
-      vertical-align: middle;
+      color: #fff;
+      border: none;
+      padding: 14px 28px;
+      border-radius: 40px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: var(--transition);
+      min-height: 48px;
+      width: 100%;
+      box-shadow: 0 4px 20px rgba(255, 45, 85, 0.25);
+    }
+    .btn-primary:hover {
+      background: #d41c40;
+      transform: translateY(-1px);
+      box-shadow: 0 6px 30px rgba(255, 45, 85, 0.35);
+    }
+    .btn-primary:active {
+      transform: scale(0.97);
     }
 
-    /* ===== Flex ===== */
-    .flex { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
-
-    /* ===== Log ===== */
+    /* ============================
+       LOG
+       ============================ */
     .log-entry {
-      font-family: monospace;
-      background: #2a000015;
-      padding: 8px;
-      border-radius: 6px;
+      background: rgba(255, 255, 255, 0.02);
+      padding: 10px 14px;
+      border-radius: 10px;
       margin: 4px 0;
       font-size: 0.8rem;
+      border-left: 2px solid var(--accent);
+      display: flex;
+      gap: 12px;
+      align-items: baseline;
+      font-family: 'SF Mono', 'Menlo', monospace;
+    }
+    .log-entry .time {
+      color: var(--text-muted);
+      font-size: 0.65rem;
+      flex-shrink: 0;
+      opacity: 0.6;
+    }
+    .log-entry .msg {
+      word-break: break-word;
     }
 
-    /* ===== Tabs ===== */
-    .tab-btn {
-      background: var(--accent2);
-      color: white;
-      box-shadow: none;
-      font-size: 0.9rem;
-      padding: 10px 14px;
-      min-height: 44px;
+    /* ============================
+       REGELN
+       ============================ */
+    .rule-box {
+      background: rgba(255, 45, 85, 0.06);
+      border-left: 4px solid var(--accent);
+      padding: 14px 16px;
+      border-radius: 0 12px 12px 0;
+      margin: 12px 0;
     }
-    .tab-btn.active { background: var(--accent); }
-    .tab-btn:focus-visible { outline: 2px solid var(--gold); }
+    .rule-box strong {
+      color: var(--accent);
+    }
+    .rule-list {
+      padding-left: 20px;
+      list-style: none;
+    }
+    .rule-list li {
+      padding: 4px 0;
+      position: relative;
+      padding-left: 24px;
+    }
+    .rule-list li::before {
+      content: '›';
+      position: absolute;
+      left: 0;
+      color: var(--accent);
+      font-weight: 700;
+      font-size: 1.2rem;
+    }
 
-    /* ===== Modal ===== */
+    /* ============================
+       MODAL
+       ============================ */
     .modal {
       display: none;
       position: fixed;
-      z-index: 1000;
-      left: 0;
-      top: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0,0,0,0.8);
+      inset: 0;
+      z-index: 9999;
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(6px);
       justify-content: center;
       align-items: center;
-      padding: 16px;
+      padding: 20px;
+      animation: fadeIn 0.25s ease;
     }
-    .modal.active { display: flex; }
+    .modal.active {
+      display: flex;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: scale(0.96);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
     .modal-content {
       background: var(--card-bg);
       border: 1px solid var(--accent);
       border-radius: var(--radius);
-      padding: 20px;
-      max-width: 400px;
+      padding: 24px;
+      max-width: 420px;
       width: 100%;
-      color: var(--text);
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
     }
-    .modal-content h3 { margin-top: 0; }
-    .modal-content input, .modal-content textarea {
-      margin: 10px 0;
+    .modal-content h3 {
+      margin: 0 0 12px;
+      font-size: 1.3rem;
+    }
+    .modal-content .modal-text {
+      background: rgba(255, 255, 255, 0.03);
+      padding: 10px 14px;
+      border-radius: 10px;
+      margin-bottom: 16px;
+      font-weight: 500;
+      border: 1px solid #2a1a1a;
+    }
+    .modal-content .form-group {
+      margin-bottom: 12px;
     }
     .modal-buttons {
       display: flex;
-      justify-content: flex-end;
       gap: 10px;
       margin-top: 16px;
     }
+    .modal-buttons button {
+      flex: 1;
+      padding: 12px;
+      border-radius: 40px;
+      border: none;
+      font-weight: 700;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: var(--transition);
+      min-height: 48px;
+    }
+    .modal-buttons .btn-primary {
+      flex: 2;
+    }
+    .modal-buttons .btn-secondary {
+      background: rgba(255, 255, 255, 0.06);
+      color: var(--text);
+      border: 1px solid #2a1a1a;
+    }
+    .modal-buttons .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.12);
+    }
 
-    /* ===== Toast ===== */
+    /* ============================
+       TOAST
+       ============================ */
     #toastContainer {
       position: fixed;
-      top: 20px;
-      right: 20px;
-      z-index: 9999;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 99999;
       display: flex;
       flex-direction: column;
-      gap: 10px;
-      max-width: 320px;
+      gap: 8px;
+      width: 90%;
+      max-width: 400px;
+      pointer-events: none;
     }
     .toast {
-      background: #222;
+      background: #1a1212;
       color: #fff;
-      padding: 12px 18px;
-      border-radius: 8px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+      padding: 14px 20px;
+      border-radius: 14px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
       border-left: 4px solid var(--accent);
-      animation: slideIn 0.3s ease;
+      animation: slideUp 0.35s ease;
+      pointer-events: auto;
+      font-size: 0.9rem;
+      backdrop-filter: blur(8px);
+      border: 1px solid #2a1a1a;
     }
-    .toast.success { border-left-color: var(--green); }
-    .toast.error { border-left-color: var(--accent); }
-    @keyframes slideIn {
-      from { transform: translateX(100%); opacity: 0; }
-      to { transform: translateX(0); opacity: 1; }
+    .toast.success {
+      border-left-color: var(--green);
+    }
+    .toast.error {
+      border-left-color: var(--accent);
+    }
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px) scale(0.95);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
     }
 
-    /* ===== Mobile ===== */
-    @media (max-width: 600px) {
-      body { padding: 8px; }
-      header { flex-direction: column; align-items: flex-start; }
-      .konto { text-align: left; font-size: 1.8rem; }
-      table { font-size: 0.75rem; }
-      th, td { padding: 8px 4px; }
-      button { padding: 10px 14px; font-size: 0.9rem; min-height: 44px; }
-      .tab-btn { font-size: 0.8rem; padding: 8px 10px; }
-      h1 { font-size: 1.5rem; }
-      h2 { font-size: 1.1rem; }
+    /* ============================
+       MOBILE OPTIMIERUNGEN
+       ============================ */
+    @media (max-width: 700px) {
+      body {
+        padding: 8px;
+      }
+
+      header {
+        flex-direction: column;
+        align-items: stretch;
+        padding: 14px;
+      }
+      .header-left h1 {
+        font-size: 1.4rem;
+      }
+      .header-left p {
+        font-size: 0.75rem;
+      }
+      .header-actions {
+        justify-content: flex-start;
+      }
+      .konto-wrap {
+        align-self: flex-start;
+        padding: 6px 14px 6px 18px;
+      }
+      .konto-wrap .konto {
+        font-size: 1.6rem;
+      }
+
+      .tab-btn {
+        font-size: 0.75rem;
+        padding: 8px 14px;
+        min-height: 38px;
+      }
+
+      .card {
+        padding: 14px 12px;
+        border-radius: 14px;
+      }
+      .card h2 {
+        font-size: 1rem;
+      }
+
+      table {
+        font-size: 0.75rem;
+        min-width: 380px;
+      }
+      th {
+        padding: 8px 6px;
+        font-size: 0.6rem;
+      }
+      td {
+        padding: 8px 6px;
+      }
+
+      .punkte-badge {
+        font-size: 0.7rem;
+        padding: 2px 10px;
+        min-width: 30px;
+      }
+
+      .action-group button {
+        padding: 4px 8px;
+        font-size: 0.75rem;
+        min-height: 34px;
+        min-width: 34px;
+      }
+
+      .modal-content {
+        padding: 18px;
+        margin: 10px;
+      }
+
+      .log-entry {
+        font-size: 0.7rem;
+        padding: 8px 12px;
+        flex-wrap: wrap;
+      }
+      .log-entry .time {
+        font-size: 0.6rem;
+      }
+
+      .btn-primary {
+        padding: 12px 20px;
+        font-size: 0.9rem;
+        min-height: 44px;
+      }
+
+      .form-group input,
+      .form-group select,
+      .form-group textarea {
+        padding: 10px 12px;
+        font-size: 0.9rem;
+      }
+    }
+
+    @media (max-width: 420px) {
+      table {
+        font-size: 0.65rem;
+        min-width: 320px;
+      }
+      th,
+      td {
+        padding: 6px 4px;
+      }
+      .action-group button {
+        padding: 2px 6px;
+        font-size: 0.7rem;
+        min-height: 30px;
+        min-width: 30px;
+      }
+      .punkte-badge {
+        font-size: 0.6rem;
+        padding: 1px 8px;
+        min-width: 26px;
+      }
+      .konto-wrap .konto {
+        font-size: 1.3rem;
+      }
+      .header-left h1 {
+        font-size: 1.2rem;
+      }
+    }
+
+    /* ============================
+       FORTPschrittsbalken (optional)
+       ============================ */
+    .progress-wrap {
+      margin-top: 10px;
+      background: #1a1111;
+      border-radius: 40px;
+      height: 6px;
+      overflow: hidden;
+      border: 1px solid #2a1a1a;
+    }
+    .progress-wrap .bar {
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent), var(--gold));
+      border-radius: 40px;
+      transition: width 0.5s ease;
+      width: 0%;
+    }
+
+    /* ============================
+       SONSTIGES
+       ============================ */
+    .text-center {
+      text-align: center;
+    }
+    .mt-8 {
+      margin-top: 8px;
+    }
+    .gap-4 {
+      gap: 4px;
+    }
+    .flex-wrap {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .hidden {
+      display: none !important;
     }
   </style>
 </head>
 <body>
-  <!-- Toast-Container -->
+
+  <!-- ===== TOAST CONTAINER ===== -->
   <div id="toastContainer"></div>
 
-  <!-- Header -->
+  <!-- ===== HEADER ===== -->
   <header>
-    <div>
-      <h1>🖤 Punkte-System <span style="font-size:0.7em;">Liebe ist gut, Einsatz ist besser.</span></h1>
-      <p style="margin:0; font-size:0.9rem;">Ehemann sammelt Punkte · Ehefrau bewertet · Wiederholbar</p>
-      <button id="syncBtn" style="background:#555; font-size:0.8rem; padding:8px 14px;">🔄 Sync</button>
-      <span id="syncStatus" class="sync-status"></span>
+    <div class="header-left">
+      <h1>🖤 Punkte-System <span>Liebe ist gut, Einsatz ist besser.</span></h1>
+      <p>Ehemann sammelt · Ehefrau bewertet · Wiederholbar</p>
+      <div class="header-actions">
+        <button id="syncBtn">🔄 Sync</button>
+        <span id="syncStatus" class="sync-status"></span>
+      </div>
     </div>
-    <div class="konto" id="kontoAnzeige">0 Punkte</div>
+    <div class="konto-wrap">
+      <span class="label">Punkte</span>
+      <span class="konto" id="kontoAnzeige">0</span>
+    </div>
   </header>
 
-  <!-- Tab-Leiste -->
-  <div class="flex" style="margin-bottom: 12px; overflow-x: auto;">
-    <button class="tab-btn active" data-tab="aufgaben">📋 Aufgaben</button>
-    <button class="tab-btn" data-tab="einloesungen">🎁 Einlösungen</button>
-    <button class="tab-btn" data-tab="neu">➕ Neu</button>
-    <button class="tab-btn" data-tab="log">📜 Verlauf</button>
-    <button class="tab-btn" data-tab="regeln">⚠️ Regeln</button>
+  <!-- ===== PROGRESS (optional) ===== -->
+  <div class="progress-wrap" id="progressWrap">
+    <div class="bar" id="progressBar" style="width:0%;"></div>
   </div>
 
-  <!-- Hauptinhalt -->
+  <!-- ===== TAB-LEISTE ===== -->
+  <div class="tab-bar" role="tablist">
+    <button class="tab-btn active" data-tab="aufgaben" role="tab">📋 Aufgaben</button>
+    <button class="tab-btn" data-tab="einloesungen" role="tab">🎁 Einlösungen</button>
+    <button class="tab-btn" data-tab="neu" role="tab">➕ Neu</button>
+    <button class="tab-btn" data-tab="log" role="tab">📜 Verlauf</button>
+    <button class="tab-btn" data-tab="regeln" role="tab">⚠️ Regeln</button>
+  </div>
+
+  <!-- ===== MAIN ===== -->
   <main>
-    <section id="tab-aufgaben" class="tab-content card">
-      <h2>Aufgaben für den Ehemann <span class="cuckold-tag">Sammle Punkte</span></h2>
-      <p style="font-size:0.8rem; color:var(--muted);">✅ = Erledigt melden | ⭐ = Qualität (1-10) & Punkte vergeben | Danach wieder offen</p>
-      <div style="overflow-x: auto;">
-        <table><thead><tr><th>Aufgabe</th><th>Pkte</th><th>Status</th><th>Aktion</th></tr></thead><tbody id="aufgabenBody"></tbody></table>
+
+    <!-- TAB: AUFGABEN -->
+    <section id="tab-aufgaben" class="tab-content card" role="tabpanel">
+      <h2>
+        <span>📋 Aufgaben für ihn</span>
+        <span class="tag">Sammeln</span>
+      </h2>
+      <p class="sub">✅ Erledigt melden · ⭐ Qualität (1–10) &amp; Punkte vergeben · Danach wieder offen</p>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Aufgabe</th><th>Pkte</th><th>Status</th><th>Aktion</th></tr>
+          </thead>
+          <tbody id="aufgabenBody"></tbody>
+        </table>
       </div>
     </section>
 
-    <section id="tab-einloesungen" class="tab-content card" style="display:none;">
-      <h2>Einlösekatalog – Hardcore <span class="Hardcore-tag">Punkte ausgeben</span></h2>
-      <p style="font-size:0.8rem; color:var(--muted);">Einfach auf 💰 klicken und bestätigen – keine weiteren Warnungen.</p>
-      <div style="overflow-x: auto;">
-        <table><thead><tr><th>Einlösung</th><th>Kosten</th><th>Notiz</th><th>Aktion</th></tr></thead><tbody id="einloesungenBody"></tbody></table>
+    <!-- TAB: EINLÖSUNGEN -->
+    <section id="tab-einloesungen" class="tab-content card" style="display:none;" role="tabpanel">
+      <h2>
+        <span>🎁 Einlösekatalog</span>
+        <span class="tag">Ausgeben</span>
+      </h2>
+      <p class="sub">💰 Klicken &amp; bestätigen – keine weitere Warnung.</p>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Einlösung</th><th>Kosten</th><th>Notiz</th><th>Aktion</th></tr>
+          </thead>
+          <tbody id="einloesungenBody"></tbody>
+        </table>
       </div>
     </section>
 
-    <section id="tab-neu" class="tab-content card" style="display:none;">
-      <h2>Neuen Eintrag hinzufügen</h2>
-      <select id="neuerTyp">
-        <option value="aufgabe">Aufgabe (Ehemann sammelt Punkte)</option>
-        <option value="einloesung">Einlösung (Ehemann gibt Punkte aus)</option>
-      </select><br><br>
-      <input type="text" id="neuerText" placeholder="Beschreibung"><br><br>
-      <label>Punkte (Richtwert) / Kosten:</label>
-      <input type="number" id="neuerPunkte" value="10" min="1"><br><br>
-      <label>Notiz (optional):</label>
-      <input type="text" id="neuerHinweis" placeholder="z.B. Cuckold, Hardcore"><br><br>
-      <button id="speichernNeu">Speichern</button>
+    <!-- TAB: NEU -->
+    <section id="tab-neu" class="tab-content card" style="display:none;" role="tabpanel">
+      <h2>➕ Neuen Eintrag hinzufügen</h2>
+      <div class="form-group">
+        <label for="neuerTyp">Typ</label>
+        <select id="neuerTyp">
+          <option value="aufgabe">Aufgabe (Ehemann sammelt)</option>
+          <option value="einloesung">Einlösung (Ehemann gibt aus)</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="neuerText">Beschreibung *</label>
+        <input type="text" id="neuerText" placeholder="z. B. Frühstück ans Bett bringen">
+      </div>
+      <div class="form-group">
+        <label for="neuerPunkte">Punkte (Richtwert) / Kosten</label>
+        <input type="number" id="neuerPunkte" value="10" min="1">
+      </div>
+      <div class="form-group">
+        <label for="neuerHinweis">Notiz (optional)</label>
+        <input type="text" id="neuerHinweis" placeholder="z. B. Cuckold, Hardcore, Romantik">
+      </div>
+      <button class="btn-primary" id="speichernNeu">💾 Speichern</button>
     </section>
 
-    <section id="tab-log" class="tab-content card" style="display:none;">
-      <h2>Letzte Aktivitäten</h2>
+    <!-- TAB: LOG -->
+    <section id="tab-log" class="tab-content card" style="display:none;" role="tabpanel">
+      <h2>📜 Letzte Aktivitäten</h2>
       <div id="logContainer">Keine Einträge</div>
     </section>
 
-    <section id="tab-regeln" class="tab-content card" style="display:none;">
-      <h2>Wichtige Regeln & Safewords</h2>
-      <div style="background:#ff2d5525; border-left:4px solid #ff2d55; padding:10px; margin:8px 0;">
+    <!-- TAB: REGELN -->
+    <section id="tab-regeln" class="tab-content card" style="display:none;" role="tabpanel">
+      <h2>⚠️ Regeln &amp; Safewords</h2>
+      <div class="rule-box">
         <strong>🛑 Safeword:</strong> „ROT“ = sofortiger Abbruch aller Aktivitäten.
       </div>
-      <h3>Grundregeln</h3>
-      <ul style="padding-left:20px;">
+      <h3 style="font-size:1rem; margin-top:16px;">Grundregeln</h3>
+      <ul class="rule-list">
         <li>Alles einvernehmlich, Vetorecht für beide jederzeit.</li>
         <li>Safer Sex ist Pflicht (Kondome, Lecktücher).</li>
         <li>Nach intensiven Sessions: Aftercare einplanen.</li>
         <li>Der Ehemann kann jederzeit aussteigen.</li>
       </ul>
     </section>
+
   </main>
 
-  <!-- Bewertungs-Modal -->
+  <!-- ===== MODAL (BEWERTUNG) ===== -->
   <div id="bewertungsModal" class="modal">
     <div class="modal-content">
       <h3>⭐ Aufgabe bewerten</h3>
-      <p id="modalAufgabenText" style="word-break: break-word;"></p>
-      <label>Punkte vergeben:</label>
-      <input type="number" id="modalPunkte" min="1" value="10" inputmode="numeric">
-      <label>Qualität (1-10):</label>
-      <input type="number" id="modalQualitaet" min="1" max="10" value="8" inputmode="numeric">
-      <label>Kommentar:</label>
-      <textarea id="modalKommentar" rows="2" placeholder="z.B. 'Fast perfekt, aber Massage war zu kurz'"></textarea>
+      <div class="modal-text" id="modalAufgabenText"></div>
+
+      <div class="form-group">
+        <label for="modalPunkte">Punkte vergeben</label>
+        <input type="number" id="modalPunkte" min="1" value="10" inputmode="numeric">
+      </div>
+      <div class="form-group">
+        <label for="modalQualitaet">Qualität (1–10)</label>
+        <input type="number" id="modalQualitaet" min="1" max="10" value="8" inputmode="numeric">
+      </div>
+      <div class="form-group">
+        <label for="modalKommentar">Kommentar (optional)</label>
+        <textarea id="modalKommentar" rows="2" placeholder="z. B. 'Fast perfekt, aber Massage war zu kurz'"></textarea>
+      </div>
+
       <div class="modal-buttons">
-        <button id="modalSpeichern">Speichern</button>
-        <button id="modalAbbrechen" style="background:#555;">Abbrechen</button>
+        <button class="btn-secondary" id="modalAbbrechen">Abbrechen</button>
+        <button class="btn-primary" id="modalSpeichern">✅ Speichern</button>
       </div>
     </div>
   </div>
 
+  <!-- ============================
+       SCRIPT
+       ============================ -->
   <script>
     (function() {
       'use strict';
 
-      // ============================
-      // 1. KONFIGURATION
-      // ============================
+      // ===== KONFIGURATION =====
       const CONFIG = {
         BIN_ID: '6a36c9e0f5f4af5e29151a52',
-        MASTER_KEY: '$2a$10$RXS/6UhoYPTh7nq/AcLtEeSOld4i4UdPbE25C2m90QuyLRxaGrLgS', // ACHTUNG: Nur für lokale Tests!
+        MASTER_KEY: '$2a$10$RXS/6UhoYPTh7nq/AcLtEeSOld4i4UdPbE25C2m90QuyLRxaGrLgS',
         API_BASE: 'https://api.jsonbin.io/v3/b/6a36c9e0f5f4af5e29151a52',
-        PIN: '0000' // Einfacher Schutz – bei Bedarf ändern oder deaktivieren
+        PIN: '0000' // Bei Bedarf ändern oder auf null setzen
       };
 
-      // ============================
-      // 2. HELFER
-      // ============================
+      // ===== HELFER =====
       function genId() {
-        return Date.now().toString(36) + Math.random().toString(36).substr(2);
+        return Date.now().toString(36) + Math.random().toString(36).substr(2, 6);
       }
 
       function esc(text) {
@@ -383,10 +986,9 @@
       }
 
       function now() {
-        return new Date().toLocaleString('de-DE');
+        return new Date().toLocaleString('de-DE', { hour12: false });
       }
 
-      // Toast-System
       function showToast(message, type = 'info') {
         const container = document.getElementById('toastContainer');
         const toast = document.createElement('div');
@@ -395,19 +997,17 @@
         container.appendChild(toast);
         setTimeout(() => {
           toast.style.opacity = '0';
-          toast.style.transition = 'opacity 0.3s';
-          setTimeout(() => toast.remove(), 300);
+          toast.style.transform = 'translateY(20px)';
+          toast.style.transition = 'all 0.3s ease';
+          setTimeout(() => toast.remove(), 350);
         }, 3000);
       }
 
-      // ============================
-      // 3. DATA MANAGER
-      // ============================
+      // ===== DATA MANAGER =====
       const DataManager = {
         lokaleDaten: { aufgaben: [], einloesungen: [], konto: 0, log: [] },
         aktuelleVersion: null,
 
-        // API-Header
         getHeaders(extra = {}) {
           return {
             'X-Master-Key': CONFIG.MASTER_KEY,
@@ -416,7 +1016,6 @@
           };
         },
 
-        // Standarddaten anlegen
         initDefaultData() {
           this.lokaleDaten = {
             aufgaben: [
@@ -447,32 +1046,34 @@
               { id: genId(), text: 'Blowjob von ihr (bis zum Höhepunkt)', kosten: 25, hinweis: '' },
               { id: genId(), text: 'Geschlechtsverkehr nach seinen Vorlieben', kosten: 40, hinweis: '' },
               { id: genId(), text: 'Verwöhnabend für ihn (Bad, Massage, Oral, Sex)', kosten: 80, hinweis: '' },
-              { id: genId(), text: 'Sie erzählt ihm eine frühere Sex-Geschichte (real oder Fantasie)', kosten: 30, hinweis: 'Light' },
+              { id: genId(), text: 'Sie erzählt ihm eine frühere Sex-Geschichte', kosten: 30, hinweis: 'Light' },
               { id: genId(), text: 'Sie trägt aufreizende Kleidung in der Öffentlichkeit', kosten: 25, hinweis: 'Light' },
               { id: genId(), text: 'Sie schreibt mit einem anderen Mann (anzüglich)', kosten: 40, hinweis: 'Light' },
               { id: genId(), text: 'Sie flirtet in seiner Anwesenheit mit einem anderen Mann', kosten: 120, hinweis: 'C' },
-              { id: genId(), text: 'Sie tanzt eng mit einem anderen Mann (kein Küssen)', kosten: 100, hinweis: 'C' },
+              { id: genId(), text: 'Sie tanzt eng mit einem anderen Mann', kosten: 100, hinweis: 'C' },
               { id: genId(), text: 'Sie küsst einen anderen Mann (vor seinen Augen)', kosten: 180, hinweis: 'C' },
               { id: genId(), text: 'Sie gibt einem anderen Mann einen Handjob', kosten: 200, hinweis: 'C' },
               { id: genId(), text: 'Sie gibt einem anderen Mann einen Blowjob', kosten: 250, hinweis: 'C' },
               { id: genId(), text: 'Er darf zuschauen, wie sie mit einem anderen Mann schläft', kosten: 350, hinweis: 'C' },
-              { id: genId(), text: 'Sie hat Sex mit einem anderen Mann (er wartet im Nebenraum)', kosten: 400, hinweis: 'Hardcore' },
+              { id: genId(), text: 'Sie hat Sex mit einem anderen Mann (er wartet im Nebenraum)', kosten: 400,
+              hinweis: 'Hardcore' },
               { id: genId(), text: 'Sie hat Sex mit einem anderen Mann (er schaut zu)', kosten: 450, hinweis: 'Hardcore' },
-              { id: genId(), text: 'Sie macht ein Sex-Date aus, er darf nur hören (Tür zu)', kosten: 500, hinweis: 'Extrem' },
+              { id: genId(), text: 'Sie macht ein Sex-Date aus, er darf nur hören', kosten: 500, hinweis: 'Extrem' },
               { id: genId(), text: 'Cleanup – er leckt sie nach dem Sex mit einem anderen', kosten: 350, hinweis: 'C' },
-              { id: genId(), text: 'Er bleibt 24h im Keuschheitsgürtel (sie hat den Schlüssel)', kosten: 50, hinweis: 'Femdom' },
+              { id: genId(), text: 'Er bleibt 24h im Keuschheitsgürtel (sie hat den Schlüssel)', kosten: 50,
+              hinweis: 'Femdom' },
               { id: genId(), text: 'Sie bestimmt 48h komplett über seine Orgasmen', kosten: 100, hinweis: 'Femdom' },
-              { id: genId(), text: 'Er muss ihr zuschauen, während sie sich selbst befriedigt', kosten: 40, hinweis: 'Tease & Denial' }
+              { id: genId(), text: 'Er muss ihr zuschauen, während sie sich selbst befriedigt', kosten: 40,
+              hinweis: 'Tease' }
             ],
             konto: 0,
             log: []
           };
         },
 
-        // Laden vom Server
         async load() {
           try {
-            document.getElementById('syncStatus').textContent = ' (lade...)';
+            document.getElementById('syncStatus').textContent = ' (lade…)';
             const res = await fetch(`${CONFIG.API_BASE}/latest`, { headers: this.getHeaders() });
             if (!res.ok) throw new Error(`HTTP ${res.status}`);
             const json = await res.json();
@@ -490,7 +1091,6 @@
             console.error('Load error:', e);
             document.getElementById('syncStatus').textContent = ' ❌';
             showToast('Fehler beim Laden – verwende lokale Daten.', 'error');
-            // Falls keine Daten vorhanden, initialisieren
             if (!this.lokaleDaten.aufgaben || !this.lokaleDaten.einloesungen) {
               this.initDefaultData();
             }
@@ -498,32 +1098,25 @@
           }
         },
 
-        // Speichern mit Konfliktbehandlung
         async save(initial = false) {
           try {
-            // Bei initialem Speichern keine Versionsprüfung
             if (!initial) {
-              // Aktuelle Version vom Server holen
               const latestRes = await fetch(`${CONFIG.API_BASE}/latest`, { headers: this.getHeaders() });
               if (latestRes.ok) {
                 const latest = await latestRes.json();
                 if (latest.record.version !== this.aktuelleVersion) {
-                  // Konflikt – Benutzer entscheiden lassen
                   const choice = confirm(
                     'Die Daten auf dem Server wurden von einem anderen Gerät geändert.\n' +
                     'Möchtest du deine lokalen Änderungen verwerfen und die Server-Daten laden?\n' +
-                    '(OK = Server-Daten laden, Abbrechen = Server überschreiben)'
+                    '(OK = Server laden, Abbrechen = Server überschreiben)'
                   );
                   if (choice) {
-                    // Lokale Daten durch Server-Daten ersetzen
                     this.lokaleDaten = latest.record;
                     this.aktuelleVersion = latest.record.version;
-                    showToast('Server-Daten wurden geladen.', 'info');
+                    showToast('Server-Daten geladen.', 'info');
                     UIRenderer.renderAlles(this.lokaleDaten);
                     return;
                   } else {
-                    // Wir überschreiben den Server – aber wir müssen die neueste Version als Basis nehmen
-                    // Dazu setzen wir die Version auf die des Servers, aber behalten lokale Daten
                     this.aktuelleVersion = latest.record.version;
                   }
                 }
@@ -549,11 +1142,9 @@
             console.error('Save error:', e);
             document.getElementById('syncStatus').textContent = ' ❌';
             showToast('Fehler beim Speichern – bitte später erneut versuchen.', 'error');
-            // Bei schwerwiegendem Fehler könnte man hier neu laden, aber wir lassen es
           }
         },
 
-        // Hilfsmethoden für Datenänderungen
         addAufgabe(text, punkte) {
           const neu = { id: genId(), text, punkte: parseInt(punkte) || 0, status: 'offen' };
           this.lokaleDaten.aufgaben.push(neu);
@@ -581,45 +1172,58 @@
         }
       };
 
-      // ============================
-      // 4. UI RENDERER
-      // ============================
+      // ===== UI RENDERER =====
       const UIRenderer = {
-        // Haupt-Renderfunktion
         renderAlles(daten) {
           this.renderKonto(daten.konto);
           this.renderAufgaben(daten.aufgaben);
           this.renderEinloesungen(daten.einloesungen);
           this.renderLog(daten.log);
+          this.updateProgress(daten.konto);
         },
 
         renderKonto(konto) {
-          document.getElementById('kontoAnzeige').textContent = (konto || 0) + ' Punkte';
+          document.getElementById('kontoAnzeige').textContent = konto || 0;
+        },
+
+        updateProgress(konto) {
+          const bar = document.getElementById('progressBar');
+          // Wir nehmen 1000 Punkte als Ziel für die volle Breite (kann angepasst werden)
+          const max = 1000;
+          const pct = Math.min(100, (konto / max) * 100);
+          bar.style.width = pct + '%';
         },
 
         renderAufgaben(aufgaben) {
           const tbody = document.getElementById('aufgabenBody');
           tbody.innerHTML = '';
           (aufgaben || []).forEach(a => {
-            let zusatzInfo = '';
+            let zusatz = '';
             if (a.lastQuality) {
-              zusatzInfo = `<br><small style="color:var(--gold);">⭐ ${a.lastQuality}/10</small>`;
-              if (a.lastComment) zusatzInfo += `<br><small style="color:var(--muted);">💬 ${esc(a.lastComment)}</small>`;
+              zusatz = `<br><small style="color:var(--gold);">⭐ ${a.lastQuality}/10</small>`;
+              if (a.lastComment) zusatz += `<br><small style="color:var(--text-muted);">💬 ${esc(a.lastComment)}</small>`;
             }
-            const statusSymbol = a.status === 'erledigt_unbewertet' ? '🟡' : '🔵';
+            const statusHtml = a.status === 'erledigt_unbewertet' ?
+              `<span class="status-indicator"><span class="dot pending"></span> Ausstehend</span>` :
+              `<span class="status-indicator"><span class="dot open"></span> Offen</span>`;
+
             tbody.innerHTML += `
               <tr data-id="${a.id}" data-typ="aufgabe">
-                <td><span class="editable-cell" data-field="text">${esc(a.text)}</span>${zusatzInfo}</td>
+                <td>
+                  <span class="editable-cell" data-field="text">${esc(a.text)}</span>
+                  ${zusatz}
+                </td>
                 <td><span class="punkte-badge editable-cell" data-field="punkte">${a.punkte || 0}</span></td>
-                <td>${statusSymbol}</td>
-                <td class="flex">
-                  ${a.status === 'offen' ? `<button class="action-erledigt" data-id="${a.id}">✅</button>` : ''}
-                  ${a.status === 'erledigt_unbewertet' ? `<button class="action-bewerten" data-id="${a.id}">⭐</button>` : ''}
-                  <button class="action-loeschen" data-id="${a.id}" data-typ="aufgabe" style="background:#555;">🗑</button>
+                <td>${statusHtml}</td>
+                <td>
+                  <div class="action-group">
+                    ${a.status === 'offen' ? `<button class="action-erledigt" data-id="${a.id}">✅</button>` : ''}
+                    ${a.status === 'erledigt_unbewertet' ? `<button class="action-bewerten" data-id="${a.id}">⭐</button>` : ''}
+                    <button class="danger action-loeschen" data-id="${a.id}" data-typ="aufgabe">🗑</button>
+                  </div>
                 </td>
               </tr>`;
           });
-          // Event-Listener für editierbare Zellen (Klick -> Input)
           tbody.querySelectorAll('.editable-cell').forEach(cell => {
             cell.addEventListener('click', this.onEditableClick.bind(this));
           });
@@ -629,14 +1233,17 @@
           const tbody = document.getElementById('einloesungenBody');
           tbody.innerHTML = '';
           (einloesungen || []).forEach(e => {
+            const disabled = (DataManager.lokaleDaten.konto || 0) < (e.kosten || 0);
             tbody.innerHTML += `
               <tr data-id="${e.id}" data-typ="einloesung">
                 <td><span class="editable-cell" data-field="text">${esc(e.text)}</span></td>
                 <td><span class="punkte-badge editable-cell" data-field="kosten">${e.kosten || 0}</span></td>
                 <td>${esc(e.hinweis || '')}</td>
-                <td class="flex">
-                  <button class="action-einloesen" data-id="${e.id}" ${(DataManager.lokaleDaten.konto || 0) < (e.kosten || 0) ? 'disabled' : ''}>💰</button>
-                  <button class="action-loeschen" data-id="${e.id}" data-typ="einloesung" style="background:#555;">🗑</button>
+                <td>
+                  <div class="action-group">
+                    <button class="action-einloesen" data-id="${e.id}" ${disabled ? 'disabled' : ''}>💰</button>
+                    <button class="danger action-loeschen" data-id="${e.id}" data-typ="einloesung">🗑</button>
+                  </div>
                 </td>
               </tr>`;
           });
@@ -648,30 +1255,39 @@
         renderLog(log) {
           const container = document.getElementById('logContainer');
           container.innerHTML = '';
-          (log || []).slice().reverse().slice(0, 20).forEach(e => {
-            container.innerHTML += `<div class="log-entry">[${e.time}] ${esc(e.text)}</div>`;
+          const entries = (log || []).slice().reverse().slice(0, 20);
+          if (entries.length === 0) {
+            container.innerHTML = '<p style="color:var(--text-muted); text-align:center; padding:20px 0;">Keine Einträge</p>';
+            return;
+          }
+          entries.forEach(e => {
+            container.innerHTML += `
+              <div class="log-entry">
+                <span class="time">${esc(e.time)}</span>
+                <span class="msg">${esc(e.text)}</span>
+              </div>`;
           });
-          if (container.innerHTML === '') container.textContent = 'Keine Einträge';
         },
 
-        // Editierbare Zellen: Klick öffnet Input-Feld
         onEditableClick(e) {
           const cell = e.currentTarget;
           if (cell.dataset.editing === 'true') return;
           const field = cell.dataset.field;
           const tr = cell.closest('tr');
           const id = tr.dataset.id;
-          const typ = tr.dataset.typ; // 'aufgabe' oder 'einloesung'
+          const typ = tr.dataset.typ;
           const aktuellerWert = cell.textContent.trim();
           const input = document.createElement('input');
           input.type = (field === 'punkte' || field === 'kosten') ? 'number' : 'text';
           input.value = aktuellerWert;
           input.style.width = '100%';
-          input.style.background = '#333';
-          input.style.color = 'white';
+          input.style.minWidth = '60px';
+          input.style.background = '#1a1111';
+          input.style.color = '#fff';
           input.style.border = '1px solid var(--accent)';
-          input.style.borderRadius = '4px';
-          input.style.padding = '4px';
+          input.style.borderRadius = '6px';
+          input.style.padding = '4px 8px';
+          input.style.fontSize = 'inherit';
           cell.innerHTML = '';
           cell.appendChild(input);
           cell.dataset.editing = 'true';
@@ -682,58 +1298,50 @@
             const neuerWert = input.value.trim();
             const liste = typ === 'aufgabe' ? DataManager.lokaleDaten.aufgaben : DataManager.lokaleDaten.einloesungen;
             const eintrag = liste.find(x => x.id === id);
-            if (!eintrag) return;
+            if (!eintrag) { cell.innerHTML = aktuellerWert;
+              cell.dataset.editing = 'false'; return; }
             if (field === 'punkte' || field === 'kosten') {
-              const num = parseInt(neuerWert) || 0;
-              eintrag[field] = num;
+              eintrag[field] = parseInt(neuerWert) || 0;
             } else {
               eintrag[field] = neuerWert;
             }
             DataManager.addLog(`Wert von „${eintrag.text || eintrag.id}“ bearbeitet.`);
-            DataManager.save().then(() => {
-              UIRenderer.renderAlles(DataManager.lokaleDaten);
-            });
+            DataManager.save().then(() => UIRenderer.renderAlles(DataManager.lokaleDaten));
           };
 
           const abbrechen = () => {
             cell.innerHTML = aktuellerWert;
             cell.dataset.editing = 'false';
-            // Re-Bind click event
             cell.addEventListener('click', UIRenderer.onEditableClick.bind(UIRenderer));
           };
 
           input.addEventListener('blur', speichern);
           input.addEventListener('keydown', (ev) => {
-            if (ev.key === 'Enter') { ev.preventDefault(); input.blur(); }
-            if (ev.key === 'Escape') { ev.preventDefault(); abbrechen(); }
+            if (ev.key === 'Enter') { ev.preventDefault();
+              input.blur(); }
+            if (ev.key === 'Escape') { ev.preventDefault();
+              abbrechen(); }
           });
-          // Damit der Klick nicht erneut feuert
           e.stopPropagation();
         }
       };
 
-      // ============================
-      // 5. APP - INIT & EVENT BINDING
-      // ============================
+      // ===== APP =====
       const App = {
         init() {
-          // PIN-Abfrage (optional)
           if (CONFIG.PIN) {
             const eingabe = prompt('Bitte PIN eingeben:', '');
             if (eingabe !== CONFIG.PIN) {
-              document.body.innerHTML = '<h1 style="color:red;">Zugriff verweigert – falsche PIN.</h1>';
+              document.body.innerHTML = '<h1 style="color:red;text-align:center;padding:40px;">Zugriff verweigert – falsche PIN.</h1>';
               return;
             }
           }
 
-          // Daten laden
           DataManager.load().then(() => {
             UIRenderer.renderAlles(DataManager.lokaleDaten);
             this.bindEvents();
-            this.bindTabEvents();
           });
 
-          // Sync-Button
           document.getElementById('syncBtn').addEventListener('click', () => {
             DataManager.load().then(() => {
               UIRenderer.renderAlles(DataManager.lokaleDaten);
@@ -743,9 +1351,9 @@
         },
 
         bindEvents() {
-          // Tab-Wechsel
+          // Tabs
           document.querySelectorAll('.tab-btn').forEach(btn => {
-            btn.addEventListener('click', (e) => {
+            btn.addEventListener('click', () => {
               const tabName = btn.dataset.tab;
               document.querySelectorAll('.tab-content').forEach(el => el.style.display = 'none');
               document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -775,7 +1383,7 @@
             });
           });
 
-          // Event-Delegation für Tabellen-Aktionen
+          // Event-Delegation für Tabellen
           document.querySelector('#tab-aufgaben tbody').addEventListener('click', (e) => {
             const btn = e.target.closest('button');
             if (!btn) return;
@@ -831,17 +1439,11 @@
           // Modal
           document.getElementById('modalSpeichern').addEventListener('click', () => this.bewertungSpeichern());
           document.getElementById('modalAbbrechen').addEventListener('click', () => this.modalSchliessen());
-          // Klick außerhalb schließt Modal
           document.getElementById('bewertungsModal').addEventListener('click', (e) => {
             if (e.target === e.currentTarget) this.modalSchliessen();
           });
         },
 
-        bindTabEvents() {
-          // Tab-Wechsel (bereits oben)
-        },
-
-        // Bewertungs-Modal
         _bewertungsAufgabeId: null,
 
         openBewertungsModal(id) {
@@ -874,22 +1476,18 @@
           a.lastQuality = qualitaet;
           a.lastComment = kommentar;
           a.status = 'offen';
-          DataManager.addLog(`Frau vergibt ${punkte} P. für „${a.text}“ (Qualität: ${qualitaet}/10)${kommentar ? ' – ' + kommentar : ''}`);
+          DataManager.addLog(`Frau vergibt ${punkte} P. für „${a.text}“ (⭐ ${qualitaet}/10)${kommentar ? ' – ' + kommentar : ''}`);
           this.modalSchliessen();
           DataManager.save().then(() => UIRenderer.renderAlles(DataManager.lokaleDaten));
         }
       };
 
-      // ============================
-      // 6. START
-      // ============================
-      // Sicherheitshinweis in der Konsole
+      // ===== START =====
       console.warn(
         '⚠️ Sicherheitshinweis: Der Master-Key für JSONBin ist im Client-Code sichtbar.\n' +
         'Dies ist nur für lokale Tests geeignet. In Produktion sollte ein Proxy-Server verwendet werden.'
       );
 
-      // App initialisieren
       document.addEventListener('DOMContentLoaded', () => App.init());
     })();
   </script>
