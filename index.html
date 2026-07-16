@@ -1,28 +1,29 @@
+```html
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
-  <title>Punkte-System – Liebe ist gut, Einsatz ist besser.</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover" />
+  <title>Punkte-System · Liebe & Einsatz</title>
   <style>
-    /* ============================
-       GLOBALE VARIABLEN & RESET
-       ============================ */
+    /* ============================================================
+       HELLES, FREUNDLICHES DESIGN – MOBILE FIRST
+       ============================================================ */
     :root {
-      --bg: #0b0a0a;
-      --card-bg: #151010;
-      --card-border: #2d1414;
-      --accent: #ff2d55;
-      --accent-glow: rgba(255, 45, 85, 0.3);
-      --accent2: #6b1a2a;
-      --text: #f0ecec;
-      --text-muted: #b0a8a8;
-      --gold: #f5d78a;
-      --gold-glow: rgba(245, 215, 138, 0.2);
-      --green: #2ecc71;
+      --bg: #fcf8f5;
+      --card-bg: #ffffff;
+      --card-border: #f0e6df;
+      --accent: #d45c4c;
+      --accent-light: #fcebe8;
+      --accent2: #b8a08c;
+      --text: #3d2e2a;
+      --text-muted: #7d6b62;
+      --gold: #d4a373;
+      --gold-glow: rgba(212, 163, 115, 0.2);
+      --green: #6b9e7a;
       --radius: 18px;
-      --shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
-      --transition: 0.25s ease;
+      --shadow: 0 8px 28px rgba(0, 0, 0, 0.06);
+      --transition: 0.2s ease;
       --font: 'Segoe UI', system-ui, -apple-system, 'Helvetica Neue', sans-serif;
     }
 
@@ -45,104 +46,78 @@
       flex-direction: column;
     }
 
-    /* ============================
-       HEADER
-       ============================ */
+    /* ===== HEADER ===== */
     header {
       display: flex;
       flex-wrap: wrap;
       justify-content: space-between;
       align-items: center;
-      background: linear-gradient(145deg, #1c0c0c, #120808);
-      padding: 18px 20px;
+      background: var(--card-bg);
+      padding: 16px 20px;
       border-radius: var(--radius);
-      box-shadow: var(--shadow), inset 0 0 60px rgba(255, 45, 85, 0.05);
+      box-shadow: var(--shadow);
       border: 1px solid var(--card-border);
-      margin-bottom: 18px;
+      margin-bottom: 16px;
       gap: 12px;
-      position: relative;
-      overflow: hidden;
-    }
-    header::after {
-      content: '';
-      position: absolute;
-      top: -50%;
-      right: -10%;
-      width: 200px;
-      height: 200px;
-      background: radial-gradient(circle, rgba(255, 45, 85, 0.08) 0%, transparent 70%);
-      border-radius: 50%;
-      pointer-events: none;
     }
 
-    .header-left {
-      flex: 1 1 200px;
-      z-index: 1;
-    }
     .header-left h1 {
-      font-size: 1.7rem;
+      font-size: 1.6rem;
       font-weight: 700;
       color: var(--accent);
-      letter-spacing: -0.5px;
+      letter-spacing: -0.3px;
       line-height: 1.2;
       margin: 0;
     }
     .header-left h1 span {
-      font-size: 0.6em;
+      font-size: 0.55em;
       font-weight: 400;
       color: var(--text-muted);
       display: inline-block;
-      margin-left: 4px;
+      margin-left: 6px;
     }
     .header-left p {
-      font-size: 0.85rem;
+      font-size: 0.8rem;
       color: var(--text-muted);
-      margin: 4px 0 8px;
+      margin: 2px 0 6px;
     }
 
     .header-actions {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 6px;
       flex-wrap: wrap;
-      z-index: 1;
     }
     .header-actions button {
-      background: rgba(255, 255, 255, 0.06);
-      border: 1px solid #3a2a2a;
+      background: var(--bg);
+      border: 1px solid var(--card-border);
       color: var(--text);
       padding: 6px 14px;
-      border-radius: 30px;
+      border-radius: 40px;
       font-size: 0.8rem;
       cursor: pointer;
       transition: var(--transition);
-      backdrop-filter: blur(4px);
       min-height: 38px;
     }
     .header-actions button:hover {
-      background: rgba(255, 45, 85, 0.15);
+      background: var(--accent-light);
       border-color: var(--accent);
-    }
-    .header-actions button:active {
-      transform: scale(0.95);
+      color: var(--accent);
     }
     .header-actions .sync-status {
       font-size: 0.7rem;
       color: var(--text-muted);
-      margin-left: 2px;
+      margin-left: 4px;
     }
 
-    /* Konto-Anzeige */
     .konto-wrap {
-      background: linear-gradient(135deg, #1f0f0f, #2a1212);
-      padding: 8px 18px 8px 22px;
+      background: var(--accent-light);
+      padding: 6px 18px 6px 22px;
       border-radius: 60px;
-      border: 1px solid rgba(255, 215, 0, 0.2);
-      box-shadow: 0 0 30px rgba(245, 215, 138, 0.05);
+      border: 1px solid var(--accent);
       display: flex;
       align-items: center;
-      gap: 12px;
-      z-index: 1;
+      gap: 10px;
       flex-shrink: 0;
     }
     .konto-wrap .label {
@@ -150,19 +125,15 @@
       text-transform: uppercase;
       letter-spacing: 1px;
       color: var(--text-muted);
-      opacity: 0.7;
     }
     .konto-wrap .konto {
       font-size: 2rem;
       font-weight: 800;
-      color: var(--gold);
-      text-shadow: 0 0 20px var(--gold-glow);
+      color: var(--accent);
       line-height: 1;
     }
 
-    /* ============================
-       TABS
-       ============================ */
+    /* ===== TABS ===== */
     .tab-bar {
       display: flex;
       gap: 6px;
@@ -178,8 +149,8 @@
 
     .tab-btn {
       flex: 0 0 auto;
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid #2a1a1a;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
       color: var(--text-muted);
       padding: 10px 16px;
       border-radius: 40px;
@@ -189,29 +160,24 @@
       transition: var(--transition);
       min-height: 44px;
       white-space: nowrap;
-      backdrop-filter: blur(4px);
+      box-shadow: var(--shadow);
     }
     .tab-btn:hover {
-      background: rgba(255, 45, 85, 0.08);
-      color: #fff;
+      background: var(--accent-light);
+      color: var(--accent);
+      border-color: var(--accent);
     }
     .tab-btn.active {
       background: var(--accent);
       color: #fff;
       border-color: var(--accent);
-      box-shadow: 0 4px 20px rgba(255, 45, 85, 0.3);
+      box-shadow: 0 4px 16px rgba(212, 92, 76, 0.25);
     }
     .tab-btn:active {
       transform: scale(0.95);
     }
-    .tab-btn:focus-visible {
-      outline: 2px solid var(--gold);
-      outline-offset: 2px;
-    }
 
-    /* ============================
-       KARTEN (Cards)
-       ============================ */
+    /* ===== KARTEN ===== */
     .card {
       background: var(--card-bg);
       border-radius: var(--radius);
@@ -219,10 +185,6 @@
       margin-bottom: 16px;
       box-shadow: var(--shadow);
       border: 1px solid var(--card-border);
-      transition: var(--transition);
-    }
-    .card:hover {
-      border-color: #3d1e1e;
     }
 
     .card h2 {
@@ -236,12 +198,12 @@
       flex-wrap: wrap;
     }
     .card h2 .tag {
-      background: var(--accent);
-      color: #fff;
+      background: var(--accent-light);
+      color: var(--accent);
       font-size: 0.55rem;
       font-weight: 700;
       text-transform: uppercase;
-      padding: 2px 12px;
+      padding: 2px 14px;
       border-radius: 40px;
       letter-spacing: 0.5px;
     }
@@ -251,26 +213,23 @@
       margin-bottom: 12px;
     }
 
-    /* ============================
-       TABELLEN
-       ============================ */
+    /* ===== TABELLEN ===== */
     .table-wrap {
       overflow-x: auto;
       -webkit-overflow-scrolling: touch;
       margin: 0 -4px;
       padding: 0 4px;
-      border-radius: var(--radius);
     }
 
     table {
       width: 100%;
       border-collapse: collapse;
       font-size: 0.85rem;
-      min-width: 480px;
+      min-width: 460px;
     }
 
     th {
-      background: rgba(255, 45, 85, 0.08);
+      background: var(--bg);
       padding: 12px 8px;
       text-align: left;
       font-weight: 600;
@@ -278,12 +237,11 @@
       text-transform: uppercase;
       letter-spacing: 0.5px;
       color: var(--text-muted);
-      border-bottom: 1px solid #2a1a1a;
+      border-bottom: 2px solid var(--card-border);
     }
-
     td {
       padding: 12px 8px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+      border-bottom: 1px solid var(--card-border);
       vertical-align: middle;
       line-height: 1.4;
     }
@@ -291,15 +249,13 @@
       border-bottom: none;
     }
     tr:hover td {
-      background: rgba(255, 45, 85, 0.03);
+      background: #faf6f2;
     }
 
-    /* ============================
-       BADGES / PUNKTE
-       ============================ */
+    /* ===== BADGES ===== */
     .punkte-badge {
-      background: linear-gradient(135deg, #f5d78a, #e8c06a);
-      color: #1a0a0a;
+      background: var(--gold);
+      color: #fff;
       padding: 2px 12px;
       border-radius: 40px;
       font-weight: 800;
@@ -307,7 +263,6 @@
       display: inline-block;
       min-width: 36px;
       text-align: center;
-      box-shadow: 0 2px 8px rgba(245, 215, 138, 0.2);
     }
 
     .status-indicator {
@@ -324,17 +279,13 @@
       display: inline-block;
     }
     .status-indicator .dot.open {
-      background: #3a8aff;
-      box-shadow: 0 0 8px rgba(58, 138, 255, 0.4);
+      background: #6b9e7a;
     }
     .status-indicator .dot.pending {
-      background: #f1c40f;
-      box-shadow: 0 0 8px rgba(241, 196, 15, 0.4);
+      background: #e6b85c;
     }
 
-    /* ============================
-       BUTTONS IN TABELLEN
-       ============================ */
+    /* ===== BUTTONS ===== */
     .action-group {
       display: flex;
       gap: 4px;
@@ -342,8 +293,8 @@
       align-items: center;
     }
     .action-group button {
-      background: rgba(255, 255, 255, 0.05);
-      border: none;
+      background: var(--bg);
+      border: 1px solid var(--card-border);
       color: var(--text);
       padding: 6px 10px;
       border-radius: 30px;
@@ -355,57 +306,49 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      border: 1px solid transparent;
     }
     .action-group button:hover {
-      background: rgba(255, 45, 85, 0.12);
-      border-color: rgba(255, 45, 85, 0.2);
+      background: var(--accent-light);
+      border-color: var(--accent);
+      color: var(--accent);
     }
     .action-group button:active {
       transform: scale(0.92);
     }
     .action-group button:disabled {
-      opacity: 0.3;
+      opacity: 0.4;
       cursor: not-allowed;
       transform: none;
     }
-    .action-group button.danger {
-      background: rgba(255, 0, 0, 0.08);
-    }
     .action-group button.danger:hover {
-      background: rgba(255, 0, 0, 0.2);
-      border-color: rgba(255, 0, 0, 0.3);
+      background: #fde8e8;
+      border-color: #d45c4c;
+      color: #d45c4c;
     }
 
-    /* ============================
-       EDITIERBARE ZELLEN
-       ============================ */
-    .editable-cell {
+    .btn-primary {
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      padding: 14px 28px;
+      border-radius: 40px;
+      font-size: 1rem;
+      font-weight: 700;
       cursor: pointer;
-      display: inline-block;
-      padding: 2px 6px;
-      border-radius: 4px;
-      border: 1px solid transparent;
       transition: var(--transition);
-      position: relative;
+      min-height: 48px;
+      width: 100%;
+      box-shadow: 0 4px 16px rgba(212, 92, 76, 0.2);
     }
-    .editable-cell:hover {
-      border-color: var(--accent);
-      background: rgba(255, 45, 85, 0.06);
+    .btn-primary:hover {
+      background: #bf4a3c;
+      transform: translateY(-1px);
     }
-    .editable-cell .edit-hint {
-      font-size: 0.6rem;
-      opacity: 0.3;
-      margin-left: 4px;
-      transition: var(--transition);
-    }
-    .editable-cell:hover .edit-hint {
-      opacity: 0.8;
+    .btn-primary:active {
+      transform: scale(0.97);
     }
 
-    /* ============================
-       FORMULAR (Neu)
-       ============================ */
+    /* ===== FORMULARE ===== */
     .form-group {
       margin-bottom: 14px;
     }
@@ -422,10 +365,10 @@
     .form-group textarea {
       width: 100%;
       padding: 12px 14px;
-      background: #1a1111;
-      border: 1px solid #2d1a1a;
+      background: var(--bg);
+      border: 1px solid var(--card-border);
       border-radius: 12px;
-      color: #fff;
+      color: var(--text);
       font-size: 1rem;
       transition: var(--transition);
       font-family: inherit;
@@ -435,41 +378,221 @@
     .form-group textarea:focus {
       outline: none;
       border-color: var(--accent);
-      box-shadow: 0 0 0 3px rgba(255, 45, 85, 0.15);
+      box-shadow: 0 0 0 3px rgba(212, 92, 76, 0.15);
     }
     .form-group textarea {
       resize: vertical;
       min-height: 60px;
     }
 
-    .btn-primary {
-      background: var(--accent);
-      color: #fff;
-      border: none;
-      padding: 14px 28px;
-      border-radius: 40px;
-      font-size: 1rem;
+    /* ===== TAGEBUCH ===== */
+    .tagebuch-eintrag {
+      background: var(--bg);
+      padding: 16px 18px;
+      border-radius: 16px;
+      margin: 12px 0;
+      border-left: 4px solid var(--accent);
+      transition: var(--transition);
+    }
+    .tagebuch-eintrag:hover {
+      background: #f5efe9;
+    }
+    .tagebuch-datum {
+      font-size: 0.75rem;
+      color: var(--gold);
       font-weight: 700;
+      margin-bottom: 4px;
+      letter-spacing: 0.5px;
+    }
+    .tagebuch-text {
+      font-size: 0.95rem;
+      line-height: 1.5;
+      white-space: pre-wrap;
+      cursor: pointer;
+      padding: 4px 6px;
+      border-radius: 6px;
+      border: 1px solid transparent;
+      transition: var(--transition);
+    }
+    .tagebuch-text:hover {
+      border-color: var(--accent);
+      background: rgba(212, 92, 76, 0.04);
+    }
+    .tagebuch-bild {
+      max-width: 100%;
+      border-radius: 12px;
+      margin: 8px 0;
+      border: 1px solid var(--card-border);
+    }
+    .tagebuch-kommentare {
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px solid var(--card-border);
+    }
+    .tagebuch-kommentar {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      padding: 4px 0;
+      display: flex;
+      gap: 8px;
+      align-items: baseline;
+    }
+    .tagebuch-kommentar .zeit {
+      font-size: 0.65rem;
+      color: var(--text-muted);
+      opacity: 0.6;
+      flex-shrink: 0;
+    }
+    .tagebuch-actions {
+      display: flex;
+      gap: 6px;
+      margin-top: 8px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .tagebuch-actions button {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      color: var(--text-muted);
+      padding: 4px 14px;
+      border-radius: 20px;
+      font-size: 0.7rem;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    .tagebuch-actions button:hover {
+      background: var(--accent-light);
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+    .tagebuch-actions .danger:hover {
+      background: #fde8e8;
+      border-color: #d45c4c;
+      color: #d45c4c;
+    }
+
+    /* ===== MODAL ===== */
+    .modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      background: rgba(0, 0, 0, 0.4);
+      backdrop-filter: blur(4px);
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      animation: fadeIn 0.2s ease;
+    }
+    .modal.active {
+      display: flex;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.96); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    .modal-content {
+      background: var(--card-bg);
+      border: 1px solid var(--accent);
+      border-radius: var(--radius);
+      padding: 24px;
+      max-width: 420px;
+      width: 100%;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+    }
+    .modal-content h3 {
+      margin: 0 0 12px;
+      font-size: 1.3rem;
+      color: var(--accent);
+    }
+    .modal-text {
+      background: var(--bg);
+      padding: 10px 14px;
+      border-radius: 10px;
+      margin-bottom: 16px;
+      font-weight: 500;
+      border: 1px solid var(--card-border);
+    }
+    .modal-buttons {
+      display: flex;
+      gap: 10px;
+      margin-top: 16px;
+    }
+    .modal-buttons button {
+      flex: 1;
+      padding: 12px;
+      border-radius: 40px;
+      border: none;
+      font-weight: 700;
+      font-size: 0.95rem;
       cursor: pointer;
       transition: var(--transition);
       min-height: 48px;
-      width: 100%;
-      box-shadow: 0 4px 20px rgba(255, 45, 85, 0.25);
     }
-    .btn-primary:hover {
-      background: #d41c40;
-      transform: translateY(-1px);
-      box-shadow: 0 6px 30px rgba(255, 45, 85, 0.35);
+    .modal-buttons .btn-primary { flex: 2; }
+    .modal-buttons .btn-secondary {
+      background: var(--bg);
+      color: var(--text);
+      border: 1px solid var(--card-border);
     }
-    .btn-primary:active {
-      transform: scale(0.97);
+    .modal-buttons .btn-secondary:hover {
+      background: var(--accent-light);
     }
 
-    /* ============================
-       LOG
-       ============================ */
+    /* ===== TOAST ===== */
+    #toastContainer {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 99999;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      width: 90%;
+      max-width: 400px;
+      pointer-events: none;
+    }
+    .toast {
+      background: var(--card-bg);
+      color: var(--text);
+      padding: 14px 20px;
+      border-radius: 14px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+      border-left: 4px solid var(--accent);
+      animation: slideUp 0.3s ease;
+      pointer-events: auto;
+      font-size: 0.9rem;
+      border: 1px solid var(--card-border);
+    }
+    .toast.success { border-left-color: var(--green); }
+    .toast.error { border-left-color: var(--accent); }
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(30px) scale(0.95); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    /* ===== PROGRESS ===== */
+    .progress-wrap {
+      margin-bottom: 14px;
+      background: var(--card-border);
+      border-radius: 40px;
+      height: 6px;
+      overflow: hidden;
+    }
+    .progress-wrap .bar {
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent), var(--gold));
+      border-radius: 40px;
+      transition: width 0.5s ease;
+      width: 0%;
+    }
+
+    /* ===== LOG ===== */
     .log-entry {
-      background: rgba(255, 255, 255, 0.02);
+      background: var(--bg);
       padding: 10px 14px;
       border-radius: 10px;
       margin: 4px 0;
@@ -490,19 +613,15 @@
       word-break: break-word;
     }
 
-    /* ============================
-       REGELN
-       ============================ */
+    /* ===== REGELN ===== */
     .rule-box {
-      background: rgba(255, 45, 85, 0.06);
+      background: var(--accent-light);
       border-left: 4px solid var(--accent);
       padding: 14px 16px;
       border-radius: 0 12px 12px 0;
       margin: 12px 0;
     }
-    .rule-box strong {
-      color: var(--accent);
-    }
+    .rule-box strong { color: var(--accent); }
     .rule-list {
       padding-left: 20px;
       list-style: none;
@@ -521,368 +640,80 @@
       font-size: 1.2rem;
     }
 
-    /* ============================
-       MODAL
-       ============================ */
-    .modal {
-      display: none;
-      position: fixed;
-      inset: 0;
-      z-index: 9999;
-      background: rgba(0, 0, 0, 0.8);
-      backdrop-filter: blur(6px);
-      justify-content: center;
-      align-items: center;
-      padding: 20px;
-      animation: fadeIn 0.25s ease;
-    }
-    .modal.active {
-      display: flex;
-    }
-
-    @keyframes fadeIn {
-      from {
-        opacity: 0;
-        transform: scale(0.96);
-      }
-      to {
-        opacity: 1;
-        transform: scale(1);
-      }
-    }
-
-    .modal-content {
-      background: var(--card-bg);
-      border: 1px solid var(--accent);
-      border-radius: var(--radius);
-      padding: 24px;
-      max-width: 420px;
-      width: 100%;
-      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
-    }
-    .modal-content h3 {
-      margin: 0 0 12px;
-      font-size: 1.3rem;
-    }
-    .modal-content .modal-text {
-      background: rgba(255, 255, 255, 0.03);
-      padding: 10px 14px;
-      border-radius: 10px;
-      margin-bottom: 16px;
-      font-weight: 500;
-      border: 1px solid #2a1a1a;
-    }
-    .modal-content .form-group {
-      margin-bottom: 12px;
-    }
-    .modal-buttons {
-      display: flex;
-      gap: 10px;
-      margin-top: 16px;
-    }
-    .modal-buttons button {
-      flex: 1;
-      padding: 12px;
-      border-radius: 40px;
-      border: none;
-      font-weight: 700;
-      font-size: 0.95rem;
-      cursor: pointer;
-      transition: var(--transition);
-      min-height: 48px;
-    }
-    .modal-buttons .btn-primary {
-      flex: 2;
-    }
-    .modal-buttons .btn-secondary {
-      background: rgba(255, 255, 255, 0.06);
-      color: var(--text);
-      border: 1px solid #2a1a1a;
-    }
-    .modal-buttons .btn-secondary:hover {
-      background: rgba(255, 255, 255, 0.12);
-    }
-
-    /* ============================
-       TOAST
-       ============================ */
-    #toastContainer {
-      position: fixed;
-      bottom: 24px;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 99999;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      width: 90%;
-      max-width: 400px;
-      pointer-events: none;
-    }
-    .toast {
-      background: #1a1212;
-      color: #fff;
-      padding: 14px 20px;
-      border-radius: 14px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
-      border-left: 4px solid var(--accent);
-      animation: slideUp 0.35s ease;
-      pointer-events: auto;
-      font-size: 0.9rem;
-      backdrop-filter: blur(8px);
-      border: 1px solid #2a1a1a;
-    }
-    .toast.success {
-      border-left-color: var(--green);
-    }
-    .toast.error {
-      border-left-color: var(--accent);
-    }
-    @keyframes slideUp {
-      from {
-        opacity: 0;
-        transform: translateY(30px) scale(0.95);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-      }
-    }
-
-    /* ============================
-       MOBILE OPTIMIERUNGEN
-       ============================ */
+    /* ===== MOBILE ANPASSUNGEN ===== */
     @media (max-width: 700px) {
-      body {
-        padding: 8px;
-      }
+      body { padding: 8px; }
 
       header {
         flex-direction: column;
         align-items: stretch;
         padding: 14px;
       }
-      .header-left h1 {
-        font-size: 1.4rem;
-      }
-      .header-left p {
-        font-size: 0.75rem;
-      }
-      .header-actions {
-        justify-content: flex-start;
-      }
-      .konto-wrap {
-        align-self: flex-start;
-        padding: 6px 14px 6px 18px;
-      }
-      .konto-wrap .konto {
-        font-size: 1.6rem;
-      }
+      .header-left h1 { font-size: 1.3rem; }
+      .header-left p { font-size: 0.75rem; }
+      .header-actions { justify-content: flex-start; }
+      .konto-wrap { align-self: flex-start; }
+      .konto-wrap .konto { font-size: 1.6rem; }
 
-      .tab-btn {
-        font-size: 0.75rem;
-        padding: 8px 14px;
-        min-height: 38px;
-      }
+      .tab-btn { font-size: 0.75rem; padding: 8px 14px; min-height: 38px; }
 
-      .card {
-        padding: 14px 12px;
-        border-radius: 14px;
-      }
-      .card h2 {
-        font-size: 1rem;
-      }
+      .card { padding: 14px 12px; border-radius: 14px; }
+      .card h2 { font-size: 1rem; }
 
-      table {
-        font-size: 0.75rem;
-        min-width: 380px;
-      }
-      th {
-        padding: 8px 6px;
-        font-size: 0.6rem;
-      }
-      td {
-        padding: 8px 6px;
-      }
+      table { font-size: 0.75rem; min-width: 380px; }
+      th { padding: 8px 6px; font-size: 0.6rem; }
+      td { padding: 8px 6px; }
 
-      .punkte-badge {
-        font-size: 0.7rem;
-        padding: 2px 10px;
-        min-width: 30px;
-      }
+      .punkte-badge { font-size: 0.7rem; padding: 2px 10px; min-width: 30px; }
+      .action-group button { padding: 4px 8px; font-size: 0.75rem; min-height: 34px; min-width: 34px; }
 
-      .action-group button {
-        padding: 4px 8px;
-        font-size: 0.75rem;
-        min-height: 34px;
-        min-width: 34px;
-      }
+      .modal-content { padding: 18px; margin: 10px; }
 
-      .modal-content {
-        padding: 18px;
-        margin: 10px;
-      }
+      .log-entry { font-size: 0.7rem; padding: 8px 12px; flex-wrap: wrap; }
+      .log-entry .time { font-size: 0.6rem; }
 
-      .log-entry {
-        font-size: 0.7rem;
-        padding: 8px 12px;
-        flex-wrap: wrap;
-      }
-      .log-entry .time {
-        font-size: 0.6rem;
-      }
-
-      .btn-primary {
-        padding: 12px 20px;
-        font-size: 0.9rem;
-        min-height: 44px;
-      }
-
+      .btn-primary { padding: 12px 20px; font-size: 0.9rem; min-height: 44px; }
       .form-group input,
       .form-group select,
-      .form-group textarea {
-        padding: 10px 12px;
-        font-size: 0.9rem;
-      }
+      .form-group textarea { padding: 10px 12px; font-size: 0.9rem; }
     }
 
     @media (max-width: 420px) {
-      table {
-        font-size: 0.65rem;
-        min-width: 320px;
-      }
-      th,
-      td {
-        padding: 6px 4px;
-      }
-      .action-group button {
-        padding: 2px 6px;
-        font-size: 0.7rem;
-        min-height: 30px;
-        min-width: 30px;
-      }
-      .punkte-badge {
-        font-size: 0.6rem;
-        padding: 1px 8px;
-        min-width: 26px;
-      }
-      .konto-wrap .konto {
-        font-size: 1.3rem;
-      }
-      .header-left h1 {
-        font-size: 1.2rem;
-      }
+      table { font-size: 0.65rem; min-width: 320px; }
+      th, td { padding: 6px 4px; }
+      .action-group button { padding: 2px 6px; font-size: 0.7rem; min-height: 30px; min-width: 30px; }
+      .punkte-badge { font-size: 0.6rem; padding: 1px 8px; min-width: 26px; }
+      .konto-wrap .konto { font-size: 1.3rem; }
+      .header-left h1 { font-size: 1.1rem; }
     }
 
-    /* ============================
-       FORTPschrittsbalken (optional)
-       ============================ */
-    .progress-wrap {
-      margin-top: 10px;
-      background: #1a1111;
-      border-radius: 40px;
-      height: 6px;
-      overflow: hidden;
-      border: 1px solid #2a1a1a;
-    }
-    .progress-wrap .bar {
-      height: 100%;
-      background: linear-gradient(90deg, var(--accent), var(--gold));
-      border-radius: 40px;
-      transition: width 0.5s ease;
-      width: 0%;
-    }
+    /* ===== UTILITIES ===== */
+    .mt-8 { margin-top: 8px; }
+    .mb-8 { margin-bottom: 8px; }
+    .flex-wrap { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+    .hidden { display: none !important; }
+    .text-muted { color: var(--text-muted); }
+    .text-center { text-align: center; }
+    .gap-4 { gap: 4px; }
 
-    /* ============================
-       SONSTIGES
-       ============================ */
-    .text-center {
-      text-align: center;
-    }
-    .mt-8 {
-      margin-top: 8px;
-    }
-    .gap-4 {
-      gap: 4px;
-    }
-    .flex-wrap {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-    }
-    .hidden {
-      display: none !important;
-    }
-
-    /* ============================
-       TAGEBUCH (NEU)
-       ============================ */
-    .tagebuch-eintrag {
-      background: rgba(255, 255, 255, 0.02);
-      padding: 14px 16px;
-      border-radius: 14px;
-      margin: 10px 0;
-      border-left: 4px solid var(--accent);
-      transition: var(--transition);
-      cursor: default;
-    }
-    .tagebuch-eintrag:hover {
-      background: rgba(255, 45, 85, 0.04);
-      border-left-color: var(--gold);
-    }
-    .tagebuch-datum {
-      font-size: 0.75rem;
-      color: var(--gold);
-      font-weight: 700;
-      margin-bottom: 4px;
-      letter-spacing: 0.5px;
-    }
-    .tagebuch-text {
-      font-size: 0.95rem;
-      line-height: 1.5;
-      white-space: pre-wrap;
-      cursor: pointer;
-      padding: 2px 4px;
-      border-radius: 6px;
-      border: 1px solid transparent;
-      transition: var(--transition);
-    }
-    .tagebuch-text:hover {
-      border-color: var(--accent);
-      background: rgba(255, 45, 85, 0.05);
-    }
-    .tagebuch-actions {
-      display: flex;
-      gap: 6px;
-      margin-top: 8px;
-      justify-content: flex-end;
-    }
-    .tagebuch-actions button {
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid transparent;
-      color: var(--text-muted);
-      padding: 4px 12px;
-      border-radius: 20px;
-      font-size: 0.7rem;
-      cursor: pointer;
-      transition: var(--transition);
-    }
-    .tagebuch-actions button:hover {
-      background: rgba(255, 45, 85, 0.15);
-      border-color: var(--accent);
-      color: #fff;
+    /* ===== EINSTELLUNGEN ===== */
+    .settings-group {
+      background: var(--bg);
+      padding: 16px;
+      border-radius: 12px;
+      margin: 8px 0;
     }
   </style>
 </head>
 <body>
 
-  <!-- ===== TOAST CONTAINER ===== -->
+  <!-- ===== TOAST ===== -->
   <div id="toastContainer"></div>
 
   <!-- ===== HEADER ===== -->
   <header>
     <div class="header-left">
-      <h1>🖤 Punkte-System <span>Liebe ist gut, Einsatz ist besser.</span></h1>
+      <h1>❤️ Punkte-System <span>Liebe &amp; Einsatz</span></h1>
       <p>Ehemann sammelt · Ehefrau bewertet · Wiederholbar</p>
       <div class="header-actions">
         <button id="syncBtn">🔄 Sync</button>
@@ -895,19 +726,18 @@
     </div>
   </header>
 
-  <!-- ===== PROGRESS (optional) ===== -->
-  <div class="progress-wrap" id="progressWrap">
-    <div class="bar" id="progressBar" style="width:0%;"></div>
-  </div>
+  <!-- ===== PROGRESS ===== -->
+  <div class="progress-wrap"><div class="bar" id="progressBar" style="width:0%;"></div></div>
 
-  <!-- ===== TAB-LEISTE ===== -->
+  <!-- ===== TABS ===== -->
   <div class="tab-bar" role="tablist">
-    <button class="tab-btn active" data-tab="aufgaben" role="tab">📋 Aufgaben</button>
-    <button class="tab-btn" data-tab="einloesungen" role="tab">🎁 Einlösungen</button>
-    <button class="tab-btn" data-tab="tagebuch" role="tab">📓 Tagebuch</button>
-    <button class="tab-btn" data-tab="neu" role="tab">➕ Neu</button>
-    <button class="tab-btn" data-tab="log" role="tab">📜 Verlauf</button>
-    <button class="tab-btn" data-tab="regeln" role="tab">⚠️ Regeln</button>
+    <button class="tab-btn active" data-tab="aufgaben">📋 Aufgaben</button>
+    <button class="tab-btn" data-tab="einloesungen">🎁 Einlösungen</button>
+    <button class="tab-btn" data-tab="neu">➕ Neu</button>
+    <button class="tab-btn" data-tab="log">📜 Verlauf</button>
+    <button class="tab-btn" data-tab="regeln">⚠️ Regeln</button>
+    <button class="tab-btn" data-tab="tagebuch">📓 Tagebuch</button>
+    <button class="tab-btn" data-tab="einstellungen">⚙️ Einstellungen</button>
   </div>
 
   <!-- ===== MAIN ===== -->
@@ -915,16 +745,11 @@
 
     <!-- TAB: AUFGABEN -->
     <section id="tab-aufgaben" class="tab-content card" role="tabpanel">
-      <h2>
-        <span>📋 Aufgaben für ihn</span>
-        <span class="tag">Sammeln</span>
-      </h2>
-      <p class="sub">✅ Erledigt melden · ⭐ Qualität (1–10) &amp; Punkte vergeben · Danach wieder offen</p>
+      <h2><span>📋 Aufgaben für ihn</span><span class="tag">Sammeln</span></h2>
+      <p class="sub">✅ Erledigt melden · ⭐ Qualität (1–10) &amp; Punkte · Wiederholbar</p>
       <div class="table-wrap">
         <table>
-          <thead>
-            <tr><th>Aufgabe</th><th>Pkte</th><th>Status</th><th>Aktion</th></tr>
-          </thead>
+          <thead><tr><th>Aufgabe</th><th>Pkte</th><th>Status</th><th>Aktion</th></tr></thead>
           <tbody id="aufgabenBody"></tbody>
         </table>
       </div>
@@ -932,34 +757,13 @@
 
     <!-- TAB: EINLÖSUNGEN -->
     <section id="tab-einloesungen" class="tab-content card" style="display:none;" role="tabpanel">
-      <h2>
-        <span>🎁 Einlösekatalog</span>
-        <span class="tag">Ausgeben</span>
-      </h2>
-      <p class="sub">💰 Klicken &amp; bestätigen – keine weitere Warnung.</p>
+      <h2><span>🎁 Einlösekatalog</span><span class="tag">Ausgeben</span></h2>
+      <p class="sub">💰 Klicken &amp; bestätigen – Punkte werden abgezogen.</p>
       <div class="table-wrap">
         <table>
-          <thead>
-            <tr><th>Einlösung</th><th>Kosten</th><th>Notiz</th><th>Aktion</th></tr>
-          </thead>
+          <thead><tr><th>Einlösung</th><th>Kosten</th><th>Notiz</th><th>Aktion</th></tr></thead>
           <tbody id="einloesungenBody"></tbody>
         </table>
-      </div>
-    </section>
-
-    <!-- TAB: TAGEBUCH (NEU) -->
-    <section id="tab-tagebuch" class="tab-content card" style="display:none;" role="tabpanel">
-      <h2>
-        <span>📓 Mein Tagebuch</span>
-        <span class="tag">Privat</span>
-      </h2>
-      <p class="sub">Gedanken, Erlebnisse, geheime Wünsche … (klick zum Bearbeiten)</p>
-      <div id="tagebuchContainer"></div>
-      <div class="form-group mt-8">
-        <label for="neuesDatum">Neuen Eintrag hinzufügen</label>
-        <input type="date" id="neuesDatum" style="margin-bottom:6px;">
-        <textarea id="neuerTagebuchText" rows="3" placeholder="Was ist heute passiert?"></textarea>
-        <button class="btn-primary mt-8" id="tagebuchSpeichern" style="width:auto; padding:10px 20px;">💾 Eintrag speichern</button>
       </div>
     </section>
 
@@ -983,7 +787,7 @@
       </div>
       <div class="form-group">
         <label for="neuerHinweis">Notiz (optional)</label>
-        <input type="text" id="neuerHinweis" placeholder="z. B. Cuckold, Hardcore, Romantik">
+        <input type="text" id="neuerHinweis" placeholder="z. B. Cuckold, Romantik">
       </div>
       <button class="btn-primary" id="speichernNeu">💾 Speichern</button>
     </section>
@@ -1009,6 +813,42 @@
       </ul>
     </section>
 
+    <!-- TAB: TAGEBUCH (NEU mit Bildern & Kommentaren) -->
+    <section id="tab-tagebuch" class="tab-content card" style="display:none;" role="tabpanel">
+      <h2><span>📓 Mein Tagebuch</span><span class="tag">Privat</span></h2>
+      <p class="sub">Gedanken, Erlebnisse, geheime Wünsche … (klick zum Bearbeiten)</p>
+      <div id="tagebuchContainer"></div>
+
+      <div class="form-group mt-8">
+        <label for="neuesDatum">Neuen Eintrag hinzufügen</label>
+        <input type="date" id="neuesDatum" style="margin-bottom:6px;">
+        <textarea id="neuerTagebuchText" rows="3" placeholder="Was ist heute passiert?"></textarea>
+        <div class="flex-wrap mt-8">
+          <label style="font-size:0.8rem; color:var(--text-muted);">Bild (optional):</label>
+          <input type="file" id="neuesBildInput" accept="image/*" style="flex:1; min-width:120px;">
+        </div>
+        <button class="btn-primary mt-8" id="tagebuchSpeichern" style="width:auto; padding:10px 24px;">💾 Eintrag speichern</button>
+      </div>
+    </section>
+
+    <!-- TAB: EINSTELLUNGEN -->
+    <section id="tab-einstellungen" class="tab-content card" style="display:none;" role="tabpanel">
+      <h2>⚙️ Einstellungen</h2>
+      <div class="settings-group">
+        <label style="display:block; font-weight:600; margin-bottom:6px;">PIN ändern</label>
+        <div class="flex-wrap">
+          <input type="password" id="neuePin" placeholder="Neue PIN (z.B. 1234)" style="flex:1; padding:10px 14px; background:var(--bg); border:1px solid var(--card-border); border-radius:10px;">
+          <button id="pinAendernBtn" class="btn-primary" style="width:auto; padding:10px 20px; min-height:44px;">Ändern</button>
+        </div>
+        <p class="text-muted" style="font-size:0.7rem; margin-top:4px;">Aktuelle PIN: <span id="aktuellePinAnzeige">0000</span></p>
+      </div>
+      <div class="settings-group">
+        <p style="font-size:0.85rem; color:var(--text-muted);">ℹ️ Alle Daten werden in der JSONBin-Cloud gespeichert. Synchronisation erfolgt automatisch beim Speichern.</p>
+        <button id="exportDatenBtn" class="btn-primary" style="width:auto; padding:10px 20px; margin-top:8px; background:var(--bg); color:var(--text); border:1px solid var(--card-border);">📥 Daten exportieren (JSON)</button>
+        <button id="importDatenBtn" class="btn-primary" style="width:auto; padding:10px 20px; margin-top:8px; background:var(--bg); color:var(--text); border:1px solid var(--card-border);">📤 Daten importieren (JSON)</button>
+        <input type="file" id="importFileInput" accept=".json" style="display:none;">
+      </div>
+    </section>
   </main>
 
   <!-- ===== MODAL (BEWERTUNG) ===== -->
@@ -1016,7 +856,6 @@
     <div class="modal-content">
       <h3>⭐ Aufgabe bewerten</h3>
       <div class="modal-text" id="modalAufgabenText"></div>
-
       <div class="form-group">
         <label for="modalPunkte">Punkte vergeben</label>
         <input type="number" id="modalPunkte" min="1" value="10" inputmode="numeric">
@@ -1029,7 +868,6 @@
         <label for="modalKommentar">Kommentar (optional)</label>
         <textarea id="modalKommentar" rows="2" placeholder="z. B. 'Fast perfekt, aber Massage war zu kurz'"></textarea>
       </div>
-
       <div class="modal-buttons">
         <button class="btn-secondary" id="modalAbbrechen">Abbrechen</button>
         <button class="btn-primary" id="modalSpeichern">✅ Speichern</button>
@@ -1049,7 +887,7 @@
         BIN_ID: '6a36c9e0f5f4af5e29151a52',
         MASTER_KEY: '$2a$10$RXS/6UhoYPTh7nq/AcLtEeSOld4i4UdPbE25C2m90QuyLRxaGrLgS',
         API_BASE: 'https://api.jsonbin.io/v3/b/6a36c9e0f5f4af5e29151a52',
-        PIN: '0000' // Bei Bedarf ändern oder auf null setzen
+        PIN: '0000' // Standard-PIN – kann in Einstellungen geändert werden
       };
 
       // ===== HELFER =====
@@ -1132,21 +970,21 @@
               { id: genId(), text: 'Sie gibt einem anderen Mann einen Blowjob', kosten: 250, hinweis: 'C' },
               { id: genId(), text: 'Er darf zuschauen, wie sie mit einem anderen Mann schläft', kosten: 350, hinweis: 'C' },
               { id: genId(), text: 'Sie hat Sex mit einem anderen Mann (er wartet im Nebenraum)', kosten: 400,
-              hinweis: 'Hardcore' },
+                hinweis: 'Hardcore' },
               { id: genId(), text: 'Sie hat Sex mit einem anderen Mann (er schaut zu)', kosten: 450, hinweis: 'Hardcore' },
               { id: genId(), text: 'Sie macht ein Sex-Date aus, er darf nur hören', kosten: 500, hinweis: 'Extrem' },
               { id: genId(), text: 'Cleanup – er leckt sie nach dem Sex mit einem anderen', kosten: 350, hinweis: 'C' },
               { id: genId(), text: 'Er bleibt 24h im Keuschheitsgürtel (sie hat den Schlüssel)', kosten: 50,
-              hinweis: 'Femdom' },
+                hinweis: 'Femdom' },
               { id: genId(), text: 'Sie bestimmt 48h komplett über seine Orgasmen', kosten: 100, hinweis: 'Femdom' },
               { id: genId(), text: 'Er muss ihr zuschauen, während sie sich selbst befriedigt', kosten: 40,
-              hinweis: 'Tease' }
+                hinweis: 'Tease' }
             ],
             tagebuch: [
-              { id: genId(), datum: '2026-07-09', text: 'Ich habe endlich den Mut gefunden, sie zu fragen, ob sie mich in diese besondere Bar begleitet – so einen Ort, an dem die Stimmung etwas freier und verspielter ist. Sie hatte keine Lust, und das ist auch völlig in Ordnung. Aber ich bin stolz auf mich, dass ich es ausgesprochen habe. Es fühlt sich gut an, ehrlich mit seinen Fantasien zu sein. Mal sehen, wohin diese Offenheit uns noch führt.' },
-              { id: genId(), datum: '2026-07-10', text: 'Heute waren wir zusammen im Bett. Ich habe mich richtig gut gefühlt und meinte hinterher scherzhaft, das sei locker eine 8 von 10 gewesen. Allerdings war ich etwas übereifrig – kam früher als geplant. Sie wirkte, als hätte da noch ein bisschen was gefehlt. Vielleicht sollte ich mir demnächst mehr Zeit nehmen, um zuerst ganz genau zu beobachten, was sie wirklich in Fahrt bringt. Sie verdient es, dass jemand so lange durchhält, bis sie völlig zufrieden ist. Vielleicht wäre es sogar aufregend, sie einfach nur zu beobachten, während jemand anderes das übernimmt … allein die Vorstellung, wie ihr Gesicht dabei aussieht.' },
-              { id: genId(), datum: '2026-07-11', text: 'Sie hat mir ihre neuen Bikinis vorgeführt. Unglaublich heiße Teile – sie sah umwerfend aus, wirklich atemberaubend. Im Freibad ist mir dann aufgefallen, wie viele Blicke sie auf sich zieht. Ich kann es niemandem verdenken, sie hat einen göttlichen Körper. Diesen unwiderstehlichen Po hätte ich am liebsten direkt vor aller Augen verwöhnt, aber dafür bin ich wohl noch zu gehemmt. Abends allein zu Hause ließ ich die Bilder Revue passieren und stellte mir vor, wie es wäre, wenn sie ihre Wirkung auf andere einfach mal genießt – ohne schlechtes Gewissen. Die Vorstellung, dass sie begehrt wird, hat etwas ungemein Erregendes.' },
-              { id: genId(), datum: '2026-07-12', text: 'Sie scherzte heute, ich solle bloß keinen Zentimeter dazulügen, und schmückte mich im Liegestuhl mit einem einzelnen Blatt – ein bisschen neckend, ein bisschen dominant. Sie selbst meinte, FKK im Urlaub käme für sie nicht infrage, ich aber dürfe ruhig. Vielleicht spürt sie, dass ich insgeheim von mehr Freiheit träume. Wobei es mich noch viel mehr reizen würde, SIE dabei zu sehen, wie sie sich ohne Hüllen völlig frei bewegt und die bewundernden Blicke genießt. Vielleicht lasse ich solche Gedanken einfach mal im Raum stehen – nicht fordernd, sondern wie eine Einladung, der man folgen kann, wenn man möchte.' }
+              { id: genId(), datum: '2026-07-09', text: 'Ich habe endlich den Mut gefunden, sie zu fragen, ob sie mich in diese besondere Bar begleitet – so einen Ort, an dem die Stimmung etwas freier und verspielter ist. Sie hatte keine Lust, und das ist auch völlig in Ordnung. Aber ich bin stolz auf mich, dass ich es ausgesprochen habe. Es fühlt sich gut an, ehrlich mit seinen Fantasien zu sein. Mal sehen, wohin diese Offenheit uns noch führt.', image: '', kommentare: [] },
+              { id: genId(), datum: '2026-07-10', text: 'Heute waren wir zusammen im Bett. Ich habe mich richtig gut gefühlt und meinte hinterher scherzhaft, das sei locker eine 8 von 10 gewesen. Allerdings war ich etwas übereifrig – kam früher als geplant. Sie wirkte, als hätte da noch ein bisschen was gefehlt. Vielleicht sollte ich mir demnächst mehr Zeit nehmen, um zuerst ganz genau zu beobachten, was sie wirklich in Fahrt bringt. Sie verdient es, dass jemand so lange durchhält, bis sie völlig zufrieden ist. Vielleicht wäre es sogar aufregend, sie einfach nur zu beobachten, während jemand anderes das übernimmt … allein die Vorstellung, wie ihr Gesicht dabei aussieht.', image: '', kommentare: [] },
+              { id: genId(), datum: '2026-07-11', text: 'Sie hat mir ihre neuen Bikinis vorgeführt. Unglaublich heiße Teile – sie sah umwerfend aus, wirklich atemberaubend. Im Freibad ist mir dann aufgefallen, wie viele Blicke sie auf sich zieht. Ich kann es niemandem verdenken, sie hat einen göttlichen Körper. Diesen unwiderstehlichen Po hätte ich am liebsten direkt vor aller Augen verwöhnt, aber dafür bin ich wohl noch zu gehemmt. Abends allein zu Hause ließ ich die Bilder Revue passieren und stellte mir vor, wie es wäre, wenn sie ihre Wirkung auf andere einfach mal genießt – ohne schlechtes Gewissen. Die Vorstellung, dass sie begehrt wird, hat etwas ungemein Erregendes.', image: '', kommentare: [] },
+              { id: genId(), datum: '2026-07-12', text: 'Sie scherzte heute, ich solle bloß keinen Zentimeter dazulügen, und schmückte mich im Liegestuhl mit einem einzelnen Blatt – ein bisschen neckend, ein bisschen dominant. Sie selbst meinte, FKK im Urlaub käme für sie nicht infrage, ich aber dürfe ruhig. Vielleicht spürt sie, dass ich insgeheim von mehr Freiheit träume. Wobei es mich noch viel mehr reizen würde, SIE dabei zu sehen, wie sie sich ohne Hüllen völlig frei bewegt und die bewundernden Blicke genießt. Vielleicht lasse ich solche Gedanken einfach mal im Raum stehen – nicht fordernd, sondern wie eine Einladung, der man folgen kann, wenn man möchte.', image: '', kommentare: [] }
             ],
             konto: 0,
             log: []
@@ -1166,10 +1004,19 @@
               await this.save(true);
             } else {
               this.lokaleDaten = data;
-              // Falls Tagebuch noch nicht existiert, initialisieren
-              if (!this.lokaleDaten.tagebuch) {
+              // Sicherstellen, dass jedes Tagebuch-Eintrag die neuen Felder hat
+              if (this.lokaleDaten.tagebuch) {
+                this.lokaleDaten.tagebuch.forEach(e => {
+                  if (!e.image) e.image = '';
+                  if (!e.kommentare) e.kommentare = [];
+                });
+              } else {
                 this.lokaleDaten.tagebuch = [];
               }
+              // PIN aus localStorage holen, falls vorhanden
+              const savedPin = localStorage.getItem('pin');
+              if (savedPin) CONFIG.PIN = savedPin;
+              document.getElementById('aktuellePinAnzeige').textContent = CONFIG.PIN;
             }
             document.getElementById('syncStatus').textContent = ' ✅';
             return true;
@@ -1241,8 +1088,8 @@
           this.lokaleDaten.einloesungen.push(neu);
           return neu;
         },
-        addTagebuchEintrag(datum, text) {
-          const neu = { id: genId(), datum, text };
+        addTagebuchEintrag(datum, text, imageBase64) {
+          const neu = { id: genId(), datum, text, image: imageBase64 || '', kommentare: [] };
           this.lokaleDaten.tagebuch.push(neu);
           return neu;
         },
@@ -1358,17 +1205,36 @@
             const div = document.createElement('div');
             div.className = 'tagebuch-eintrag';
             div.dataset.id = e.id;
+
+            let bildHtml = '';
+            if (e.image) {
+              bildHtml = `<img src="${e.image}" alt="Bild zum Eintrag" class="tagebuch-bild" style="max-width:100%; max-height:300px; object-fit:contain;">`;
+            }
+
+            let kommentareHtml = '';
+            if (e.kommentare && e.kommentare.length > 0) {
+              const kommentareListe = e.kommentare.map(k =>
+                `<div class="tagebuch-kommentar"><span class="zeit">${esc(k.zeit)}</span><span>${esc(k.text)}</span></div>`
+              ).join('');
+              kommentareHtml = `<div class="tagebuch-kommentare">${kommentareListe}</div>`;
+            }
+
             div.innerHTML = `
               <div class="tagebuch-datum">${esc(e.datum)}</div>
               <div class="tagebuch-text" data-field="text">${esc(e.text)}</div>
+              ${bildHtml}
+              ${kommentareHtml}
               <div class="tagebuch-actions">
                 <button class="tagebuch-datum-bearbeiten" data-id="${e.id}">📅 Datum</button>
+                <button class="tagebuch-bild-upload" data-id="${e.id}">🖼️ Bild</button>
+                <button class="tagebuch-bild-loeschen" data-id="${e.id}" style="${e.image ? '' : 'display:none;'}">🗑️ Bild</button>
+                <button class="tagebuch-kommentar-hinzufuegen" data-id="${e.id}">💬 Kommentar</button>
                 <button class="danger tagebuch-loeschen" data-id="${e.id}">🗑 Löschen</button>
               </div>`;
             container.appendChild(div);
           });
 
-          // Textbearbeitung per Klick
+          // Text bearbeiten (klick)
           container.querySelectorAll('.tagebuch-text').forEach(el => {
             el.addEventListener('click', function(e) {
               if (this.dataset.editing === 'true') return;
@@ -1379,8 +1245,8 @@
               textarea.value = aktuellerText;
               textarea.style.width = '100%';
               textarea.style.minHeight = '80px';
-              textarea.style.background = '#1a1111';
-              textarea.style.color = '#fff';
+              textarea.style.background = 'var(--bg)';
+              textarea.style.color = 'var(--text)';
               textarea.style.border = '1px solid var(--accent)';
               textarea.style.borderRadius = '8px';
               textarea.style.padding = '8px';
@@ -1412,7 +1278,7 @@
             });
           });
 
-          // Datumsbearbeitung
+          // Datumsänderung
           container.querySelectorAll('.tagebuch-datum-bearbeiten').forEach(btn => {
             btn.addEventListener('click', function(e) {
               e.stopPropagation();
@@ -1430,6 +1296,67 @@
             });
           });
 
+          // Bild hochladen
+          container.querySelectorAll('.tagebuch-bild-upload').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+              e.stopPropagation();
+              const id = this.dataset.id;
+              const input = document.createElement('input');
+              input.type = 'file';
+              input.accept = 'image/*';
+              input.onchange = function(ev) {
+                const file = ev.target.files[0];
+                if (!file) return;
+                const reader = new FileReader();
+                reader.onload = function(ev2) {
+                  const base64 = ev2.target.result;
+                  const eintrag = DataManager.findTagebuch(id);
+                  if (eintrag) {
+                    eintrag.image = base64;
+                    DataManager.addLog(`Bild zu Tagebucheintrag hinzugefügt.`);
+                    DataManager.save().then(() => UIRenderer.renderAlles(DataManager.lokaleDaten));
+                  }
+                };
+                reader.readAsDataURL(file);
+              };
+              input.click();
+            });
+          });
+
+          // Bild löschen
+          container.querySelectorAll('.tagebuch-bild-loeschen').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+              e.stopPropagation();
+              const id = this.dataset.id;
+              const eintrag = DataManager.findTagebuch(id);
+              if (eintrag && eintrag.image) {
+                if (confirm('Bild wirklich entfernen?')) {
+                  eintrag.image = '';
+                  DataManager.addLog(`Bild aus Tagebucheintrag entfernt.`);
+                  DataManager.save().then(() => UIRenderer.renderAlles(DataManager.lokaleDaten));
+                }
+              }
+            });
+          });
+
+          // Kommentar hinzufügen
+          container.querySelectorAll('.tagebuch-kommentar-hinzufuegen').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+              e.stopPropagation();
+              const id = this.dataset.id;
+              const kommentarText = prompt('Dein Kommentar:');
+              if (kommentarText && kommentarText.trim()) {
+                const eintrag = DataManager.findTagebuch(id);
+                if (eintrag) {
+                  if (!eintrag.kommentare) eintrag.kommentare = [];
+                  eintrag.kommentare.push({ text: kommentarText.trim(), zeit: now() });
+                  DataManager.addLog(`Kommentar zu Tagebucheintrag hinzugefügt.`);
+                  DataManager.save().then(() => UIRenderer.renderAlles(DataManager.lokaleDaten));
+                }
+              }
+            });
+          });
+
           // Löschen
           container.querySelectorAll('.tagebuch-loeschen').forEach(btn => {
             btn.addEventListener('click', function(e) {
@@ -1441,6 +1368,17 @@
                 DataManager.save().then(() => UIRenderer.renderAlles(DataManager.lokaleDaten));
               }
             });
+          });
+
+          // Bild-Lösch-Button sichtbar/unsichtbar nach Rendering
+          container.querySelectorAll('.tagebuch-eintrag').forEach(div => {
+            const id = div.dataset.id;
+            const eintrag = DataManager.findTagebuch(id);
+            const loeschBtn = div.querySelector('.tagebuch-bild-loeschen');
+            if (loeschBtn) {
+              if (eintrag && eintrag.image) loeschBtn.style.display = '';
+              else loeschBtn.style.display = 'none';
+            }
           });
         },
 
@@ -1474,8 +1412,8 @@
           input.value = aktuellerWert;
           input.style.width = '100%';
           input.style.minWidth = '60px';
-          input.style.background = '#1a1111';
-          input.style.color = '#fff';
+          input.style.background = 'var(--bg)';
+          input.style.color = 'var(--text)';
           input.style.border = '1px solid var(--accent)';
           input.style.borderRadius = '6px';
           input.style.padding = '4px 8px';
@@ -1524,7 +1462,7 @@
           if (CONFIG.PIN) {
             const eingabe = prompt('Bitte PIN eingeben:', '');
             if (eingabe !== CONFIG.PIN) {
-              document.body.innerHTML = '<h1 style="color:red;text-align:center;padding:40px;">Zugriff verweigert – falsche PIN.</h1>';
+              document.body.innerHTML = '<h1 style="color:#d45c4c;text-align:center;padding:40px;">Zugriff verweigert – falsche PIN.</h1>';
               return;
             }
           }
@@ -1558,16 +1496,36 @@
           document.getElementById('tagebuchSpeichern').addEventListener('click', () => {
             const datum = document.getElementById('neuesDatum').value;
             const text = document.getElementById('neuerTagebuchText').value.trim();
+            const bildInput = document.getElementById('neuesBildInput');
             if (!datum) { showToast('Bitte Datum auswählen.', 'error'); return; }
             if (!text) { showToast('Bitte Text eingeben.', 'error'); return; }
-            DataManager.addTagebuchEintrag(datum, text);
-            DataManager.addLog(`Neuer Tagebucheintrag für ${datum}.`);
-            document.getElementById('neuesDatum').value = '';
-            document.getElementById('neuerTagebuchText').value = '';
-            DataManager.save().then(() => {
-              UIRenderer.renderAlles(DataManager.lokaleDaten);
-              showToast('Tagebucheintrag gespeichert.', 'success');
-            });
+
+            const file = bildInput.files[0];
+            if (file) {
+              const reader = new FileReader();
+              reader.onload = function(ev) {
+                const base64 = ev.target.result;
+                DataManager.addTagebuchEintrag(datum, text, base64);
+                DataManager.addLog(`Neuer Tagebucheintrag für ${datum} mit Bild.`);
+                document.getElementById('neuesDatum').value = '';
+                document.getElementById('neuerTagebuchText').value = '';
+                bildInput.value = '';
+                DataManager.save().then(() => {
+                  UIRenderer.renderAlles(DataManager.lokaleDaten);
+                  showToast('Tagebucheintrag gespeichert.', 'success');
+                });
+              };
+              reader.readAsDataURL(file);
+            } else {
+              DataManager.addTagebuchEintrag(datum, text, '');
+              DataManager.addLog(`Neuer Tagebucheintrag für ${datum}.`);
+              document.getElementById('neuesDatum').value = '';
+              document.getElementById('neuerTagebuchText').value = '';
+              DataManager.save().then(() => {
+                UIRenderer.renderAlles(DataManager.lokaleDaten);
+                showToast('Tagebucheintrag gespeichert.', 'success');
+              });
+            }
           });
 
           // Event-Delegation für Tabellen
@@ -1629,6 +1587,71 @@
           document.getElementById('bewertungsModal').addEventListener('click', (e) => {
             if (e.target === e.currentTarget) this.modalSchliessen();
           });
+
+          // Einstellungen: PIN ändern
+          document.getElementById('pinAendernBtn').addEventListener('click', () => {
+            const neuePin = document.getElementById('neuePin').value.trim();
+            if (!neuePin || neuePin.length < 4) {
+              showToast('Bitte mindestens 4 Zeichen eingeben.', 'error');
+              return;
+            }
+            CONFIG.PIN = neuePin;
+            localStorage.setItem('pin', neuePin);
+            document.getElementById('aktuellePinAnzeige').textContent = neuePin;
+            document.getElementById('neuePin').value = '';
+            showToast('PIN erfolgreich geändert.', 'success');
+          });
+
+          // Export / Import
+          document.getElementById('exportDatenBtn').addEventListener('click', () => {
+            const json = JSON.stringify(DataManager.lokaleDaten, null, 2);
+            const blob = new Blob([json], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `punkte_daten_${new Date().toISOString().slice(0,10)}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+          });
+
+          document.getElementById('importDatenBtn').addEventListener('click', () => {
+            document.getElementById('importFileInput').click();
+          });
+
+          document.getElementById('importFileInput').addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = (ev) => {
+              try {
+                const imported = JSON.parse(ev.target.result);
+                if (!imported.aufgaben || !imported.einloesungen) {
+                  showToast('Ungültiges Dateiformat.', 'error');
+                  return;
+                }
+                if (confirm('Daten importieren? Alle lokalen Daten werden überschrieben.')) {
+                  DataManager.lokaleDaten = imported;
+                  // Felder für Tagebuch sicherstellen
+                  if (DataManager.lokaleDaten.tagebuch) {
+                    DataManager.lokaleDaten.tagebuch.forEach(e => {
+                      if (!e.image) e.image = '';
+                      if (!e.kommentare) e.kommentare = [];
+                    });
+                  } else {
+                    DataManager.lokaleDaten.tagebuch = [];
+                  }
+                  DataManager.save().then(() => {
+                    UIRenderer.renderAlles(DataManager.lokaleDaten);
+                    showToast('Import erfolgreich.', 'success');
+                  });
+                }
+              } catch (err) {
+                showToast('Fehler beim Import: ' + err.message, 'error');
+              }
+            };
+            reader.readAsText(file);
+            e.target.value = '';
+          });
         },
 
         _bewertungsAufgabeId: null,
@@ -1680,3 +1703,4 @@
   </script>
 </body>
 </html>
+```
