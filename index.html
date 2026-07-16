@@ -813,6 +813,65 @@
     .hidden {
       display: none !important;
     }
+
+    /* ============================
+       TAGEBUCH (NEU)
+       ============================ */
+    .tagebuch-eintrag {
+      background: rgba(255, 255, 255, 0.02);
+      padding: 14px 16px;
+      border-radius: 14px;
+      margin: 10px 0;
+      border-left: 4px solid var(--accent);
+      transition: var(--transition);
+      cursor: default;
+    }
+    .tagebuch-eintrag:hover {
+      background: rgba(255, 45, 85, 0.04);
+      border-left-color: var(--gold);
+    }
+    .tagebuch-datum {
+      font-size: 0.75rem;
+      color: var(--gold);
+      font-weight: 700;
+      margin-bottom: 4px;
+      letter-spacing: 0.5px;
+    }
+    .tagebuch-text {
+      font-size: 0.95rem;
+      line-height: 1.5;
+      white-space: pre-wrap;
+      cursor: pointer;
+      padding: 2px 4px;
+      border-radius: 6px;
+      border: 1px solid transparent;
+      transition: var(--transition);
+    }
+    .tagebuch-text:hover {
+      border-color: var(--accent);
+      background: rgba(255, 45, 85, 0.05);
+    }
+    .tagebuch-actions {
+      display: flex;
+      gap: 6px;
+      margin-top: 8px;
+      justify-content: flex-end;
+    }
+    .tagebuch-actions button {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid transparent;
+      color: var(--text-muted);
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 0.7rem;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    .tagebuch-actions button:hover {
+      background: rgba(255, 45, 85, 0.15);
+      border-color: var(--accent);
+      color: #fff;
+    }
   </style>
 </head>
 <body>
@@ -845,6 +904,7 @@
   <div class="tab-bar" role="tablist">
     <button class="tab-btn active" data-tab="aufgaben" role="tab">📋 Aufgaben</button>
     <button class="tab-btn" data-tab="einloesungen" role="tab">🎁 Einlösungen</button>
+    <button class="tab-btn" data-tab="tagebuch" role="tab">📓 Tagebuch</button>
     <button class="tab-btn" data-tab="neu" role="tab">➕ Neu</button>
     <button class="tab-btn" data-tab="log" role="tab">📜 Verlauf</button>
     <button class="tab-btn" data-tab="regeln" role="tab">⚠️ Regeln</button>
@@ -884,6 +944,22 @@
           </thead>
           <tbody id="einloesungenBody"></tbody>
         </table>
+      </div>
+    </section>
+
+    <!-- TAB: TAGEBUCH (NEU) -->
+    <section id="tab-tagebuch" class="tab-content card" style="display:none;" role="tabpanel">
+      <h2>
+        <span>📓 Mein Tagebuch</span>
+        <span class="tag">Privat</span>
+      </h2>
+      <p class="sub">Gedanken, Erlebnisse, geheime Wünsche … (klick zum Bearbeiten)</p>
+      <div id="tagebuchContainer"></div>
+      <div class="form-group mt-8">
+        <label for="neuesDatum">Neuen Eintrag hinzufügen</label>
+        <input type="date" id="neuesDatum" style="margin-bottom:6px;">
+        <textarea id="neuerTagebuchText" rows="3" placeholder="Was ist heute passiert?"></textarea>
+        <button class="btn-primary mt-8" id="tagebuchSpeichern" style="width:auto; padding:10px 20px;">💾 Eintrag speichern</button>
       </div>
     </section>
 
@@ -1005,7 +1081,7 @@
 
       // ===== DATA MANAGER =====
       const DataManager = {
-        lokaleDaten: { aufgaben: [], einloesungen: [], konto: 0, log: [] },
+        lokaleDaten: { aufgaben: [], einloesungen: [], tagebuch: [], konto: 0, log: [] },
         aktuelleVersion: null,
 
         getHeaders(extra = {}) {
@@ -1066,6 +1142,12 @@
               { id: genId(), text: 'Er muss ihr zuschauen, während sie sich selbst befriedigt', kosten: 40,
               hinweis: 'Tease' }
             ],
+            tagebuch: [
+              { id: genId(), datum: '2026-07-09', text: 'Ich habe endlich den Mut gefunden, sie zu fragen, ob sie mich in diese besondere Bar begleitet – so einen Ort, an dem die Stimmung etwas freier und verspielter ist. Sie hatte keine Lust, und das ist auch völlig in Ordnung. Aber ich bin stolz auf mich, dass ich es ausgesprochen habe. Es fühlt sich gut an, ehrlich mit seinen Fantasien zu sein. Mal sehen, wohin diese Offenheit uns noch führt.' },
+              { id: genId(), datum: '2026-07-10', text: 'Heute waren wir zusammen im Bett. Ich habe mich richtig gut gefühlt und meinte hinterher scherzhaft, das sei locker eine 8 von 10 gewesen. Allerdings war ich etwas übereifrig – kam früher als geplant. Sie wirkte, als hätte da noch ein bisschen was gefehlt. Vielleicht sollte ich mir demnächst mehr Zeit nehmen, um zuerst ganz genau zu beobachten, was sie wirklich in Fahrt bringt. Sie verdient es, dass jemand so lange durchhält, bis sie völlig zufrieden ist. Vielleicht wäre es sogar aufregend, sie einfach nur zu beobachten, während jemand anderes das übernimmt … allein die Vorstellung, wie ihr Gesicht dabei aussieht.' },
+              { id: genId(), datum: '2026-07-11', text: 'Sie hat mir ihre neuen Bikinis vorgeführt. Unglaublich heiße Teile – sie sah umwerfend aus, wirklich atemberaubend. Im Freibad ist mir dann aufgefallen, wie viele Blicke sie auf sich zieht. Ich kann es niemandem verdenken, sie hat einen göttlichen Körper. Diesen unwiderstehlichen Po hätte ich am liebsten direkt vor aller Augen verwöhnt, aber dafür bin ich wohl noch zu gehemmt. Abends allein zu Hause ließ ich die Bilder Revue passieren und stellte mir vor, wie es wäre, wenn sie ihre Wirkung auf andere einfach mal genießt – ohne schlechtes Gewissen. Die Vorstellung, dass sie begehrt wird, hat etwas ungemein Erregendes.' },
+              { id: genId(), datum: '2026-07-12', text: 'Sie scherzte heute, ich solle bloß keinen Zentimeter dazulügen, und schmückte mich im Liegestuhl mit einem einzelnen Blatt – ein bisschen neckend, ein bisschen dominant. Sie selbst meinte, FKK im Urlaub käme für sie nicht infrage, ich aber dürfe ruhig. Vielleicht spürt sie, dass ich insgeheim von mehr Freiheit träume. Wobei es mich noch viel mehr reizen würde, SIE dabei zu sehen, wie sie sich ohne Hüllen völlig frei bewegt und die bewundernden Blicke genießt. Vielleicht lasse ich solche Gedanken einfach mal im Raum stehen – nicht fordernd, sondern wie eine Einladung, der man folgen kann, wenn man möchte.' }
+            ],
             konto: 0,
             log: []
           };
@@ -1084,6 +1166,10 @@
               await this.save(true);
             } else {
               this.lokaleDaten = data;
+              // Falls Tagebuch noch nicht existiert, initialisieren
+              if (!this.lokaleDaten.tagebuch) {
+                this.lokaleDaten.tagebuch = [];
+              }
             }
             document.getElementById('syncStatus').textContent = ' ✅';
             return true;
@@ -1155,15 +1241,23 @@
           this.lokaleDaten.einloesungen.push(neu);
           return neu;
         },
+        addTagebuchEintrag(datum, text) {
+          const neu = { id: genId(), datum, text };
+          this.lokaleDaten.tagebuch.push(neu);
+          return neu;
+        },
         deleteEintrag(id, typ) {
           if (typ === 'aufgabe') {
             this.lokaleDaten.aufgaben = this.lokaleDaten.aufgaben.filter(x => x.id !== id);
-          } else {
+          } else if (typ === 'einloesung') {
             this.lokaleDaten.einloesungen = this.lokaleDaten.einloesungen.filter(x => x.id !== id);
+          } else if (typ === 'tagebuch') {
+            this.lokaleDaten.tagebuch = this.lokaleDaten.tagebuch.filter(x => x.id !== id);
           }
         },
         findAufgabe(id) { return this.lokaleDaten.aufgaben.find(x => x.id === id); },
         findEinloesung(id) { return this.lokaleDaten.einloesungen.find(x => x.id === id); },
+        findTagebuch(id) { return this.lokaleDaten.tagebuch.find(x => x.id === id); },
         addLog(text) {
           this.lokaleDaten.log.push({ text, time: now() });
         },
@@ -1178,6 +1272,7 @@
           this.renderKonto(daten.konto);
           this.renderAufgaben(daten.aufgaben);
           this.renderEinloesungen(daten.einloesungen);
+          this.renderTagebuch(daten.tagebuch);
           this.renderLog(daten.log);
           this.updateProgress(daten.konto);
         },
@@ -1188,7 +1283,6 @@
 
         updateProgress(konto) {
           const bar = document.getElementById('progressBar');
-          // Wir nehmen 1000 Punkte als Ziel für die volle Breite (kann angepasst werden)
           const max = 1000;
           const pct = Math.min(100, (konto / max) * 100);
           bar.style.width = pct + '%';
@@ -1249,6 +1343,104 @@
           });
           tbody.querySelectorAll('.editable-cell').forEach(cell => {
             cell.addEventListener('click', this.onEditableClick.bind(this));
+          });
+        },
+
+        renderTagebuch(tagebuch) {
+          const container = document.getElementById('tagebuchContainer');
+          container.innerHTML = '';
+          const eintraege = (tagebuch || []).slice().sort((a, b) => b.datum.localeCompare(a.datum));
+          if (eintraege.length === 0) {
+            container.innerHTML = '<p style="color:var(--text-muted); text-align:center; padding:20px 0;">Noch keine Einträge.</p>';
+            return;
+          }
+          eintraege.forEach(e => {
+            const div = document.createElement('div');
+            div.className = 'tagebuch-eintrag';
+            div.dataset.id = e.id;
+            div.innerHTML = `
+              <div class="tagebuch-datum">${esc(e.datum)}</div>
+              <div class="tagebuch-text" data-field="text">${esc(e.text)}</div>
+              <div class="tagebuch-actions">
+                <button class="tagebuch-datum-bearbeiten" data-id="${e.id}">📅 Datum</button>
+                <button class="danger tagebuch-loeschen" data-id="${e.id}">🗑 Löschen</button>
+              </div>`;
+            container.appendChild(div);
+          });
+
+          // Textbearbeitung per Klick
+          container.querySelectorAll('.tagebuch-text').forEach(el => {
+            el.addEventListener('click', function(e) {
+              if (this.dataset.editing === 'true') return;
+              const eintragDiv = this.closest('.tagebuch-eintrag');
+              const id = eintragDiv.dataset.id;
+              const aktuellerText = this.textContent;
+              const textarea = document.createElement('textarea');
+              textarea.value = aktuellerText;
+              textarea.style.width = '100%';
+              textarea.style.minHeight = '80px';
+              textarea.style.background = '#1a1111';
+              textarea.style.color = '#fff';
+              textarea.style.border = '1px solid var(--accent)';
+              textarea.style.borderRadius = '8px';
+              textarea.style.padding = '8px';
+              textarea.style.fontFamily = 'inherit';
+              textarea.style.fontSize = '0.95rem';
+              textarea.style.lineHeight = '1.5';
+              this.innerHTML = '';
+              this.appendChild(textarea);
+              this.dataset.editing = 'true';
+              textarea.focus();
+
+              const speichern = () => {
+                const neuerText = textarea.value.trim();
+                const eintrag = DataManager.findTagebuch(id);
+                if (eintrag) {
+                  eintrag.text = neuerText;
+                  DataManager.addLog(`Tagebucheintrag ${e.datum} bearbeitet.`);
+                  DataManager.save().then(() => UIRenderer.renderAlles(DataManager.lokaleDaten));
+                }
+              };
+              textarea.addEventListener('blur', speichern);
+              textarea.addEventListener('keydown', (ev) => {
+                if (ev.key === 'Escape') {
+                  this.textContent = aktuellerText;
+                  this.dataset.editing = 'false';
+                }
+              });
+              e.stopPropagation();
+            });
+          });
+
+          // Datumsbearbeitung
+          container.querySelectorAll('.tagebuch-datum-bearbeiten').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+              e.stopPropagation();
+              const id = this.dataset.id;
+              const eintrag = DataManager.findTagebuch(id);
+              if (!eintrag) return;
+              const neuesDatum = prompt('Neues Datum (YYYY-MM-DD):', eintrag.datum);
+              if (neuesDatum && /^\d{4}-\d{2}-\d{2}$/.test(neuesDatum)) {
+                eintrag.datum = neuesDatum;
+                DataManager.addLog(`Datum von Tagebucheintrag geändert.`);
+                DataManager.save().then(() => UIRenderer.renderAlles(DataManager.lokaleDaten));
+              } else if (neuesDatum !== null) {
+                showToast('Ungültiges Datum.', 'error');
+              }
+            });
+          });
+
+          // Löschen
+          container.querySelectorAll('.tagebuch-loeschen').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+              e.stopPropagation();
+              const id = this.dataset.id;
+              if (confirm('Tagebucheintrag wirklich löschen?')) {
+                DataManager.deleteEintrag(id, 'tagebuch');
+                DataManager.addLog('Tagebucheintrag gelöscht.');
+                DataManager.save().then(() => UIRenderer.renderAlles(DataManager.lokaleDaten));
+              }
+            });
           });
         },
 
@@ -1362,24 +1554,19 @@
             });
           });
 
-          // Neu speichern
-          document.getElementById('speichernNeu').addEventListener('click', () => {
-            const typ = document.getElementById('neuerTyp').value;
-            const text = document.getElementById('neuerText').value.trim();
-            const punkte = parseInt(document.getElementById('neuerPunkte').value) || 0;
-            const hinweis = document.getElementById('neuerHinweis').value.trim();
-            if (!text) { showToast('Bitte Beschreibung eingeben.', 'error'); return; }
-            if (typ === 'aufgabe') {
-              DataManager.addAufgabe(text, punkte);
-            } else {
-              DataManager.addEinloesung(text, punkte, hinweis);
-            }
-            DataManager.addLog(`Neuer Eintrag: ${text}`);
-            document.getElementById('neuerText').value = '';
-            document.getElementById('neuerHinweis').value = '';
+          // Tagebuch speichern
+          document.getElementById('tagebuchSpeichern').addEventListener('click', () => {
+            const datum = document.getElementById('neuesDatum').value;
+            const text = document.getElementById('neuerTagebuchText').value.trim();
+            if (!datum) { showToast('Bitte Datum auswählen.', 'error'); return; }
+            if (!text) { showToast('Bitte Text eingeben.', 'error'); return; }
+            DataManager.addTagebuchEintrag(datum, text);
+            DataManager.addLog(`Neuer Tagebucheintrag für ${datum}.`);
+            document.getElementById('neuesDatum').value = '';
+            document.getElementById('neuerTagebuchText').value = '';
             DataManager.save().then(() => {
               UIRenderer.renderAlles(DataManager.lokaleDaten);
-              showToast('Eintrag hinzugefügt.', 'success');
+              showToast('Tagebucheintrag gespeichert.', 'success');
             });
           });
 
