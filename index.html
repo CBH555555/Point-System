@@ -118,6 +118,7 @@
       align-items: center;
       gap: 10px;
       flex-shrink: 0;
+      margin-left: auto; /* Punkte nach rechts */
     }
     .konto-wrap .label {
       font-size: 0.7rem;
@@ -384,14 +385,15 @@
       min-height: 60px;
     }
 
-    /* ===== TAGEBUCH ===== */
+    /* ===== TAGEBUCH (neues Design) ===== */
     .tagebuch-eintrag {
       background: var(--bg);
-      padding: 16px 18px;
+      padding: 14px 18px;
       border-radius: 16px;
       margin: 12px 0;
       border-left: 4px solid var(--accent);
       transition: var(--transition);
+      cursor: pointer;
     }
     .tagebuch-eintrag:hover {
       background: #f5efe9;
@@ -400,22 +402,34 @@
       font-size: 0.75rem;
       color: var(--gold);
       font-weight: 700;
-      margin-bottom: 4px;
       letter-spacing: 0.5px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .tagebuch-datum .toggle-icon {
+      font-size: 1.2rem;
+      transition: transform 0.2s;
+      margin-left: 8px;
+    }
+    .tagebuch-datum .toggle-icon.open {
+      transform: rotate(180deg);
+    }
+    .tagebuch-body {
+      margin-top: 8px;
+      display: none; /* standardmäßig ausgeblendet */
+    }
+    .tagebuch-body.open {
+      display: block;
     }
     .tagebuch-text {
       font-size: 0.95rem;
       line-height: 1.5;
       white-space: pre-wrap;
-      cursor: pointer;
       padding: 4px 6px;
       border-radius: 6px;
       border: 1px solid transparent;
       transition: var(--transition);
-    }
-    .tagebuch-text:hover {
-      border-color: var(--accent);
-      background: rgba(212, 92, 76, 0.04);
     }
     .tagebuch-bild {
       max-width: 100%;
@@ -612,31 +626,12 @@
       word-break: break-word;
     }
 
-    /* ===== REGELN ===== */
-    .rule-box {
-      background: var(--accent-light);
-      border-left: 4px solid var(--accent);
-      padding: 14px 16px;
-      border-radius: 0 12px 12px 0;
-      margin: 12px 0;
-    }
-    .rule-box strong { color: var(--accent); }
-    .rule-list {
-      padding-left: 20px;
-      list-style: none;
-    }
-    .rule-list li {
-      padding: 4px 0;
-      position: relative;
-      padding-left: 24px;
-    }
-    .rule-list li::before {
-      content: '›';
-      position: absolute;
-      left: 0;
-      color: var(--accent);
-      font-weight: 700;
-      font-size: 1.2rem;
+    /* ===== EINSTELLUNGEN ===== */
+    .settings-group {
+      background: var(--bg);
+      padding: 16px;
+      border-radius: 12px;
+      margin: 8px 0;
     }
 
     /* ===== MOBILE ANPASSUNGEN ===== */
@@ -651,7 +646,7 @@
       .header-left h1 { font-size: 1.3rem; }
       .header-left p { font-size: 0.75rem; }
       .header-actions { justify-content: flex-start; }
-      .konto-wrap { align-self: flex-start; }
+      .konto-wrap { align-self: flex-start; margin-left: 0; }
       .konto-wrap .konto { font-size: 1.6rem; }
 
       .tab-btn { font-size: 0.75rem; padding: 8px 14px; min-height: 38px; }
@@ -694,14 +689,6 @@
     .text-muted { color: var(--text-muted); }
     .text-center { text-align: center; }
     .gap-4 { gap: 4px; }
-
-    /* ===== EINSTELLUNGEN ===== */
-    .settings-group {
-      background: var(--bg);
-      padding: 16px;
-      border-radius: 12px;
-      margin: 8px 0;
-    }
   </style>
 </head>
 <body>
@@ -728,13 +715,12 @@
   <!-- ===== PROGRESS ===== -->
   <div class="progress-wrap"><div class="bar" id="progressBar" style="width:0%;"></div></div>
 
-  <!-- ===== TABS ===== -->
+  <!-- ===== TABS (Reihenfolge geändert: Aufgaben zuerst, dann Tagebuch, Regeln entfernt) ===== -->
   <div class="tab-bar" role="tablist">
     <button class="tab-btn active" data-tab="aufgaben">📋 Aufgaben</button>
     <button class="tab-btn" data-tab="einloesungen">🎁 Einlösungen</button>
     <button class="tab-btn" data-tab="neu">➕ Neu</button>
     <button class="tab-btn" data-tab="log">📜 Verlauf</button>
-    <button class="tab-btn" data-tab="regeln">⚠️ Regeln</button>
     <button class="tab-btn" data-tab="tagebuch">📓 Tagebuch</button>
     <button class="tab-btn" data-tab="einstellungen">⚙️ Einstellungen</button>
   </div>
@@ -797,25 +783,10 @@
       <div id="logContainer">Keine Einträge</div>
     </section>
 
-    <!-- TAB: REGELN -->
-    <section id="tab-regeln" class="tab-content card" style="display:none;" role="tabpanel">
-      <h2>⚠️ Regeln &amp; Safewords</h2>
-      <div class="rule-box">
-        <strong>🛑 Safeword:</strong> „ROT“ = sofortiger Abbruch aller Aktivitäten.
-      </div>
-      <h3 style="font-size:1rem; margin-top:16px;">Grundregeln</h3>
-      <ul class="rule-list">
-        <li>Alles einvernehmlich, Vetorecht für beide jederzeit.</li>
-        <li>Safer Sex ist Pflicht (Kondome, Lecktücher).</li>
-        <li>Nach intensiven Sessions: Aftercare einplanen.</li>
-        <li>Der Ehemann kann jederzeit aussteigen.</li>
-      </ul>
-    </section>
-
-    <!-- TAB: TAGEBUCH (NEU mit Bildern & Kommentaren) -->
+    <!-- TAB: TAGEBUCH (angepasst) -->
     <section id="tab-tagebuch" class="tab-content card" style="display:none;" role="tabpanel">
       <h2><span>📓 Mein Tagebuch</span><span class="tag">Privat</span></h2>
-      <p class="sub">Gedanken, Erlebnisse, geheime Wünsche … (klick zum Bearbeiten)</p>
+      <p class="sub">Gedanken, Erlebnisse, geheime Wünsche … (Klick auf Eintrag zeigt Text)</p>
       <div id="tagebuchContainer"></div>
 
       <div class="form-group mt-8">
@@ -1212,9 +1183,11 @@
           });
         },
 
+        // Tagebuch: neue Sortierung (absteigend) + Einklappen
         renderTagebuch(tagebuch) {
           const container = document.getElementById('tagebuchContainer');
           container.innerHTML = '';
+          // Sortieren: neueste zuerst (absteigend)
           const eintraege = (tagebuch || []).slice().sort((a, b) => b.datum.localeCompare(a.datum));
           if (eintraege.length === 0) {
             container.innerHTML = '<p style="color:var(--text-muted); text-align:center; padding:20px 0;">Noch keine Einträge.</p>';
@@ -1225,41 +1198,139 @@
             div.className = 'tagebuch-eintrag';
             div.dataset.id = e.id;
 
-            let bildHtml = '';
+            // Kopfzeile: Datum + Toggle-Symbol
+            const headerDiv = document.createElement('div');
+            headerDiv.className = 'tagebuch-datum';
+            headerDiv.innerHTML = `
+              <span>${esc(e.datum)}</span>
+              <span class="toggle-icon">▼</span>
+            `;
+            div.appendChild(headerDiv);
+
+            // Body (standardmäßig ausgeblendet)
+            const bodyDiv = document.createElement('div');
+            bodyDiv.className = 'tagebuch-body';
+            bodyDiv.dataset.open = 'false';
+
+            // Text
+            const textDiv = document.createElement('div');
+            textDiv.className = 'tagebuch-text';
+            textDiv.textContent = e.text;
+            bodyDiv.appendChild(textDiv);
+
+            // Bild
             if (e.image) {
-              bildHtml = `<img src="${e.image}" alt="Bild zum Eintrag" class="tagebuch-bild" style="max-width:100%; max-height:300px; object-fit:contain;">`;
+              const img = document.createElement('img');
+              img.src = e.image;
+              img.className = 'tagebuch-bild';
+              img.alt = 'Bild zum Eintrag';
+              img.style.maxWidth = '100%';
+              img.style.maxHeight = '300px';
+              img.style.objectFit = 'contain';
+              bodyDiv.appendChild(img);
             }
 
-            let kommentareHtml = '';
+            // Kommentare
             if (e.kommentare && e.kommentare.length > 0) {
-              const kommentareListe = e.kommentare.map(k =>
-                `<div class="tagebuch-kommentar"><span class="zeit">${esc(k.zeit)}</span><span>${esc(k.text)}</span></div>`
-              ).join('');
-              kommentareHtml = `<div class="tagebuch-kommentare">${kommentareListe}</div>`;
+              const kommentarContainer = document.createElement('div');
+              kommentarContainer.className = 'tagebuch-kommentare';
+              e.kommentare.forEach(k => {
+                const kDiv = document.createElement('div');
+                kDiv.className = 'tagebuch-kommentar';
+                kDiv.innerHTML = `<span class="zeit">${esc(k.zeit)}</span><span>${esc(k.text)}</span>`;
+                kommentarContainer.appendChild(kDiv);
+              });
+              bodyDiv.appendChild(kommentarContainer);
             }
 
-            div.innerHTML = `
-              <div class="tagebuch-datum">${esc(e.datum)}</div>
-              <div class="tagebuch-text" data-field="text">${esc(e.text)}</div>
-              ${bildHtml}
-              ${kommentareHtml}
-              <div class="tagebuch-actions">
-                <button class="tagebuch-datum-bearbeiten" data-id="${e.id}">📅 Datum</button>
-                <button class="tagebuch-bild-upload" data-id="${e.id}">🖼️ Bild</button>
-                <button class="tagebuch-bild-loeschen" data-id="${e.id}" style="${e.image ? '' : 'display:none;'}">🗑️ Bild</button>
-                <button class="tagebuch-kommentar-hinzufuegen" data-id="${e.id}">💬 Kommentar</button>
-                <button class="danger tagebuch-loeschen" data-id="${e.id}">🗑 Löschen</button>
-              </div>`;
+            // Buttons (Aktionen) – immer sichtbar
+            const actionsDiv = document.createElement('div');
+            actionsDiv.className = 'tagebuch-actions';
+
+            // Bearbeiten-Button (macht Text editierbar)
+            const bearbeitenBtn = document.createElement('button');
+            bearbeitenBtn.textContent = '✏️ Bearbeiten';
+            bearbeitenBtn.className = 'tagebuch-bearbeiten';
+            bearbeitenBtn.dataset.id = e.id;
+            actionsDiv.appendChild(bearbeitenBtn);
+
+            // Datum ändern
+            const datumBtn = document.createElement('button');
+            datumBtn.textContent = '📅 Datum';
+            datumBtn.className = 'tagebuch-datum-bearbeiten';
+            datumBtn.dataset.id = e.id;
+            actionsDiv.appendChild(datumBtn);
+
+            // Bild hochladen
+            const bildUploadBtn = document.createElement('button');
+            bildUploadBtn.textContent = '🖼️ Bild';
+            bildUploadBtn.className = 'tagebuch-bild-upload';
+            bildUploadBtn.dataset.id = e.id;
+            actionsDiv.appendChild(bildUploadBtn);
+
+            // Bild löschen (falls vorhanden)
+            if (e.image) {
+              const bildLoeschBtn = document.createElement('button');
+              bildLoeschBtn.textContent = '🗑️ Bild';
+              bildLoeschBtn.className = 'danger tagebuch-bild-loeschen';
+              bildLoeschBtn.dataset.id = e.id;
+              actionsDiv.appendChild(bildLoeschBtn);
+            }
+
+            // Kommentar hinzufügen
+            const kommentarBtn = document.createElement('button');
+            kommentarBtn.textContent = '💬 Kommentar';
+            kommentarBtn.className = 'tagebuch-kommentar-hinzufuegen';
+            kommentarBtn.dataset.id = e.id;
+            actionsDiv.appendChild(kommentarBtn);
+
+            // Löschen
+            const loeschBtn = document.createElement('button');
+            loeschBtn.textContent = '🗑 Löschen';
+            loeschBtn.className = 'danger tagebuch-loeschen';
+            loeschBtn.dataset.id = e.id;
+            actionsDiv.appendChild(loeschBtn);
+
+            bodyDiv.appendChild(actionsDiv);
+            div.appendChild(bodyDiv);
+
+            // Toggle: Klick auf den ganzen Eintrag (außer Buttons) öffnet/schließt den Body
+            div.addEventListener('click', function(e) {
+              // Wenn auf einen Button geklickt wird, nicht toggeln
+              if (e.target.closest('button')) return;
+              const body = this.querySelector('.tagebuch-body');
+              const icon = this.querySelector('.toggle-icon');
+              if (body.dataset.open === 'false') {
+                body.style.display = 'block';
+                body.dataset.open = 'true';
+                icon.classList.add('open');
+                icon.textContent = '▲';
+              } else {
+                body.style.display = 'none';
+                body.dataset.open = 'false';
+                icon.classList.remove('open');
+                icon.textContent = '▼';
+              }
+            });
+
             container.appendChild(div);
           });
 
-          // Text bearbeiten
-          container.querySelectorAll('.tagebuch-text').forEach(el => {
-            el.addEventListener('click', function(e) {
-              if (this.dataset.editing === 'true') return;
-              const eintragDiv = this.closest('.tagebuch-eintrag');
-              const id = eintragDiv.dataset.id;
-              const aktuellerText = this.textContent;
+          // Event-Listener für die Buttons (nachträglich)
+          container.querySelectorAll('.tagebuch-bearbeiten').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+              e.stopPropagation();
+              const id = this.dataset.id;
+              const eintrag = DataManager.findTagebuch(id);
+              if (!eintrag) return;
+              // Hole den aktuellen Text und mache ihn editierbar
+              const bodyDiv = this.closest('.tagebuch-eintrag').querySelector('.tagebuch-body');
+              const textDiv = bodyDiv.querySelector('.tagebuch-text');
+              const aktuellerText = textDiv.textContent;
+
+              // Wenn bereits ein Textarea existiert, abbrechen
+              if (textDiv.querySelector('textarea')) return;
+
               const textarea = document.createElement('textarea');
               textarea.value = aktuellerText;
               textarea.style.width = '100%';
@@ -1272,28 +1343,31 @@
               textarea.style.fontFamily = 'inherit';
               textarea.style.fontSize = '0.95rem';
               textarea.style.lineHeight = '1.5';
-              this.innerHTML = '';
-              this.appendChild(textarea);
-              this.dataset.editing = 'true';
+              textDiv.innerHTML = '';
+              textDiv.appendChild(textarea);
               textarea.focus();
 
               const speichern = () => {
                 const neuerText = textarea.value.trim();
-                const eintrag = DataManager.findTagebuch(id);
-                if (eintrag) {
+                if (neuerText !== '') {
                   eintrag.text = neuerText;
-                  DataManager.addLog(`Tagebucheintrag ${e.datum} bearbeitet.`);
+                  DataManager.addLog(`Tagebucheintrag vom ${eintrag.datum} bearbeitet.`);
                   DataManager.save().then(() => UIRenderer.renderAlles(DataManager.lokaleDaten));
+                } else {
+                  // Falls leer, einfach alten Text wiederherstellen
+                  textDiv.textContent = aktuellerText;
                 }
               };
+
               textarea.addEventListener('blur', speichern);
               textarea.addEventListener('keydown', (ev) => {
                 if (ev.key === 'Escape') {
-                  this.textContent = aktuellerText;
-                  this.dataset.editing = 'false';
+                  textDiv.textContent = aktuellerText;
+                }
+                if (ev.key === 'Enter' && ev.ctrlKey) {
+                  speichern();
                 }
               });
-              e.stopPropagation();
             });
           });
 
@@ -1315,7 +1389,7 @@
             });
           });
 
-          // Bild hochladen (mit Komprimierung)
+          // Bild hochladen
           container.querySelectorAll('.tagebuch-bild-upload').forEach(btn => {
             btn.addEventListener('click', function(e) {
               e.stopPropagation();
