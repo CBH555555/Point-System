@@ -192,7 +192,7 @@
       margin-bottom: 12px;
     }
 
-    /* Einträge (Aufgaben, Einlösungen) – einheitlich, aber Text nur im Header */
+    /* Einträge (Aufgaben, Einlösungen) */
     .entry {
       background: var(--bg);
       padding: 14px 18px;
@@ -241,7 +241,6 @@
     }
     .entry-body.open { display: block; }
 
-    /* Im Body gibt es KEINEN zusätzlichen Text mehr – nur Details */
     .entry-details {
       display: flex;
       flex-wrap: wrap;
@@ -324,7 +323,7 @@
       transform: none;
     }
 
-    /* ===== TAGEBUCH (alte, einfache Version) ===== */
+    /* ===== TAGEBUCH (alte, einfache Version mit Bearbeiten-Button) ===== */
     .tagebuch-eintrag {
       background: var(--bg);
       padding: 14px 18px;
@@ -364,7 +363,6 @@
       border-radius: 6px;
       border: 1px solid transparent;
       transition: var(--transition);
-      cursor: text;
     }
     .tagebuch-text:hover { border-color: var(--accent); background: rgba(212,92,76,0.04); }
     .tagebuch-bild {
@@ -717,7 +715,7 @@
       <button class="btn-primary" id="speichernNeu">💾 Speichern</button>
     </section>
 
-    <!-- TAB: TAGEBUCH (alte, einfache Version) -->
+    <!-- TAB: TAGEBUCH (mit Bearbeiten-Button) -->
     <section id="tab-tagebuch" class="tab-content card" style="display:none;" role="tabpanel">
       <h2><span>📓 Mein Tagebuch</span><span class="tag">Privat</span></h2>
       <p class="sub">Gedanken, Erlebnisse, geheime Wünsche … (Klick auf Eintrag zeigt Text)</p>
@@ -1062,7 +1060,7 @@
           bar.style.width = pct + '%';
         },
 
-        // ===== AUFGABEN (Text nur im Header, Body nur Details) =====
+        // ===== AUFGABEN =====
         renderAufgaben(aufgaben) {
           const container = document.getElementById('aufgabenContainer');
           container.innerHTML = '';
@@ -1101,15 +1099,12 @@
           div.dataset.id = item.id;
           div.dataset.typ = typ;
 
-          // Header (immer sichtbar) – hier steht der Text
           const header = document.createElement('div');
           header.className = 'entry-header';
 
           const titleSpan = document.createElement('span');
           titleSpan.className = 'title';
           titleSpan.textContent = item.text || '(kein Text)';
-          // Bei Klick auf den Titel: Bearbeiten (optional, aber wir haben ja den Bearbeiten-Button)
-          // Hier lassen wir es aber beim Button
 
           let badgeText = '';
           if (typ === 'aufgabe') {
@@ -1131,12 +1126,10 @@
           header.appendChild(icon);
           div.appendChild(header);
 
-          // Body (standardmäßig ausgeblendet) – KEIN Text mehr, nur Details
           const body = document.createElement('div');
           body.className = 'entry-body';
           body.dataset.open = 'false';
 
-          // Details (Punkte, Status, etc.)
           const detailsDiv = document.createElement('div');
           detailsDiv.className = 'entry-details';
 
@@ -1168,7 +1161,6 @@
           }
           body.appendChild(detailsDiv);
 
-          // Bild
           if (item.image) {
             const img = document.createElement('img');
             img.src = item.image;
@@ -1177,7 +1169,6 @@
             body.appendChild(img);
           }
 
-          // Kommentare
           if (item.kommentare && item.kommentare.length > 0) {
             const commentContainer = document.createElement('div');
             commentContainer.className = 'entry-comments';
@@ -1190,11 +1181,9 @@
             body.appendChild(commentContainer);
           }
 
-          // Buttons
           const actions = document.createElement('div');
           actions.className = 'entry-actions';
 
-          // Bearbeiten-Button (editiert den Text im Header)
           const editBtn = document.createElement('button');
           editBtn.textContent = '✏️ Bearbeiten';
           editBtn.className = 'entry-bearbeiten';
@@ -1254,7 +1243,6 @@
           body.appendChild(actions);
           div.appendChild(body);
 
-          // Toggle: Klick auf den gesamten Eintrag (außer Buttons)
           div.addEventListener('click', function(e) {
             if (e.target.closest('button')) return;
             const bodyEl = this.querySelector('.entry-body');
@@ -1277,7 +1265,7 @@
 
         // ===== BINDING DER BUTTON-EVENTS (für Aufgaben & Einlösungen) =====
         bindEntryEvents(container, typ) {
-          // Bearbeiten – editiert den Text im Header
+          // Bearbeiten
           container.querySelectorAll('.entry-bearbeiten').forEach(btn => {
             btn.addEventListener('click', function(e) {
               e.stopPropagation();
@@ -1323,7 +1311,7 @@
             });
           });
 
-          // Bild hochladen
+          // Bild upload
           container.querySelectorAll('.entry-bild-upload').forEach(btn => {
             btn.addEventListener('click', function(e) {
               e.stopPropagation();
@@ -1368,7 +1356,7 @@
             });
           });
 
-          // Kommentar hinzufügen
+          // Kommentar
           container.querySelectorAll('.entry-kommentar-hinzufuegen').forEach(btn => {
             btn.addEventListener('click', function(e) {
               e.stopPropagation();
@@ -1399,7 +1387,7 @@
             });
           });
 
-          // Aufgabenspezifisch
+          // Aufgaben-spezifisch
           if (typ === 'aufgabe') {
             container.querySelectorAll('.entry-erledigt').forEach(btn => {
               btn.addEventListener('click', function(e) {
@@ -1422,7 +1410,7 @@
             });
           }
 
-          // Einlösungsspezifisch
+          // Einlösung-spezifisch – hier war der Fehler: Event wurde nicht korrekt gebunden
           if (typ === 'einloesung') {
             container.querySelectorAll('.entry-einloesen').forEach(btn => {
               btn.addEventListener('click', function(e) {
@@ -1443,7 +1431,7 @@
           }
         },
 
-        // ===== TAGEBUCH (alte, einfache Version) =====
+        // ===== TAGEBUCH (mit Bearbeiten-Button) =====
         renderTagebuch(tagebuch) {
           const container = document.getElementById('tagebuchContainer');
           container.innerHTML = '';
@@ -1457,7 +1445,6 @@
             div.className = 'tagebuch-eintrag';
             div.dataset.id = e.id;
 
-            // Kopfzeile: Datum + Toggle
             const headerDiv = document.createElement('div');
             headerDiv.className = 'tagebuch-datum';
             headerDiv.innerHTML = `
@@ -1466,18 +1453,15 @@
             `;
             div.appendChild(headerDiv);
 
-            // Body (ausgeblendet)
             const bodyDiv = document.createElement('div');
             bodyDiv.className = 'tagebuch-body';
             bodyDiv.dataset.open = 'false';
 
-            // Text
             const textDiv = document.createElement('div');
             textDiv.className = 'tagebuch-text';
             textDiv.textContent = e.text;
             bodyDiv.appendChild(textDiv);
 
-            // Bild
             if (e.image) {
               const img = document.createElement('img');
               img.src = e.image;
@@ -1486,7 +1470,6 @@
               bodyDiv.appendChild(img);
             }
 
-            // Kommentare
             if (e.kommentare && e.kommentare.length > 0) {
               const commentContainer = document.createElement('div');
               commentContainer.className = 'tagebuch-kommentare';
@@ -1499,25 +1482,28 @@
               bodyDiv.appendChild(commentContainer);
             }
 
-            // Buttons (wie in der ersten Version)
             const actionsDiv = document.createElement('div');
             actionsDiv.className = 'tagebuch-actions';
 
-            // Datum ändern
+            // Bearbeiten-Button (wie gewünscht)
+            const editBtn = document.createElement('button');
+            editBtn.textContent = '✏️ Bearbeiten';
+            editBtn.className = 'tagebuch-bearbeiten';
+            editBtn.dataset.id = e.id;
+            actionsDiv.appendChild(editBtn);
+
             const datumBtn = document.createElement('button');
             datumBtn.textContent = '📅 Datum';
             datumBtn.className = 'tagebuch-datum-bearbeiten';
             datumBtn.dataset.id = e.id;
             actionsDiv.appendChild(datumBtn);
 
-            // Bild hochladen
             const bildUploadBtn = document.createElement('button');
             bildUploadBtn.textContent = '🖼️ Bild';
             bildUploadBtn.className = 'tagebuch-bild-upload';
             bildUploadBtn.dataset.id = e.id;
             actionsDiv.appendChild(bildUploadBtn);
 
-            // Bild löschen (falls vorhanden)
             if (e.image) {
               const bildDelBtn = document.createElement('button');
               bildDelBtn.textContent = '🗑️ Bild';
@@ -1526,14 +1512,12 @@
               actionsDiv.appendChild(bildDelBtn);
             }
 
-            // Kommentar hinzufügen
             const kommentarBtn = document.createElement('button');
             kommentarBtn.textContent = '💬 Kommentar';
             kommentarBtn.className = 'tagebuch-kommentar-hinzufuegen';
             kommentarBtn.dataset.id = e.id;
             actionsDiv.appendChild(kommentarBtn);
 
-            // Löschen
             const loeschBtn = document.createElement('button');
             loeschBtn.textContent = '🗑 Löschen';
             loeschBtn.className = 'danger tagebuch-loeschen';
@@ -1543,7 +1527,7 @@
             bodyDiv.appendChild(actionsDiv);
             div.appendChild(bodyDiv);
 
-            // Toggle: Klick auf den ganzen Eintrag (außer Buttons)
+            // Toggle
             div.addEventListener('click', function(e) {
               if (e.target.closest('button')) return;
               const body = this.querySelector('.tagebuch-body');
@@ -1561,13 +1545,21 @@
               }
             });
 
-            // Text bearbeiten (Klick auf Text)
-            textDiv.addEventListener('click', function(e) {
+            container.appendChild(div);
+          });
+
+          // Events für Tagebuch-Buttons
+          container.querySelectorAll('.tagebuch-bearbeiten').forEach(btn => {
+            btn.addEventListener('click', function(e) {
               e.stopPropagation();
-              if (this.dataset.editing === 'true') return;
-              const eintragDiv = this.closest('.tagebuch-eintrag');
-              const id = eintragDiv.dataset.id;
-              const aktuellerText = this.textContent;
+              const id = this.dataset.id;
+              const eintrag = DataManager.findTagebuch(id);
+              if (!eintrag) return;
+              const entryDiv = this.closest('.tagebuch-eintrag');
+              const textDiv = entryDiv.querySelector('.tagebuch-text');
+              const aktuellerText = textDiv.textContent;
+              if (textDiv.querySelector('textarea')) return;
+
               const textarea = document.createElement('textarea');
               textarea.value = aktuellerText;
               textarea.style.width = '100%';
@@ -1580,37 +1572,28 @@
               textarea.style.fontFamily = 'inherit';
               textarea.style.fontSize = '0.95rem';
               textarea.style.lineHeight = '1.5';
-              this.innerHTML = '';
-              this.appendChild(textarea);
-              this.dataset.editing = 'true';
+              textDiv.innerHTML = '';
+              textDiv.appendChild(textarea);
               textarea.focus();
 
               const speichern = () => {
                 const neuerText = textarea.value.trim();
-                const eintrag = DataManager.findTagebuch(id);
-                if (eintrag && neuerText !== '') {
+                if (neuerText !== '') {
                   eintrag.text = neuerText;
                   DataManager.addLog(`Tagebucheintrag ${eintrag.datum} bearbeitet.`);
                   DataManager.save().then(() => UIRenderer.renderAlles(DataManager.lokaleDaten));
                 } else {
-                  this.textContent = aktuellerText;
-                  this.dataset.editing = 'false';
+                  textDiv.textContent = aktuellerText;
                 }
               };
               textarea.addEventListener('blur', speichern);
               textarea.addEventListener('keydown', (ev) => {
-                if (ev.key === 'Escape') {
-                  this.textContent = aktuellerText;
-                  this.dataset.editing = 'false';
-                }
+                if (ev.key === 'Escape') { textDiv.textContent = aktuellerText; }
                 if (ev.key === 'Enter' && ev.ctrlKey) { speichern(); }
               });
             });
-
-            container.appendChild(div);
           });
 
-          // Events für die Buttons (nachträglich)
           container.querySelectorAll('.tagebuch-datum-bearbeiten').forEach(btn => {
             btn.addEventListener('click', function(e) {
               e.stopPropagation();
