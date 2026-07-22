@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover" />
   <title>Punkte-System · Liebe & Einsatz</title>
   <style>
-    /* ===== STYLES (wie gehabt) ===== */
+    /* ===== STYLES ===== */
     :root {
       --bg: #fcf8f5;
       --card-bg: #ffffff;
@@ -33,6 +33,7 @@
       min-height: 100vh;
       display: flex;
       flex-direction: column;
+      padding-bottom: 100px; /* Platz für Float-Button */
     }
     header {
       display: flex;
@@ -223,7 +224,7 @@
       font-weight: 800;
       font-size: 0.85rem;
       white-space: nowrap;
-      cursor: pointer; /* für schnelles Editieren der Zahl */
+      cursor: pointer;
     }
     .entry-header .badge:hover {
       background: var(--accent);
@@ -324,7 +325,7 @@
       transform: none;
     }
 
-    /* Tagebuch (alte Version) */
+    /* Tagebuch */
     .tagebuch-eintrag {
       background: var(--bg);
       padding: 14px 18px;
@@ -470,7 +471,7 @@
     .btn-primary:hover { background: #bf4a3c; transform: translateY(-1px); }
     .btn-primary:active { transform: scale(0.97); }
 
-    /* Modal (für Bewertung und Bearbeiten) */
+    /* Modal (allgemein) */
     .modal {
       display: none;
       position: fixed;
@@ -534,9 +535,37 @@
     }
     .modal-buttons .btn-secondary:hover { background: var(--accent-light); }
 
-    #toastContainer {
+    /* Float-Button */
+    .float-btn {
       position: fixed;
       bottom: 24px;
+      right: 24px;
+      background: var(--accent);
+      color: #fff;
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      border: none;
+      font-size: 2.4rem;
+      font-weight: 300;
+      box-shadow: 0 6px 24px rgba(212,92,76,0.4);
+      cursor: pointer;
+      transition: var(--transition);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .float-btn:hover {
+      transform: scale(1.05);
+      background: #bf4a3c;
+    }
+    .float-btn:active { transform: scale(0.92); }
+
+    /* Toast */
+    #toastContainer {
+      position: fixed;
+      bottom: 100px;
       left: 50%;
       transform: translateX(-50%);
       z-index: 99999;
@@ -566,6 +595,7 @@
       to { opacity: 1; transform: translateY(0) scale(1); }
     }
 
+    /* Progress */
     .progress-wrap {
       margin-bottom: 14px;
       background: var(--card-border);
@@ -581,6 +611,7 @@
       width: 0%;
     }
 
+    /* Log (jetzt in Einstellungen) */
     .log-entry {
       background: var(--bg);
       padding: 10px 14px;
@@ -601,6 +632,7 @@
     }
     .log-entry .msg { word-break: break-word; }
 
+    /* Einstellungen */
     .settings-group {
       background: var(--bg);
       padding: 16px;
@@ -617,7 +649,7 @@
     .gap-4 { gap: 4px; }
 
     @media (max-width: 700px) {
-      body { padding: 8px; }
+      body { padding: 8px; padding-bottom: 90px; }
       header { flex-direction: column; align-items: stretch; padding: 14px; }
       .header-left h1 { font-size: 1.3rem; }
       .header-left p { font-size: 0.75rem; }
@@ -633,6 +665,13 @@
       .form-group input,
       .form-group select,
       .form-group textarea { padding: 10px 12px; font-size: 0.9rem; }
+      .float-btn {
+        width: 56px;
+        height: 56px;
+        font-size: 2rem;
+        bottom: 16px;
+        right: 16px;
+      }
     }
     @media (max-width: 420px) {
       .entry-header .badge { font-size: 0.7rem; padding: 1px 8px; }
@@ -661,14 +700,16 @@
 
   <div class="progress-wrap"><div class="bar" id="progressBar"></div></div>
 
+  <!-- TABS: Nur noch Aufgaben, Einlösungen, Tagebuch, Einstellungen -->
   <div class="tab-bar" role="tablist">
     <button class="tab-btn active" data-tab="aufgaben">📋 Aufgaben</button>
     <button class="tab-btn" data-tab="einloesungen">🎁 Einlösungen</button>
-    <button class="tab-btn" data-tab="neu">➕ Neu</button>
     <button class="tab-btn" data-tab="tagebuch">📓 Tagebuch</button>
-    <button class="tab-btn" data-tab="log">📜 Verlauf</button>
     <button class="tab-btn" data-tab="einstellungen">⚙️ Einstellungen</button>
   </div>
+
+  <!-- Float-Button (Plus) -->
+  <button class="float-btn" id="floatNeuBtn" title="Neue Aufgabe / Einlösung">✚</button>
 
   <main>
 
@@ -686,32 +727,7 @@
       <div id="einloesungenContainer"></div>
     </section>
 
-    <!-- NEU -->
-    <section id="tab-neu" class="tab-content card" style="display:none;" role="tabpanel">
-      <h2>➕ Neuen Eintrag hinzufügen</h2>
-      <div class="form-group">
-        <label for="neuerTyp">Typ</label>
-        <select id="neuerTyp">
-          <option value="aufgabe">Aufgabe (Ehemann sammelt)</option>
-          <option value="einloesung">Einlösung (Ehemann gibt aus)</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label for="neuerText">Beschreibung *</label>
-        <input type="text" id="neuerText" placeholder="z. B. Frühstück ans Bett bringen">
-      </div>
-      <div class="form-group">
-        <label for="neuerPunkte">Punkte (Richtwert) / Kosten</label>
-        <input type="number" id="neuerPunkte" value="10" min="1">
-      </div>
-      <div class="form-group">
-        <label for="neuerHinweis">Notiz (optional)</label>
-        <input type="text" id="neuerHinweis" placeholder="z. B. Cuckold, Romantik">
-      </div>
-      <button class="btn-primary" id="speichernNeu">💾 Speichern</button>
-    </section>
-
-    <!-- TAGEBUCH -->
+    <!-- TAGEBUCH (unverändert) -->
     <section id="tab-tagebuch" class="tab-content card" style="display:none;" role="tabpanel">
       <h2><span>📓 Mein Tagebuch</span><span class="tag">Privat</span></h2>
       <p class="sub">Gedanken, Erlebnisse, geheime Wünsche … (Klick auf Eintrag zeigt Text)</p>
@@ -730,15 +746,10 @@
       <div id="tagebuchContainer"></div>
     </section>
 
-    <!-- LOG -->
-    <section id="tab-log" class="tab-content card" style="display:none;" role="tabpanel">
-      <h2>📜 Letzte Aktivitäten</h2>
-      <div id="logContainer">Keine Einträge</div>
-    </section>
-
-    <!-- EINSTELLUNGEN -->
+    <!-- EINSTELLUNGEN (mit integriertem Verlauf) -->
     <section id="tab-einstellungen" class="tab-content card" style="display:none;" role="tabpanel">
-      <h2>⚙️ Einstellungen</h2>
+      <h2>⚙️ Einstellungen &amp; Verlauf</h2>
+
       <div class="settings-group">
         <label style="display:block; font-weight:600; margin-bottom:6px;">PIN ändern</label>
         <div class="flex-wrap">
@@ -747,12 +758,17 @@
         </div>
         <p class="text-muted" style="font-size:0.7rem; margin-top:4px;">Aktuelle PIN: <span id="aktuellePinAnzeige">0000</span></p>
       </div>
+
       <div class="settings-group">
         <p style="font-size:0.85rem; color:var(--text-muted);">ℹ️ Alle Daten werden in der JSONBin-Cloud gespeichert. Synchronisation erfolgt automatisch beim Speichern.</p>
         <button id="exportDatenBtn" class="btn-primary" style="width:auto; padding:10px 20px; margin-top:8px; background:var(--bg); color:var(--text); border:1px solid var(--card-border);">📥 Daten exportieren (JSON)</button>
         <button id="importDatenBtn" class="btn-primary" style="width:auto; padding:10px 20px; margin-top:8px; background:var(--bg); color:var(--text); border:1px solid var(--card-border);">📤 Daten importieren (JSON)</button>
         <input type="file" id="importFileInput" accept=".json" style="display:none;">
       </div>
+
+      <!-- Verlauf (ehemals eigener Tab) -->
+      <h3 style="margin-top:24px; font-size:1.1rem; color:var(--text);">📜 Verlauf</h3>
+      <div id="logContainer">Keine Einträge</div>
     </section>
   </main>
 
@@ -780,7 +796,7 @@
     </div>
   </div>
 
-  <!-- NEUES MODAL: Bearbeiten (für Aufgaben & Einlösungen) -->
+  <!-- MODAL: Bearbeiten (für Aufgaben & Einlösungen) -->
   <div id="bearbeitenModal" class="modal">
     <div class="modal-content">
       <h3>✏️ Eintrag bearbeiten</h3>
@@ -795,6 +811,36 @@
       <div class="modal-buttons">
         <button class="btn-secondary" id="bearbeitenAbbrechen">Abbrechen</button>
         <button class="btn-primary" id="bearbeitenSpeichern">💾 Speichern</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: Neu (für Float-Button) -->
+  <div id="neuModal" class="modal">
+    <div class="modal-content">
+      <h3>➕ Neuen Eintrag</h3>
+      <div class="form-group">
+        <label for="neuTyp">Typ</label>
+        <select id="neuTyp">
+          <option value="aufgabe">Aufgabe (Ehemann sammelt)</option>
+          <option value="einloesung">Einlösung (Ehemann gibt aus)</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="neuText">Beschreibung *</label>
+        <input type="text" id="neuText" placeholder="z. B. Frühstück ans Bett bringen">
+      </div>
+      <div class="form-group">
+        <label for="neuPunkte">Punkte (Richtwert) / Kosten</label>
+        <input type="number" id="neuPunkte" value="10" min="1">
+      </div>
+      <div class="form-group">
+        <label for="neuHinweis">Notiz (optional)</label>
+        <input type="text" id="neuHinweis" placeholder="z. B. Cuckold, Romantik">
+      </div>
+      <div class="modal-buttons">
+        <button class="btn-secondary" id="neuAbbrechen">Abbrechen</button>
+        <button class="btn-primary" id="neuSpeichern">💾 Speichern</button>
       </div>
     </div>
   </div>
@@ -1132,10 +1178,9 @@
           const badge = document.createElement('span');
           badge.className = 'badge';
           badge.textContent = badgeText;
-          // Direktes Editieren der Zahl über Klick auf Badge (optional)
+          // Direktes Editieren der Zahl über Klick auf Badge
           badge.addEventListener('click', function(e) {
             e.stopPropagation();
-            // Direktes Editieren der Zahl (wie bisher)
             const aktuellerWert = badgeValue;
             const input = document.createElement('input');
             input.type = 'number';
@@ -1236,7 +1281,6 @@
           const actions = document.createElement('div');
           actions.className = 'entry-actions';
 
-          // Bearbeiten-Button – öffnet jetzt das Modal
           const editBtn = document.createElement('button');
           editBtn.textContent = '✏️ Bearbeiten';
           editBtn.className = 'entry-bearbeiten';
@@ -1319,7 +1363,6 @@
 
         // ===== EVENT-DELEGATION für Container (Aufgaben & Einlösungen) =====
         bindContainerEvents(container, typ) {
-          // Entferne alten Handler (falls vorhanden) – aber wir setzen nur einen neuen
           container.removeEventListener('click', this._containerHandler);
           this._containerHandler = function(e) {
             const btn = e.target.closest('button');
@@ -1327,14 +1370,11 @@
             const id = btn.dataset.id;
             if (!id) return;
 
-            // Bearbeiten – jetzt öffnet Modal
             if (btn.classList.contains('entry-bearbeiten')) {
               App.openBearbeitenModal(id, typ);
               return;
             }
 
-            // Andere Aktionen (wie gehabt)
-            // Erledigt (Aufgabe)
             if (btn.classList.contains('entry-erledigt') && typ === 'aufgabe') {
               const item = DataManager.findAufgabe(id);
               if (item) {
@@ -1345,13 +1385,11 @@
               return;
             }
 
-            // Bewerten (Aufgabe)
             if (btn.classList.contains('entry-bewerten') && typ === 'aufgabe') {
               App.openBewertungsModal(id);
               return;
             }
 
-            // Einlösen (Einlösung)
             if (btn.classList.contains('entry-einloesen') && typ === 'einloesung') {
               const item = DataManager.findEinloesung(id);
               if (!item || (DataManager.lokaleDaten.konto || 0) < (item.kosten || 0)) {
@@ -1366,7 +1404,6 @@
               return;
             }
 
-            // Bild hochladen
             if (btn.classList.contains('entry-bild-upload')) {
               const input = document.createElement('input');
               input.type = 'file';
@@ -1392,7 +1429,6 @@
               return;
             }
 
-            // Bild löschen
             if (btn.classList.contains('entry-bild-loeschen')) {
               const item = DataManager[`find${typ.charAt(0).toUpperCase() + typ.slice(1)}`](id);
               if (item && item.image) {
@@ -1405,7 +1441,6 @@
               return;
             }
 
-            // Kommentar hinzufügen
             if (btn.classList.contains('entry-kommentar-hinzufuegen')) {
               const kommentarText = prompt('Dein Kommentar:');
               if (kommentarText && kommentarText.trim()) {
@@ -1420,7 +1455,6 @@
               return;
             }
 
-            // Löschen
             if (btn.classList.contains('entry-loeschen')) {
               if (confirm('Eintrag wirklich löschen?')) {
                 DataManager.deleteEintrag(id, typ);
@@ -1433,7 +1467,7 @@
           container.addEventListener('click', this._containerHandler);
         },
 
-        // ===== TAGEBUCH (alte Version) =====
+        // ===== TAGEBUCH (unverändert) =====
         renderTagebuch(tagebuch) {
           const container = document.getElementById('tagebuchContainer');
           container.innerHTML = '';
@@ -1680,7 +1714,7 @@
           });
         },
 
-        // ===== LOG =====
+        // ===== LOG (jetzt in Einstellungen) =====
         renderLog(log) {
           const container = document.getElementById('logContainer');
           container.innerHTML = '';
@@ -1701,7 +1735,6 @@
 
       // ===== APP =====
       const App = {
-        // Für Bearbeiten-Modal
         _bearbeitenId: null,
         _bearbeitenTyp: null,
 
@@ -1770,12 +1803,18 @@
             } catch (e) {}
           });
 
-          // Neu: Aufgabe/Einlösung
-          document.getElementById('speichernNeu').addEventListener('click', async () => {
-            const typ = document.getElementById('neuerTyp').value;
-            const text = document.getElementById('neuerText').value.trim();
-            const punkte = parseInt(document.getElementById('neuerPunkte').value) || 0;
-            const hinweis = document.getElementById('neuerHinweis').value.trim();
+          // Float-Button -> Modal Neu
+          document.getElementById('floatNeuBtn').addEventListener('click', () => {
+            document.getElementById('neuModal').classList.add('active');
+            document.getElementById('neuText').focus();
+          });
+
+          // Neu-Modal speichern
+          document.getElementById('neuSpeichern').addEventListener('click', async () => {
+            const typ = document.getElementById('neuTyp').value;
+            const text = document.getElementById('neuText').value.trim();
+            const punkte = parseInt(document.getElementById('neuPunkte').value) || 0;
+            const hinweis = document.getElementById('neuHinweis').value.trim();
             if (!text) { showToast('Bitte Beschreibung eingeben.', 'error'); return; }
             if (punkte < 1) { showToast('Punkte müssen positiv sein.', 'error'); return; }
 
@@ -1786,14 +1825,22 @@
               DataManager.addEinloesung(text, punkte, hinweis);
               DataManager.addLog(`Neue Einlösung: „${text}“ (${punkte} P.)`);
             }
-            document.getElementById('neuerText').value = '';
-            document.getElementById('neuerPunkte').value = '10';
-            document.getElementById('neuerHinweis').value = '';
+            document.getElementById('neuText').value = '';
+            document.getElementById('neuPunkte').value = '10';
+            document.getElementById('neuHinweis').value = '';
+            document.getElementById('neuModal').classList.remove('active');
             try {
               await DataManager.save();
               UIRenderer.renderAlles(DataManager.lokaleDaten);
               showToast('Eintrag gespeichert.', 'success');
             } catch (e) {}
+          });
+
+          document.getElementById('neuAbbrechen').addEventListener('click', () => {
+            document.getElementById('neuModal').classList.remove('active');
+          });
+          document.getElementById('neuModal').addEventListener('click', (e) => {
+            if (e.target === e.currentTarget) document.getElementById('neuModal').classList.remove('active');
           });
 
           // Modal: Bewertung
@@ -1951,7 +1998,6 @@
           DataManager.save().then(() => UIRenderer.renderAlles(DataManager.lokaleDaten));
         },
 
-        // ===== MODAL HELFER =====
         modalSchliessen(id) {
           document.getElementById(id).classList.remove('active');
           if (id === 'bearbeitenModal') {
