@@ -5,9 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover" />
   <title>Punkte-System · Liebe & Einsatz</title>
   <style>
-    /* ============================================================
-       HELLES, FREUNDLICHES DESIGN – MOBILE FIRST
-       ============================================================ */
+    /* ===== STYLES (wie gehabt) ===== */
     :root {
       --bg: #fcf8f5;
       --card-bg: #ffffff;
@@ -119,7 +117,6 @@
       line-height: 1;
     }
 
-    /* TABS */
     .tab-bar {
       display: flex;
       gap: 6px;
@@ -323,7 +320,7 @@
       transform: none;
     }
 
-    /* ===== TAGEBUCH (alte, einfache Version mit Bearbeiten-Button) ===== */
+    /* Tagebuch (alte Version) */
     .tagebuch-eintrag {
       background: var(--bg);
       padding: 14px 18px;
@@ -363,6 +360,7 @@
       border-radius: 6px;
       border: 1px solid transparent;
       transition: var(--transition);
+      cursor: text;
     }
     .tagebuch-text:hover { border-color: var(--accent); background: rgba(212,92,76,0.04); }
     .tagebuch-bild {
@@ -468,7 +466,6 @@
     .btn-primary:hover { background: #bf4a3c; transform: translateY(-1px); }
     .btn-primary:active { transform: scale(0.97); }
 
-    /* Modal */
     .modal {
       display: none;
       position: fixed;
@@ -528,7 +525,6 @@
     }
     .modal-buttons .btn-secondary:hover { background: var(--accent-light); }
 
-    /* Toast */
     #toastContainer {
       position: fixed;
       bottom: 24px;
@@ -561,7 +557,6 @@
       to { opacity: 1; transform: translateY(0) scale(1); }
     }
 
-    /* Progress */
     .progress-wrap {
       margin-bottom: 14px;
       background: var(--card-border);
@@ -577,7 +572,6 @@
       width: 0%;
     }
 
-    /* Log */
     .log-entry {
       background: var(--bg);
       padding: 10px 14px;
@@ -598,7 +592,6 @@
     }
     .log-entry .msg { word-break: break-word; }
 
-    /* Einstellungen */
     .settings-group {
       background: var(--bg);
       padding: 16px;
@@ -606,7 +599,6 @@
       margin: 8px 0;
     }
 
-    /* Utilities */
     .mt-8 { margin-top: 8px; }
     .mb-8 { margin-bottom: 8px; }
     .flex-wrap { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
@@ -641,10 +633,8 @@
 </head>
 <body>
 
-  <!-- Toast -->
   <div id="toastContainer"></div>
 
-  <!-- HEADER -->
   <header>
     <div class="header-left">
       <h1>❤️ Punkte-System <span>Liebe &amp; Einsatz</span></h1>
@@ -660,10 +650,8 @@
     </div>
   </header>
 
-  <!-- Progress -->
   <div class="progress-wrap"><div class="bar" id="progressBar"></div></div>
 
-  <!-- TABS -->
   <div class="tab-bar" role="tablist">
     <button class="tab-btn active" data-tab="aufgaben">📋 Aufgaben</button>
     <button class="tab-btn" data-tab="einloesungen">🎁 Einlösungen</button>
@@ -673,24 +661,23 @@
     <button class="tab-btn" data-tab="einstellungen">⚙️ Einstellungen</button>
   </div>
 
-  <!-- MAIN -->
   <main>
 
-    <!-- TAB: AUFGABEN -->
+    <!-- AUFGABEN -->
     <section id="tab-aufgaben" class="tab-content card" role="tabpanel">
       <h2><span>📋 Aufgaben für ihn</span><span class="tag">Sammeln</span></h2>
       <p class="sub">✅ Erledigt melden · ⭐ Qualität (1–10) &amp; Punkte · Wiederholbar</p>
       <div id="aufgabenContainer"></div>
     </section>
 
-    <!-- TAB: EINLÖSUNGEN -->
+    <!-- EINLÖSUNGEN -->
     <section id="tab-einloesungen" class="tab-content card" style="display:none;" role="tabpanel">
       <h2><span>🎁 Einlösekatalog</span><span class="tag">Ausgeben</span></h2>
       <p class="sub">💰 Klicken &amp; bestätigen – Punkte werden abgezogen.</p>
       <div id="einloesungenContainer"></div>
     </section>
 
-    <!-- TAB: NEU -->
+    <!-- NEU -->
     <section id="tab-neu" class="tab-content card" style="display:none;" role="tabpanel">
       <h2>➕ Neuen Eintrag hinzufügen</h2>
       <div class="form-group">
@@ -715,12 +702,12 @@
       <button class="btn-primary" id="speichernNeu">💾 Speichern</button>
     </section>
 
-    <!-- TAB: TAGEBUCH (mit Bearbeiten-Button) -->
+    <!-- TAGEBUCH (Formular jetzt oben) -->
     <section id="tab-tagebuch" class="tab-content card" style="display:none;" role="tabpanel">
       <h2><span>📓 Mein Tagebuch</span><span class="tag">Privat</span></h2>
       <p class="sub">Gedanken, Erlebnisse, geheime Wünsche … (Klick auf Eintrag zeigt Text)</p>
-      <div id="tagebuchContainer"></div>
 
+      <!-- NEUER EINTRAG – oben -->
       <div class="form-group mt-8">
         <label for="neuesDatum">Neuen Eintrag hinzufügen</label>
         <input type="date" id="neuesDatum" style="margin-bottom:6px;">
@@ -731,15 +718,18 @@
         </div>
         <button class="btn-primary mt-8" id="tagebuchSpeichern" style="width:auto; padding:10px 24px;">💾 Eintrag speichern</button>
       </div>
+
+      <!-- Container für vorhandene Einträge (darunter) -->
+      <div id="tagebuchContainer"></div>
     </section>
 
-    <!-- TAB: LOG -->
+    <!-- LOG -->
     <section id="tab-log" class="tab-content card" style="display:none;" role="tabpanel">
       <h2>📜 Letzte Aktivitäten</h2>
       <div id="logContainer">Keine Einträge</div>
     </section>
 
-    <!-- TAB: EINSTELLUNGEN -->
+    <!-- EINSTELLUNGEN -->
     <section id="tab-einstellungen" class="tab-content card" style="display:none;" role="tabpanel">
       <h2>⚙️ Einstellungen</h2>
       <div class="settings-group">
@@ -759,7 +749,7 @@
     </section>
   </main>
 
-  <!-- MODAL (Bewertung) -->
+  <!-- MODAL -->
   <div id="bewertungsModal" class="modal">
     <div class="modal-content">
       <h3>⭐ Aufgabe bewerten</h3>
@@ -783,9 +773,6 @@
     </div>
   </div>
 
-  <!-- ============================
-       SCRIPT
-       ============================ -->
   <script>
     (function() {
       'use strict';
@@ -1073,7 +1060,7 @@
             const entry = this.createEntryElement(a, 'aufgabe');
             container.appendChild(entry);
           });
-          this.bindEntryEvents(container, 'aufgabe');
+          this.bindContainerEvents(container, 'aufgabe');
         },
 
         // ===== EINLÖSUNGEN =====
@@ -1089,7 +1076,7 @@
             const entry = this.createEntryElement(e, 'einloesung');
             container.appendChild(entry);
           });
-          this.bindEntryEvents(container, 'einloesung');
+          this.bindContainerEvents(container, 'einloesung');
         },
 
         // ===== GENERISCHE ENTRY-ERSTELLUNG (für Aufgaben & Einlösungen) =====
@@ -1141,7 +1128,6 @@
             statusSpan.appendChild(dot);
             statusSpan.appendChild(document.createTextNode(item.status === 'offen' ? 'Offen' : 'Ausstehend'));
             detailsDiv.appendChild(statusSpan);
-
             if (item.lastQuality) {
               const qualSpan = document.createElement('span');
               qualSpan.textContent = `⭐ ${item.lastQuality}/10`;
@@ -1243,6 +1229,7 @@
           body.appendChild(actions);
           div.appendChild(body);
 
+          // Toggle
           div.addEventListener('click', function(e) {
             if (e.target.closest('button')) return;
             const bodyEl = this.querySelector('.entry-body');
@@ -1263,16 +1250,23 @@
           return div;
         },
 
-        // ===== BINDING DER BUTTON-EVENTS (für Aufgaben & Einlösungen) =====
-        bindEntryEvents(container, typ) {
-          // Bearbeiten
-          container.querySelectorAll('.entry-bearbeiten').forEach(btn => {
-            btn.addEventListener('click', function(e) {
-              e.stopPropagation();
-              const id = this.dataset.id;
+        // ===== EVENT-DELEGATION für Container (Aufgaben & Einlösungen) =====
+        bindContainerEvents(container, typ) {
+          // Entferne alte Listener, falls vorhanden (einfach neu setzen)
+          // Wir verwenden einen einzigen Listener auf dem Container
+          container.removeEventListener('click', this._containerHandler);
+          // Speichere den Handler, damit wir ihn später entfernen können
+          this._containerHandler = function(e) {
+            const btn = e.target.closest('button');
+            if (!btn) return;
+            const id = btn.dataset.id;
+            if (!id) return;
+
+            // Bearbeiten
+            if (btn.classList.contains('entry-bearbeiten')) {
               const item = DataManager[`find${typ.charAt(0).toUpperCase() + typ.slice(1)}`](id);
               if (!item) return;
-              const entryDiv = this.closest('.entry');
+              const entryDiv = btn.closest('.entry');
               const titleSpan = entryDiv.querySelector('.entry-header .title');
               const aktuellerText = titleSpan.textContent;
               if (titleSpan.querySelector('textarea')) return;
@@ -1308,14 +1302,39 @@
                 if (ev.key === 'Escape') { titleSpan.textContent = aktuellerText; }
                 if (ev.key === 'Enter' && ev.ctrlKey) { speichern(); }
               });
-            });
-          });
+            }
 
-          // Bild upload
-          container.querySelectorAll('.entry-bild-upload').forEach(btn => {
-            btn.addEventListener('click', function(e) {
-              e.stopPropagation();
-              const id = this.dataset.id;
+            // Erledigt (Aufgabe)
+            else if (btn.classList.contains('entry-erledigt') && typ === 'aufgabe') {
+              const item = DataManager.findAufgabe(id);
+              if (item) {
+                item.status = 'erledigt_unbewertet';
+                DataManager.addLog(`Ehemann meldet „${item.text}“ erledigt.`);
+                DataManager.save().then(() => UIRenderer.renderAlles(DataManager.lokaleDaten));
+              }
+            }
+
+            // Bewerten (Aufgabe)
+            else if (btn.classList.contains('entry-bewerten') && typ === 'aufgabe') {
+              App.openBewertungsModal(id);
+            }
+
+            // Einlösen (Einlösung)
+            else if (btn.classList.contains('entry-einloesen') && typ === 'einloesung') {
+              const item = DataManager.findEinloesung(id);
+              if (!item || (DataManager.lokaleDaten.konto || 0) < (item.kosten || 0)) {
+                showToast('Nicht genügend Punkte.', 'error');
+                return;
+              }
+              if (confirm(`„${item.text}“ für ${item.kosten} Punkte einlösen?`)) {
+                DataManager.updateKonto(-item.kosten);
+                DataManager.addLog(`Ehemann löst ein: „${item.text}“ (${item.kosten} P.).`);
+                DataManager.save().then(() => UIRenderer.renderAlles(DataManager.lokaleDaten));
+              }
+            }
+
+            // Bild hochladen
+            else if (btn.classList.contains('entry-bild-upload')) {
               const input = document.createElement('input');
               input.type = 'file';
               input.accept = 'image/*';
@@ -1337,14 +1356,10 @@
                 }
               };
               input.click();
-            });
-          });
+            }
 
-          // Bild löschen
-          container.querySelectorAll('.entry-bild-loeschen').forEach(btn => {
-            btn.addEventListener('click', function(e) {
-              e.stopPropagation();
-              const id = this.dataset.id;
+            // Bild löschen
+            else if (btn.classList.contains('entry-bild-loeschen')) {
               const item = DataManager[`find${typ.charAt(0).toUpperCase() + typ.slice(1)}`](id);
               if (item && item.image) {
                 if (confirm('Bild wirklich entfernen?')) {
@@ -1353,14 +1368,10 @@
                   DataManager.save().then(() => UIRenderer.renderAlles(DataManager.lokaleDaten));
                 }
               }
-            });
-          });
+            }
 
-          // Kommentar
-          container.querySelectorAll('.entry-kommentar-hinzufuegen').forEach(btn => {
-            btn.addEventListener('click', function(e) {
-              e.stopPropagation();
-              const id = this.dataset.id;
+            // Kommentar hinzufügen
+            else if (btn.classList.contains('entry-kommentar-hinzufuegen')) {
               const kommentarText = prompt('Dein Kommentar:');
               if (kommentarText && kommentarText.trim()) {
                 const item = DataManager[`find${typ.charAt(0).toUpperCase() + typ.slice(1)}`](id);
@@ -1371,67 +1382,21 @@
                   DataManager.save().then(() => UIRenderer.renderAlles(DataManager.lokaleDaten));
                 }
               }
-            });
-          });
+            }
 
-          // Löschen
-          container.querySelectorAll('.entry-loeschen').forEach(btn => {
-            btn.addEventListener('click', function(e) {
-              e.stopPropagation();
-              const id = this.dataset.id;
+            // Löschen
+            else if (btn.classList.contains('entry-loeschen')) {
               if (confirm('Eintrag wirklich löschen?')) {
                 DataManager.deleteEintrag(id, typ);
                 DataManager.addLog(`${typ} gelöscht.`);
                 DataManager.save().then(() => UIRenderer.renderAlles(DataManager.lokaleDaten));
               }
-            });
-          });
-
-          // Aufgaben-spezifisch
-          if (typ === 'aufgabe') {
-            container.querySelectorAll('.entry-erledigt').forEach(btn => {
-              btn.addEventListener('click', function(e) {
-                e.stopPropagation();
-                const id = this.dataset.id;
-                const item = DataManager.findAufgabe(id);
-                if (item) {
-                  item.status = 'erledigt_unbewertet';
-                  DataManager.addLog(`Ehemann meldet „${item.text}“ erledigt.`);
-                  DataManager.save().then(() => UIRenderer.renderAlles(DataManager.lokaleDaten));
-                }
-              });
-            });
-            container.querySelectorAll('.entry-bewerten').forEach(btn => {
-              btn.addEventListener('click', function(e) {
-                e.stopPropagation();
-                const id = this.dataset.id;
-                App.openBewertungsModal(id);
-              });
-            });
-          }
-
-          // Einlösung-spezifisch – hier war der Fehler: Event wurde nicht korrekt gebunden
-          if (typ === 'einloesung') {
-            container.querySelectorAll('.entry-einloesen').forEach(btn => {
-              btn.addEventListener('click', function(e) {
-                e.stopPropagation();
-                const id = this.dataset.id;
-                const item = DataManager.findEinloesung(id);
-                if (!item || (DataManager.lokaleDaten.konto || 0) < (item.kosten || 0)) {
-                  showToast('Nicht genügend Punkte.', 'error');
-                  return;
-                }
-                if (confirm(`„${item.text}“ für ${item.kosten} Punkte einlösen?`)) {
-                  DataManager.updateKonto(-item.kosten);
-                  DataManager.addLog(`Ehemann löst ein: „${item.text}“ (${item.kosten} P.).`);
-                  DataManager.save().then(() => UIRenderer.renderAlles(DataManager.lokaleDaten));
-                }
-              });
-            });
-          }
+            }
+          };
+          container.addEventListener('click', this._containerHandler);
         },
 
-        // ===== TAGEBUCH (mit Bearbeiten-Button) =====
+        // ===== TAGEBUCH (alte Version) =====
         renderTagebuch(tagebuch) {
           const container = document.getElementById('tagebuchContainer');
           container.innerHTML = '';
@@ -1484,13 +1449,6 @@
 
             const actionsDiv = document.createElement('div');
             actionsDiv.className = 'tagebuch-actions';
-
-            // Bearbeiten-Button (wie gewünscht)
-            const editBtn = document.createElement('button');
-            editBtn.textContent = '✏️ Bearbeiten';
-            editBtn.className = 'tagebuch-bearbeiten';
-            editBtn.dataset.id = e.id;
-            actionsDiv.appendChild(editBtn);
 
             const datumBtn = document.createElement('button');
             datumBtn.textContent = '📅 Datum';
@@ -1545,21 +1503,13 @@
               }
             });
 
-            container.appendChild(div);
-          });
-
-          // Events für Tagebuch-Buttons
-          container.querySelectorAll('.tagebuch-bearbeiten').forEach(btn => {
-            btn.addEventListener('click', function(e) {
+            // Text bearbeiten (Klick auf Text)
+            textDiv.addEventListener('click', function(e) {
               e.stopPropagation();
-              const id = this.dataset.id;
-              const eintrag = DataManager.findTagebuch(id);
-              if (!eintrag) return;
-              const entryDiv = this.closest('.tagebuch-eintrag');
-              const textDiv = entryDiv.querySelector('.tagebuch-text');
-              const aktuellerText = textDiv.textContent;
-              if (textDiv.querySelector('textarea')) return;
-
+              if (this.dataset.editing === 'true') return;
+              const eintragDiv = this.closest('.tagebuch-eintrag');
+              const id = eintragDiv.dataset.id;
+              const aktuellerText = this.textContent;
               const textarea = document.createElement('textarea');
               textarea.value = aktuellerText;
               textarea.style.width = '100%';
@@ -1572,28 +1522,37 @@
               textarea.style.fontFamily = 'inherit';
               textarea.style.fontSize = '0.95rem';
               textarea.style.lineHeight = '1.5';
-              textDiv.innerHTML = '';
-              textDiv.appendChild(textarea);
+              this.innerHTML = '';
+              this.appendChild(textarea);
+              this.dataset.editing = 'true';
               textarea.focus();
 
               const speichern = () => {
                 const neuerText = textarea.value.trim();
-                if (neuerText !== '') {
+                const eintrag = DataManager.findTagebuch(id);
+                if (eintrag && neuerText !== '') {
                   eintrag.text = neuerText;
                   DataManager.addLog(`Tagebucheintrag ${eintrag.datum} bearbeitet.`);
                   DataManager.save().then(() => UIRenderer.renderAlles(DataManager.lokaleDaten));
                 } else {
-                  textDiv.textContent = aktuellerText;
+                  this.textContent = aktuellerText;
+                  this.dataset.editing = 'false';
                 }
               };
               textarea.addEventListener('blur', speichern);
               textarea.addEventListener('keydown', (ev) => {
-                if (ev.key === 'Escape') { textDiv.textContent = aktuellerText; }
+                if (ev.key === 'Escape') {
+                  this.textContent = aktuellerText;
+                  this.dataset.editing = 'false';
+                }
                 if (ev.key === 'Enter' && ev.ctrlKey) { speichern(); }
               });
             });
+
+            container.appendChild(div);
           });
 
+          // Events für die Buttons (weiterhin einzeln, da eigenes System)
           container.querySelectorAll('.tagebuch-datum-bearbeiten').forEach(btn => {
             btn.addEventListener('click', function(e) {
               e.stopPropagation();
