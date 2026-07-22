@@ -223,6 +223,10 @@
       font-weight: 800;
       font-size: 0.85rem;
       white-space: nowrap;
+      cursor: pointer; /* für schnelles Editieren der Zahl */
+    }
+    .entry-header .badge:hover {
+      background: var(--accent);
     }
     .entry-header .toggle-icon {
       font-size: 1.2rem;
@@ -466,6 +470,7 @@
     .btn-primary:hover { background: #bf4a3c; transform: translateY(-1px); }
     .btn-primary:active { transform: scale(0.97); }
 
+    /* Modal (für Bewertung und Bearbeiten) */
     .modal {
       display: none;
       position: fixed;
@@ -492,7 +497,11 @@
       width: 100%;
       box-shadow: 0 20px 60px rgba(0,0,0,0.15);
     }
-    .modal-content h3 { margin: 0 0 12px; font-size: 1.3rem; color: var(--accent); }
+    .modal-content h3 {
+      margin: 0 0 12px;
+      font-size: 1.3rem;
+      color: var(--accent);
+    }
     .modal-text {
       background: var(--bg);
       padding: 10px 14px;
@@ -702,12 +711,11 @@
       <button class="btn-primary" id="speichernNeu">💾 Speichern</button>
     </section>
 
-    <!-- TAGEBUCH (Formular jetzt oben) -->
+    <!-- TAGEBUCH -->
     <section id="tab-tagebuch" class="tab-content card" style="display:none;" role="tabpanel">
       <h2><span>📓 Mein Tagebuch</span><span class="tag">Privat</span></h2>
       <p class="sub">Gedanken, Erlebnisse, geheime Wünsche … (Klick auf Eintrag zeigt Text)</p>
 
-      <!-- NEUER EINTRAG – oben -->
       <div class="form-group mt-8">
         <label for="neuesDatum">Neuen Eintrag hinzufügen</label>
         <input type="date" id="neuesDatum" style="margin-bottom:6px;">
@@ -719,7 +727,6 @@
         <button class="btn-primary mt-8" id="tagebuchSpeichern" style="width:auto; padding:10px 24px;">💾 Eintrag speichern</button>
       </div>
 
-      <!-- Container für vorhandene Einträge (darunter) -->
       <div id="tagebuchContainer"></div>
     </section>
 
@@ -749,7 +756,7 @@
     </section>
   </main>
 
-  <!-- MODAL -->
+  <!-- MODAL: Bewertung -->
   <div id="bewertungsModal" class="modal">
     <div class="modal-content">
       <h3>⭐ Aufgabe bewerten</h3>
@@ -769,6 +776,25 @@
       <div class="modal-buttons">
         <button class="btn-secondary" id="modalAbbrechen">Abbrechen</button>
         <button class="btn-primary" id="modalSpeichern">✅ Speichern</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- NEUES MODAL: Bearbeiten (für Aufgaben & Einlösungen) -->
+  <div id="bearbeitenModal" class="modal">
+    <div class="modal-content">
+      <h3>✏️ Eintrag bearbeiten</h3>
+      <div class="form-group">
+        <label for="bearbeitenText">Beschreibung</label>
+        <textarea id="bearbeitenText" rows="2" placeholder="Text"></textarea>
+      </div>
+      <div class="form-group">
+        <label for="bearbeitenPunkte" id="bearbeitenPunkteLabel">Punkte / Kosten</label>
+        <input type="number" id="bearbeitenPunkte" min="0" step="1" value="0" inputmode="numeric">
+      </div>
+      <div class="modal-buttons">
+        <button class="btn-secondary" id="bearbeitenAbbrechen">Abbrechen</button>
+        <button class="btn-primary" id="bearbeitenSpeichern">💾 Speichern</button>
       </div>
     </div>
   </div>
@@ -1094,15 +1120,55 @@
           titleSpan.textContent = item.text || '(kein Text)';
 
           let badgeText = '';
+          let badgeValue = 0;
           if (typ === 'aufgabe') {
             badgeText = `${item.punkte || 0} P.`;
+            badgeValue = item.punkte || 0;
             if (item.status === 'erledigt_unbewertet') badgeText += ' ⏳';
           } else if (typ === 'einloesung') {
             badgeText = `${item.kosten || 0} P.`;
+            badgeValue = item.kosten || 0;
           }
           const badge = document.createElement('span');
           badge.className = 'badge';
           badge.textContent = badgeText;
+          // Direktes Editieren der Zahl über Klick auf Badge (optional)
+          badge.addEventListener('click', function(e) {
+            e.stopPropagation();
+            // Direktes Editieren der Zahl (wie bisher)
+            const aktuellerWert = badgeValue;
+            const input = document.createElement('input');
+            input.type = 'number';
+            input.value = aktuellerWert;
+            input.style.width = '60px';
+            input.style.background = 'var(--bg)';
+            input.style.border = '1px solid var(--accent)';
+            input.style.borderRadius = '6px';
+            input.style.padding = '2px 6px';
+            input.style.fontSize = '0.85rem';
+            badge.textContent = '';
+            badge.appendChild(input);
+            input.focus();
+            input.select();
+
+            const speichern = () => {
+              const neuerWert = parseInt(input.value) || 0;
+              const item = DataManager[`find${typ.charAt(0).toUpperCase() + typ.slice(1)}`](div.dataset.id);
+              if (item) {
+                if (typ === 'aufgabe') item.punkte = neuerWert;
+                else item.kosten = neuerWert;
+                DataManager.addLog(`${typ} Punkte geändert auf ${neuerWert}.`);
+                DataManager.save().then(() => UIRenderer.renderAlles(DataManager.lokaleDaten));
+              } else {
+                badge.textContent = aktuellerWert + (typ === 'aufgabe' ? ' P.' : ' P.');
+              }
+            };
+            input.addEventListener('blur', speichern);
+            input.addEventListener('keydown', (ev) => {
+              if (ev.key === 'Enter') { ev.preventDefault(); input.blur(); }
+              if (ev.key === 'Escape') { badge.textContent = aktuellerWert + (typ === 'aufgabe' ? ' P.' : ' P.'); }
+            });
+          });
 
           const icon = document.createElement('span');
           icon.className = 'toggle-icon';
@@ -1170,6 +1236,7 @@
           const actions = document.createElement('div');
           actions.className = 'entry-actions';
 
+          // Bearbeiten-Button – öffnet jetzt das Modal
           const editBtn = document.createElement('button');
           editBtn.textContent = '✏️ Bearbeiten';
           editBtn.className = 'entry-bearbeiten';
@@ -1231,7 +1298,7 @@
 
           // Toggle
           div.addEventListener('click', function(e) {
-            if (e.target.closest('button')) return;
+            if (e.target.closest('button') || e.target.closest('.badge')) return;
             const bodyEl = this.querySelector('.entry-body');
             const iconEl = this.querySelector('.toggle-icon');
             if (bodyEl.dataset.open === 'false') {
@@ -1252,75 +1319,40 @@
 
         // ===== EVENT-DELEGATION für Container (Aufgaben & Einlösungen) =====
         bindContainerEvents(container, typ) {
-          // Entferne alte Listener, falls vorhanden (einfach neu setzen)
-          // Wir verwenden einen einzigen Listener auf dem Container
+          // Entferne alten Handler (falls vorhanden) – aber wir setzen nur einen neuen
           container.removeEventListener('click', this._containerHandler);
-          // Speichere den Handler, damit wir ihn später entfernen können
           this._containerHandler = function(e) {
             const btn = e.target.closest('button');
             if (!btn) return;
             const id = btn.dataset.id;
             if (!id) return;
 
-            // Bearbeiten
+            // Bearbeiten – jetzt öffnet Modal
             if (btn.classList.contains('entry-bearbeiten')) {
-              const item = DataManager[`find${typ.charAt(0).toUpperCase() + typ.slice(1)}`](id);
-              if (!item) return;
-              const entryDiv = btn.closest('.entry');
-              const titleSpan = entryDiv.querySelector('.entry-header .title');
-              const aktuellerText = titleSpan.textContent;
-              if (titleSpan.querySelector('textarea')) return;
-
-              const textarea = document.createElement('textarea');
-              textarea.value = aktuellerText;
-              textarea.style.width = '100%';
-              textarea.style.minHeight = '40px';
-              textarea.style.background = 'var(--bg)';
-              textarea.style.color = 'var(--text)';
-              textarea.style.border = '1px solid var(--accent)';
-              textarea.style.borderRadius = '6px';
-              textarea.style.padding = '4px 8px';
-              textarea.style.fontFamily = 'inherit';
-              textarea.style.fontSize = '1rem';
-              textarea.style.lineHeight = '1.4';
-              titleSpan.innerHTML = '';
-              titleSpan.appendChild(textarea);
-              textarea.focus();
-
-              const speichern = () => {
-                const neuerText = textarea.value.trim();
-                if (neuerText !== '') {
-                  item.text = neuerText;
-                  DataManager.addLog(`${typ.charAt(0).toUpperCase() + typ.slice(1)} „${item.text}“ bearbeitet.`);
-                  DataManager.save().then(() => UIRenderer.renderAlles(DataManager.lokaleDaten));
-                } else {
-                  titleSpan.textContent = aktuellerText;
-                }
-              };
-              textarea.addEventListener('blur', speichern);
-              textarea.addEventListener('keydown', (ev) => {
-                if (ev.key === 'Escape') { titleSpan.textContent = aktuellerText; }
-                if (ev.key === 'Enter' && ev.ctrlKey) { speichern(); }
-              });
+              App.openBearbeitenModal(id, typ);
+              return;
             }
 
+            // Andere Aktionen (wie gehabt)
             // Erledigt (Aufgabe)
-            else if (btn.classList.contains('entry-erledigt') && typ === 'aufgabe') {
+            if (btn.classList.contains('entry-erledigt') && typ === 'aufgabe') {
               const item = DataManager.findAufgabe(id);
               if (item) {
                 item.status = 'erledigt_unbewertet';
                 DataManager.addLog(`Ehemann meldet „${item.text}“ erledigt.`);
                 DataManager.save().then(() => UIRenderer.renderAlles(DataManager.lokaleDaten));
               }
+              return;
             }
 
             // Bewerten (Aufgabe)
-            else if (btn.classList.contains('entry-bewerten') && typ === 'aufgabe') {
+            if (btn.classList.contains('entry-bewerten') && typ === 'aufgabe') {
               App.openBewertungsModal(id);
+              return;
             }
 
             // Einlösen (Einlösung)
-            else if (btn.classList.contains('entry-einloesen') && typ === 'einloesung') {
+            if (btn.classList.contains('entry-einloesen') && typ === 'einloesung') {
               const item = DataManager.findEinloesung(id);
               if (!item || (DataManager.lokaleDaten.konto || 0) < (item.kosten || 0)) {
                 showToast('Nicht genügend Punkte.', 'error');
@@ -1331,10 +1363,11 @@
                 DataManager.addLog(`Ehemann löst ein: „${item.text}“ (${item.kosten} P.).`);
                 DataManager.save().then(() => UIRenderer.renderAlles(DataManager.lokaleDaten));
               }
+              return;
             }
 
             // Bild hochladen
-            else if (btn.classList.contains('entry-bild-upload')) {
+            if (btn.classList.contains('entry-bild-upload')) {
               const input = document.createElement('input');
               input.type = 'file';
               input.accept = 'image/*';
@@ -1356,10 +1389,11 @@
                 }
               };
               input.click();
+              return;
             }
 
             // Bild löschen
-            else if (btn.classList.contains('entry-bild-loeschen')) {
+            if (btn.classList.contains('entry-bild-loeschen')) {
               const item = DataManager[`find${typ.charAt(0).toUpperCase() + typ.slice(1)}`](id);
               if (item && item.image) {
                 if (confirm('Bild wirklich entfernen?')) {
@@ -1368,10 +1402,11 @@
                   DataManager.save().then(() => UIRenderer.renderAlles(DataManager.lokaleDaten));
                 }
               }
+              return;
             }
 
             // Kommentar hinzufügen
-            else if (btn.classList.contains('entry-kommentar-hinzufuegen')) {
+            if (btn.classList.contains('entry-kommentar-hinzufuegen')) {
               const kommentarText = prompt('Dein Kommentar:');
               if (kommentarText && kommentarText.trim()) {
                 const item = DataManager[`find${typ.charAt(0).toUpperCase() + typ.slice(1)}`](id);
@@ -1382,15 +1417,17 @@
                   DataManager.save().then(() => UIRenderer.renderAlles(DataManager.lokaleDaten));
                 }
               }
+              return;
             }
 
             // Löschen
-            else if (btn.classList.contains('entry-loeschen')) {
+            if (btn.classList.contains('entry-loeschen')) {
               if (confirm('Eintrag wirklich löschen?')) {
                 DataManager.deleteEintrag(id, typ);
                 DataManager.addLog(`${typ} gelöscht.`);
                 DataManager.save().then(() => UIRenderer.renderAlles(DataManager.lokaleDaten));
               }
+              return;
             }
           };
           container.addEventListener('click', this._containerHandler);
@@ -1552,7 +1589,7 @@
             container.appendChild(div);
           });
 
-          // Events für die Buttons (weiterhin einzeln, da eigenes System)
+          // Events für die Buttons (weiterhin einzeln)
           container.querySelectorAll('.tagebuch-datum-bearbeiten').forEach(btn => {
             btn.addEventListener('click', function(e) {
               e.stopPropagation();
@@ -1664,6 +1701,10 @@
 
       // ===== APP =====
       const App = {
+        // Für Bearbeiten-Modal
+        _bearbeitenId: null,
+        _bearbeitenTyp: null,
+
         init() {
           if (CONFIG.PIN) {
             const eingabe = prompt('Bitte PIN eingeben:', '');
@@ -1755,11 +1796,18 @@
             } catch (e) {}
           });
 
-          // Modal
+          // Modal: Bewertung
           document.getElementById('modalSpeichern').addEventListener('click', () => this.bewertungSpeichern());
-          document.getElementById('modalAbbrechen').addEventListener('click', () => this.modalSchliessen());
+          document.getElementById('modalAbbrechen').addEventListener('click', () => this.modalSchliessen('bewertungsModal'));
           document.getElementById('bewertungsModal').addEventListener('click', (e) => {
-            if (e.target === e.currentTarget) this.modalSchliessen();
+            if (e.target === e.currentTarget) this.modalSchliessen('bewertungsModal');
+          });
+
+          // Modal: Bearbeiten
+          document.getElementById('bearbeitenSpeichern').addEventListener('click', () => this.bearbeitenSpeichern());
+          document.getElementById('bearbeitenAbbrechen').addEventListener('click', () => this.modalSchliessen('bearbeitenModal'));
+          document.getElementById('bearbeitenModal').addEventListener('click', (e) => {
+            if (e.target === e.currentTarget) this.modalSchliessen('bearbeitenModal');
           });
 
           // PIN
@@ -1823,6 +1871,54 @@
           });
         },
 
+        // ===== BEARBEITEN-MODAL =====
+        openBearbeitenModal(id, typ) {
+          const item = DataManager[`find${typ.charAt(0).toUpperCase() + typ.slice(1)}`](id);
+          if (!item) return;
+          this._bearbeitenId = id;
+          this._bearbeitenTyp = typ;
+
+          const modal = document.getElementById('bearbeitenModal');
+          const textField = document.getElementById('bearbeitenText');
+          const punkteField = document.getElementById('bearbeitenPunkte');
+          const label = document.getElementById('bearbeitenPunkteLabel');
+
+          textField.value = item.text || '';
+          if (typ === 'aufgabe') {
+            punkteField.value = item.punkte || 0;
+            label.textContent = 'Punkte (Zahl)';
+          } else {
+            punkteField.value = item.kosten || 0;
+            label.textContent = 'Kosten (Zahl)';
+          }
+          modal.classList.add('active');
+          textField.focus();
+        },
+
+        bearbeitenSpeichern() {
+          if (!this._bearbeitenId || !this._bearbeitenTyp) return;
+          const item = DataManager[`find${this._bearbeitenTyp.charAt(0).toUpperCase() + this._bearbeitenTyp.slice(1)}`](this._bearbeitenId);
+          if (!item) return;
+
+          const neuerText = document.getElementById('bearbeitenText').value.trim();
+          const neuePunkte = parseInt(document.getElementById('bearbeitenPunkte').value) || 0;
+
+          if (!neuerText) { showToast('Bitte einen Text eingeben.', 'error'); return; }
+          if (neuePunkte < 0) { showToast('Punkte/Kosten müssen positiv sein.', 'error'); return; }
+
+          item.text = neuerText;
+          if (this._bearbeitenTyp === 'aufgabe') {
+            item.punkte = neuePunkte;
+          } else {
+            item.kosten = neuePunkte;
+          }
+
+          DataManager.addLog(`${this._bearbeitenTyp} „${item.text}“ bearbeitet (Text + Punkte).`);
+          this.modalSchliessen('bearbeitenModal');
+          DataManager.save().then(() => UIRenderer.renderAlles(DataManager.lokaleDaten));
+        },
+
+        // ===== BEWERTUNGS-MODAL =====
         _bewertungsAufgabeId: null,
 
         openBewertungsModal(id) {
@@ -1834,11 +1930,6 @@
           document.getElementById('modalQualitaet').value = a.lastQuality || 8;
           document.getElementById('modalKommentar').value = '';
           document.getElementById('bewertungsModal').classList.add('active');
-        },
-
-        modalSchliessen() {
-          document.getElementById('bewertungsModal').classList.remove('active');
-          this._bewertungsAufgabeId = null;
         },
 
         bewertungSpeichern() {
@@ -1856,8 +1947,20 @@
           a.lastComment = kommentar;
           a.status = 'offen';
           DataManager.addLog(`Frau vergibt ${punkte} P. für „${a.text}“ (⭐ ${qualitaet}/10)${kommentar ? ' – ' + kommentar : ''}`);
-          this.modalSchliessen();
+          this.modalSchliessen('bewertungsModal');
           DataManager.save().then(() => UIRenderer.renderAlles(DataManager.lokaleDaten));
+        },
+
+        // ===== MODAL HELFER =====
+        modalSchliessen(id) {
+          document.getElementById(id).classList.remove('active');
+          if (id === 'bearbeitenModal') {
+            this._bearbeitenId = null;
+            this._bearbeitenTyp = null;
+          }
+          if (id === 'bewertungsModal') {
+            this._bewertungsAufgabeId = null;
+          }
         }
       };
 
