@@ -192,7 +192,7 @@
       margin-bottom: 12px;
     }
 
-    /* Einträge (Aufgaben, Einlösungen) – mit Aufklappen & Buttons */
+    /* Einträge (Aufgaben, Einlösungen) – einheitlich, aber Text nur im Header */
     .entry {
       background: var(--bg);
       padding: 14px 18px;
@@ -216,6 +216,7 @@
       font-size: 1rem;
       flex: 1;
       min-width: 120px;
+      word-break: break-word;
     }
     .entry-header .badge {
       background: var(--gold);
@@ -240,21 +241,12 @@
     }
     .entry-body.open { display: block; }
 
-    .entry-text {
-      font-size: 0.95rem;
-      line-height: 1.5;
-      white-space: pre-wrap;
-      padding: 4px 6px;
-      border-radius: 6px;
-      border: 1px solid transparent;
-      transition: var(--transition);
-    }
-
+    /* Im Body gibt es KEINEN zusätzlichen Text mehr – nur Details */
     .entry-details {
       display: flex;
       flex-wrap: wrap;
       gap: 12px 20px;
-      margin: 8px 0;
+      margin: 4px 0 8px;
       font-size: 0.85rem;
       color: var(--text-muted);
     }
@@ -332,7 +324,7 @@
       transform: none;
     }
 
-    /* TAGEBUCH (eigenes, schlankeres Design – wie in der Vorversion) */
+    /* ===== TAGEBUCH (alte, einfache Version) ===== */
     .tagebuch-eintrag {
       background: var(--bg);
       padding: 14px 18px;
@@ -343,7 +335,6 @@
       cursor: pointer;
     }
     .tagebuch-eintrag:hover { background: #f5efe9; }
-
     .tagebuch-datum {
       font-size: 0.75rem;
       color: var(--gold);
@@ -357,15 +348,14 @@
       font-size: 1.2rem;
       transition: transform 0.2s;
       margin-left: 8px;
+      color: var(--text-muted);
     }
     .tagebuch-datum .toggle-icon.open { transform: rotate(180deg); }
-
     .tagebuch-body {
       margin-top: 8px;
       display: none;
     }
     .tagebuch-body.open { display: block; }
-
     .tagebuch-text {
       font-size: 0.95rem;
       line-height: 1.5;
@@ -376,12 +366,8 @@
       transition: var(--transition);
       cursor: text;
     }
-    .tagebuch-text:hover {
-      border-color: var(--accent);
-      background: rgba(212,92,76,0.04);
-    }
-
-    .tagebuch-image {
+    .tagebuch-text:hover { border-color: var(--accent); background: rgba(212,92,76,0.04); }
+    .tagebuch-bild {
       max-width: 100%;
       max-height: 300px;
       object-fit: contain;
@@ -389,7 +375,6 @@
       margin: 8px 0;
       border: 1px solid var(--card-border);
     }
-
     .tagebuch-kommentare {
       margin-top: 10px;
       padding-top: 10px;
@@ -408,7 +393,6 @@
       opacity: 0.6;
       flex-shrink: 0;
     }
-
     .tagebuch-actions {
       display: flex;
       gap: 6px;
@@ -733,10 +717,10 @@
       <button class="btn-primary" id="speichernNeu">💾 Speichern</button>
     </section>
 
-    <!-- TAB: TAGEBUCH (mit altem Verhalten) -->
+    <!-- TAB: TAGEBUCH (alte, einfache Version) -->
     <section id="tab-tagebuch" class="tab-content card" style="display:none;" role="tabpanel">
       <h2><span>📓 Mein Tagebuch</span><span class="tag">Privat</span></h2>
-      <p class="sub">Gedanken, Erlebnisse, geheime Wünsche … (Klick auf Datum zeigt Text)</p>
+      <p class="sub">Gedanken, Erlebnisse, geheime Wünsche … (Klick auf Eintrag zeigt Text)</p>
       <div id="tagebuchContainer"></div>
 
       <div class="form-group mt-8">
@@ -1078,7 +1062,7 @@
           bar.style.width = pct + '%';
         },
 
-        // ===== AUFGABEN (mit Aufklappen, Bearbeiten-Button etc.) =====
+        // ===== AUFGABEN (Text nur im Header, Body nur Details) =====
         renderAufgaben(aufgaben) {
           const container = document.getElementById('aufgabenContainer');
           container.innerHTML = '';
@@ -1094,7 +1078,7 @@
           this.bindEntryEvents(container, 'aufgabe');
         },
 
-        // ===== EINLÖSUNGEN (wie Aufgaben) =====
+        // ===== EINLÖSUNGEN =====
         renderEinloesungen(einloesungen) {
           const container = document.getElementById('einloesungenContainer');
           container.innerHTML = '';
@@ -1110,19 +1094,22 @@
           this.bindEntryEvents(container, 'einloesung');
         },
 
-        // ===== GENERISCHE ENTRY-ERSTELLUNG für Aufgaben & Einlösungen =====
+        // ===== GENERISCHE ENTRY-ERSTELLUNG (für Aufgaben & Einlösungen) =====
         createEntryElement(item, typ) {
           const div = document.createElement('div');
           div.className = 'entry';
           div.dataset.id = item.id;
           div.dataset.typ = typ;
 
+          // Header (immer sichtbar) – hier steht der Text
           const header = document.createElement('div');
           header.className = 'entry-header';
 
           const titleSpan = document.createElement('span');
           titleSpan.className = 'title';
           titleSpan.textContent = item.text || '(kein Text)';
+          // Bei Klick auf den Titel: Bearbeiten (optional, aber wir haben ja den Bearbeiten-Button)
+          // Hier lassen wir es aber beim Button
 
           let badgeText = '';
           if (typ === 'aufgabe') {
@@ -1144,15 +1131,12 @@
           header.appendChild(icon);
           div.appendChild(header);
 
+          // Body (standardmäßig ausgeblendet) – KEIN Text mehr, nur Details
           const body = document.createElement('div');
           body.className = 'entry-body';
           body.dataset.open = 'false';
 
-          const textDiv = document.createElement('div');
-          textDiv.className = 'entry-text';
-          textDiv.textContent = item.text || '';
-          body.appendChild(textDiv);
-
+          // Details (Punkte, Status, etc.)
           const detailsDiv = document.createElement('div');
           detailsDiv.className = 'entry-details';
 
@@ -1184,6 +1168,7 @@
           }
           body.appendChild(detailsDiv);
 
+          // Bild
           if (item.image) {
             const img = document.createElement('img');
             img.src = item.image;
@@ -1192,6 +1177,7 @@
             body.appendChild(img);
           }
 
+          // Kommentare
           if (item.kommentare && item.kommentare.length > 0) {
             const commentContainer = document.createElement('div');
             commentContainer.className = 'entry-comments';
@@ -1204,9 +1190,11 @@
             body.appendChild(commentContainer);
           }
 
+          // Buttons
           const actions = document.createElement('div');
           actions.className = 'entry-actions';
 
+          // Bearbeiten-Button (editiert den Text im Header)
           const editBtn = document.createElement('button');
           editBtn.textContent = '✏️ Bearbeiten';
           editBtn.className = 'entry-bearbeiten';
@@ -1266,6 +1254,7 @@
           body.appendChild(actions);
           div.appendChild(body);
 
+          // Toggle: Klick auf den gesamten Eintrag (außer Buttons)
           div.addEventListener('click', function(e) {
             if (e.target.closest('button')) return;
             const bodyEl = this.querySelector('.entry-body');
@@ -1286,8 +1275,9 @@
           return div;
         },
 
-        // ===== BINDING DER BUTTON-EVENTS für Aufgaben & Einlösungen =====
+        // ===== BINDING DER BUTTON-EVENTS (für Aufgaben & Einlösungen) =====
         bindEntryEvents(container, typ) {
+          // Bearbeiten – editiert den Text im Header
           container.querySelectorAll('.entry-bearbeiten').forEach(btn => {
             btn.addEventListener('click', function(e) {
               e.stopPropagation();
@@ -1295,24 +1285,24 @@
               const item = DataManager[`find${typ.charAt(0).toUpperCase() + typ.slice(1)}`](id);
               if (!item) return;
               const entryDiv = this.closest('.entry');
-              const textDiv = entryDiv.querySelector('.entry-text');
-              const aktuellerText = textDiv.textContent;
-              if (textDiv.querySelector('textarea')) return;
+              const titleSpan = entryDiv.querySelector('.entry-header .title');
+              const aktuellerText = titleSpan.textContent;
+              if (titleSpan.querySelector('textarea')) return;
 
               const textarea = document.createElement('textarea');
               textarea.value = aktuellerText;
               textarea.style.width = '100%';
-              textarea.style.minHeight = '80px';
+              textarea.style.minHeight = '40px';
               textarea.style.background = 'var(--bg)';
               textarea.style.color = 'var(--text)';
               textarea.style.border = '1px solid var(--accent)';
-              textarea.style.borderRadius = '8px';
-              textarea.style.padding = '8px';
+              textarea.style.borderRadius = '6px';
+              textarea.style.padding = '4px 8px';
               textarea.style.fontFamily = 'inherit';
-              textarea.style.fontSize = '0.95rem';
-              textarea.style.lineHeight = '1.5';
-              textDiv.innerHTML = '';
-              textDiv.appendChild(textarea);
+              textarea.style.fontSize = '1rem';
+              textarea.style.lineHeight = '1.4';
+              titleSpan.innerHTML = '';
+              titleSpan.appendChild(textarea);
               textarea.focus();
 
               const speichern = () => {
@@ -1322,17 +1312,18 @@
                   DataManager.addLog(`${typ.charAt(0).toUpperCase() + typ.slice(1)} „${item.text}“ bearbeitet.`);
                   DataManager.save().then(() => UIRenderer.renderAlles(DataManager.lokaleDaten));
                 } else {
-                  textDiv.textContent = aktuellerText;
+                  titleSpan.textContent = aktuellerText;
                 }
               };
               textarea.addEventListener('blur', speichern);
               textarea.addEventListener('keydown', (ev) => {
-                if (ev.key === 'Escape') { textDiv.textContent = aktuellerText; }
+                if (ev.key === 'Escape') { titleSpan.textContent = aktuellerText; }
                 if (ev.key === 'Enter' && ev.ctrlKey) { speichern(); }
               });
             });
           });
 
+          // Bild hochladen
           container.querySelectorAll('.entry-bild-upload').forEach(btn => {
             btn.addEventListener('click', function(e) {
               e.stopPropagation();
@@ -1361,6 +1352,7 @@
             });
           });
 
+          // Bild löschen
           container.querySelectorAll('.entry-bild-loeschen').forEach(btn => {
             btn.addEventListener('click', function(e) {
               e.stopPropagation();
@@ -1376,6 +1368,7 @@
             });
           });
 
+          // Kommentar hinzufügen
           container.querySelectorAll('.entry-kommentar-hinzufuegen').forEach(btn => {
             btn.addEventListener('click', function(e) {
               e.stopPropagation();
@@ -1393,6 +1386,7 @@
             });
           });
 
+          // Löschen
           container.querySelectorAll('.entry-loeschen').forEach(btn => {
             btn.addEventListener('click', function(e) {
               e.stopPropagation();
@@ -1405,6 +1399,7 @@
             });
           });
 
+          // Aufgabenspezifisch
           if (typ === 'aufgabe') {
             container.querySelectorAll('.entry-erledigt').forEach(btn => {
               btn.addEventListener('click', function(e) {
@@ -1427,6 +1422,7 @@
             });
           }
 
+          // Einlösungsspezifisch
           if (typ === 'einloesung') {
             container.querySelectorAll('.entry-einloesen').forEach(btn => {
               btn.addEventListener('click', function(e) {
@@ -1447,21 +1443,21 @@
           }
         },
 
-        // ===== TAGEBUCH (altes Verhalten: kein Bearbeiten-Button, Klick auf Text editierbar) =====
+        // ===== TAGEBUCH (alte, einfache Version) =====
         renderTagebuch(tagebuch) {
           const container = document.getElementById('tagebuchContainer');
           container.innerHTML = '';
-          const eintraege = (tagebuch || []).slice().sort((a, b) => b.datum.localeCompare(a.datum));
-          if (eintraege.length === 0) {
+          const sorted = (tagebuch || []).slice().sort((a,b) => b.datum.localeCompare(a.datum));
+          if (sorted.length === 0) {
             container.innerHTML = '<p style="color:var(--text-muted); text-align:center; padding:20px 0;">Noch keine Einträge.</p>';
             return;
           }
-          eintraege.forEach(e => {
+          sorted.forEach(e => {
             const div = document.createElement('div');
             div.className = 'tagebuch-eintrag';
             div.dataset.id = e.id;
 
-            // Kopf: Datum + Toggle-Icon
+            // Kopfzeile: Datum + Toggle
             const headerDiv = document.createElement('div');
             headerDiv.className = 'tagebuch-datum';
             headerDiv.innerHTML = `
@@ -1470,12 +1466,12 @@
             `;
             div.appendChild(headerDiv);
 
-            // Body (standardmäßig ausgeblendet)
+            // Body (ausgeblendet)
             const bodyDiv = document.createElement('div');
             bodyDiv.className = 'tagebuch-body';
             bodyDiv.dataset.open = 'false';
 
-            // Text – Klick macht editierbar (wie in der Vorversion)
+            // Text
             const textDiv = document.createElement('div');
             textDiv.className = 'tagebuch-text';
             textDiv.textContent = e.text;
@@ -1485,7 +1481,7 @@
             if (e.image) {
               const img = document.createElement('img');
               img.src = e.image;
-              img.className = 'tagebuch-image';
+              img.className = 'tagebuch-bild';
               img.alt = 'Bild';
               bodyDiv.appendChild(img);
             }
@@ -1503,7 +1499,7 @@
               bodyDiv.appendChild(commentContainer);
             }
 
-            // Buttons (ohne Bearbeiten-Button)
+            // Buttons (wie in der ersten Version)
             const actionsDiv = document.createElement('div');
             actionsDiv.className = 'tagebuch-actions';
 
@@ -1547,7 +1543,7 @@
             bodyDiv.appendChild(actionsDiv);
             div.appendChild(bodyDiv);
 
-            // Toggle: Klick auf den ganzen Eintrag (außer Buttons) – wie gehabt
+            // Toggle: Klick auf den ganzen Eintrag (außer Buttons)
             div.addEventListener('click', function(e) {
               if (e.target.closest('button')) return;
               const body = this.querySelector('.tagebuch-body');
@@ -1565,7 +1561,7 @@
               }
             });
 
-            // Text-Klick: editierbar machen (wie in der Vorversion)
+            // Text bearbeiten (Klick auf Text)
             textDiv.addEventListener('click', function(e) {
               e.stopPropagation();
               if (this.dataset.editing === 'true') return;
@@ -1592,10 +1588,13 @@
               const speichern = () => {
                 const neuerText = textarea.value.trim();
                 const eintrag = DataManager.findTagebuch(id);
-                if (eintrag) {
+                if (eintrag && neuerText !== '') {
                   eintrag.text = neuerText;
-                  DataManager.addLog(`Tagebucheintrag vom ${eintrag.datum} bearbeitet.`);
+                  DataManager.addLog(`Tagebucheintrag ${eintrag.datum} bearbeitet.`);
                   DataManager.save().then(() => UIRenderer.renderAlles(DataManager.lokaleDaten));
+                } else {
+                  this.textContent = aktuellerText;
+                  this.dataset.editing = 'false';
                 }
               };
               textarea.addEventListener('blur', speichern);
@@ -1604,16 +1603,14 @@
                   this.textContent = aktuellerText;
                   this.dataset.editing = 'false';
                 }
-                if (ev.key === 'Enter' && ev.ctrlKey) {
-                  speichern();
-                }
+                if (ev.key === 'Enter' && ev.ctrlKey) { speichern(); }
               });
             });
 
             container.appendChild(div);
           });
 
-          // Events für die Buttons im Tagebuch (nachträglich binden)
+          // Events für die Buttons (nachträglich)
           container.querySelectorAll('.tagebuch-datum-bearbeiten').forEach(btn => {
             btn.addEventListener('click', function(e) {
               e.stopPropagation();
@@ -1790,7 +1787,7 @@
             } catch (e) {}
           });
 
-          // Neu: Aufgabe/Einlösung speichern
+          // Neu: Aufgabe/Einlösung
           document.getElementById('speichernNeu').addEventListener('click', async () => {
             const typ = document.getElementById('neuerTyp').value;
             const text = document.getElementById('neuerText').value.trim();
@@ -1823,7 +1820,7 @@
             if (e.target === e.currentTarget) this.modalSchliessen();
           });
 
-          // PIN ändern
+          // PIN
           document.getElementById('pinAendernBtn').addEventListener('click', () => {
             const neuePin = document.getElementById('neuePin').value.trim();
             if (!neuePin || neuePin.length < 4) {
@@ -1848,7 +1845,6 @@
             a.click();
             URL.revokeObjectURL(url);
           });
-
           document.getElementById('importDatenBtn').addEventListener('click', () => {
             document.getElementById('importFileInput').click();
           });
