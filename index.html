@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover" />
   <title>Punkte-System · Liebe & Einsatz</title>
   <style>
-    /* ===== STYLES ===== */
+    /* ===== STYLES (unverändert) ===== */
     :root {
       --bg: #fcf8f5;
       --card-bg: #ffffff;
@@ -33,7 +33,7 @@
       min-height: 100vh;
       display: flex;
       flex-direction: column;
-      padding-bottom: 100px; /* Platz für Float-Button */
+      padding-bottom: 100px;
     }
     header {
       display: flex;
@@ -365,9 +365,12 @@
       border-radius: 6px;
       border: 1px solid transparent;
       transition: var(--transition);
-      cursor: text;
+      /* Kein cursor:text mehr, da nicht mehr editierbar per Klick */
     }
-    .tagebuch-text:hover { border-color: var(--accent); background: rgba(212,92,76,0.04); }
+    .tagebuch-text:hover {
+      border-color: var(--accent);
+      background: rgba(212,92,76,0.04);
+    }
     .tagebuch-bild {
       max-width: 100%;
       max-height: 300px;
@@ -700,7 +703,6 @@
 
   <div class="progress-wrap"><div class="bar" id="progressBar"></div></div>
 
-  <!-- TABS: Nur noch Aufgaben, Einlösungen, Tagebuch, Einstellungen -->
   <div class="tab-bar" role="tablist">
     <button class="tab-btn active" data-tab="aufgaben">📋 Aufgaben</button>
     <button class="tab-btn" data-tab="einloesungen">🎁 Einlösungen</button>
@@ -708,7 +710,6 @@
     <button class="tab-btn" data-tab="einstellungen">⚙️ Einstellungen</button>
   </div>
 
-  <!-- Float-Button (Plus) -->
   <button class="float-btn" id="floatNeuBtn" title="Neue Aufgabe / Einlösung">✚</button>
 
   <main>
@@ -727,7 +728,7 @@
       <div id="einloesungenContainer"></div>
     </section>
 
-    <!-- TAGEBUCH (unverändert) -->
+    <!-- TAGEBUCH -->
     <section id="tab-tagebuch" class="tab-content card" style="display:none;" role="tabpanel">
       <h2><span>📓 Mein Tagebuch</span><span class="tag">Privat</span></h2>
       <p class="sub">Gedanken, Erlebnisse, geheime Wünsche … (Klick auf Eintrag zeigt Text)</p>
@@ -766,7 +767,6 @@
         <input type="file" id="importFileInput" accept=".json" style="display:none;">
       </div>
 
-      <!-- Verlauf (ehemals eigener Tab) -->
       <h3 style="margin-top:24px; font-size:1.1rem; color:var(--text);">📜 Verlauf</h3>
       <div id="logContainer">Keine Einträge</div>
     </section>
@@ -796,17 +796,24 @@
     </div>
   </div>
 
-  <!-- MODAL: Bearbeiten (für Aufgaben & Einlösungen) -->
+  <!-- MODAL: Bearbeiten (für Aufgaben, Einlösungen und Tagebuch) -->
   <div id="bearbeitenModal" class="modal">
     <div class="modal-content">
       <h3>✏️ Eintrag bearbeiten</h3>
+      <!-- Text -->
       <div class="form-group">
-        <label for="bearbeitenText">Beschreibung</label>
+        <label for="bearbeitenText">Beschreibung / Text</label>
         <textarea id="bearbeitenText" rows="2" placeholder="Text"></textarea>
       </div>
-      <div class="form-group">
+      <!-- Punkte / Kosten (nur bei Aufgaben/Einlösungen) -->
+      <div class="form-group" id="bearbeitenPunkteGroup">
         <label for="bearbeitenPunkte" id="bearbeitenPunkteLabel">Punkte / Kosten</label>
         <input type="number" id="bearbeitenPunkte" min="0" step="1" value="0" inputmode="numeric">
+      </div>
+      <!-- Datum (nur bei Tagebuch) -->
+      <div class="form-group" id="bearbeitenDatumGroup" style="display:none;">
+        <label for="bearbeitenDatum">Datum</label>
+        <input type="date" id="bearbeitenDatum">
       </div>
       <div class="modal-buttons">
         <button class="btn-secondary" id="bearbeitenAbbrechen">Abbrechen</button>
@@ -1467,7 +1474,7 @@
           container.addEventListener('click', this._containerHandler);
         },
 
-        // ===== TAGEBUCH (unverändert) =====
+        // ===== TAGEBUCH (nur noch Bearbeiten-Button, kein Text-Klick-Edit) =====
         renderTagebuch(tagebuch) {
           const container = document.getElementById('tagebuchContainer');
           container.innerHTML = '';
@@ -1521,6 +1528,13 @@
             const actionsDiv = document.createElement('div');
             actionsDiv.className = 'tagebuch-actions';
 
+            // Bearbeiten-Button (der einzige Weg zum Editieren)
+            const bearbeitenBtn = document.createElement('button');
+            bearbeitenBtn.textContent = '✏️ Bearbeiten';
+            bearbeitenBtn.className = 'tagebuch-bearbeiten';
+            bearbeitenBtn.dataset.id = e.id;
+            actionsDiv.appendChild(bearbeitenBtn);
+
             const datumBtn = document.createElement('button');
             datumBtn.textContent = '📅 Datum';
             datumBtn.className = 'tagebuch-datum-bearbeiten';
@@ -1556,7 +1570,7 @@
             bodyDiv.appendChild(actionsDiv);
             div.appendChild(bodyDiv);
 
-            // Toggle
+            // Toggle: Klick auf den Eintrag (außer Buttons) klappt auf/zu
             div.addEventListener('click', function(e) {
               if (e.target.closest('button')) return;
               const body = this.querySelector('.tagebuch-body');
@@ -1574,56 +1588,19 @@
               }
             });
 
-            // Text bearbeiten (Klick auf Text)
-            textDiv.addEventListener('click', function(e) {
-              e.stopPropagation();
-              if (this.dataset.editing === 'true') return;
-              const eintragDiv = this.closest('.tagebuch-eintrag');
-              const id = eintragDiv.dataset.id;
-              const aktuellerText = this.textContent;
-              const textarea = document.createElement('textarea');
-              textarea.value = aktuellerText;
-              textarea.style.width = '100%';
-              textarea.style.minHeight = '80px';
-              textarea.style.background = 'var(--bg)';
-              textarea.style.color = 'var(--text)';
-              textarea.style.border = '1px solid var(--accent)';
-              textarea.style.borderRadius = '8px';
-              textarea.style.padding = '8px';
-              textarea.style.fontFamily = 'inherit';
-              textarea.style.fontSize = '0.95rem';
-              textarea.style.lineHeight = '1.5';
-              this.innerHTML = '';
-              this.appendChild(textarea);
-              this.dataset.editing = 'true';
-              textarea.focus();
-
-              const speichern = () => {
-                const neuerText = textarea.value.trim();
-                const eintrag = DataManager.findTagebuch(id);
-                if (eintrag && neuerText !== '') {
-                  eintrag.text = neuerText;
-                  DataManager.addLog(`Tagebucheintrag ${eintrag.datum} bearbeitet.`);
-                  DataManager.save().then(() => UIRenderer.renderAlles(DataManager.lokaleDaten));
-                } else {
-                  this.textContent = aktuellerText;
-                  this.dataset.editing = 'false';
-                }
-              };
-              textarea.addEventListener('blur', speichern);
-              textarea.addEventListener('keydown', (ev) => {
-                if (ev.key === 'Escape') {
-                  this.textContent = aktuellerText;
-                  this.dataset.editing = 'false';
-                }
-                if (ev.key === 'Enter' && ev.ctrlKey) { speichern(); }
-              });
-            });
-
             container.appendChild(div);
           });
 
           // Events für die Buttons (weiterhin einzeln)
+          // Tagebuch-Bearbeiten-Button öffnet das Bearbeiten-Modal
+          container.querySelectorAll('.tagebuch-bearbeiten').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+              e.stopPropagation();
+              const id = this.dataset.id;
+              App.openBearbeitenModal(id, 'tagebuch');
+            });
+          });
+
           container.querySelectorAll('.tagebuch-datum-bearbeiten').forEach(btn => {
             btn.addEventListener('click', function(e) {
               e.stopPropagation();
@@ -1918,7 +1895,7 @@
           });
         },
 
-        // ===== BEARBEITEN-MODAL =====
+        // ===== BEARBEITEN-MODAL (für alle Typen) =====
         openBearbeitenModal(id, typ) {
           const item = DataManager[`find${typ.charAt(0).toUpperCase() + typ.slice(1)}`](id);
           if (!item) return;
@@ -1927,17 +1904,33 @@
 
           const modal = document.getElementById('bearbeitenModal');
           const textField = document.getElementById('bearbeitenText');
+          const punkteGroup = document.getElementById('bearbeitenPunkteGroup');
           const punkteField = document.getElementById('bearbeitenPunkte');
-          const label = document.getElementById('bearbeitenPunkteLabel');
+          const punkteLabel = document.getElementById('bearbeitenPunkteLabel');
+          const datumGroup = document.getElementById('bearbeitenDatumGroup');
+          const datumField = document.getElementById('bearbeitenDatum');
 
+          // Text immer setzen
           textField.value = item.text || '';
-          if (typ === 'aufgabe') {
-            punkteField.value = item.punkte || 0;
-            label.textContent = 'Punkte (Zahl)';
+
+          if (typ === 'tagebuch') {
+            // Tagebuch: Datum anzeigen, Punkte ausblenden
+            punkteGroup.style.display = 'none';
+            datumGroup.style.display = 'block';
+            datumField.value = item.datum || '';
           } else {
-            punkteField.value = item.kosten || 0;
-            label.textContent = 'Kosten (Zahl)';
+            // Aufgaben/Einlösungen: Punkte anzeigen, Datum ausblenden
+            punkteGroup.style.display = 'block';
+            datumGroup.style.display = 'none';
+            if (typ === 'aufgabe') {
+              punkteField.value = item.punkte || 0;
+              punkteLabel.textContent = 'Punkte (Zahl)';
+            } else {
+              punkteField.value = item.kosten || 0;
+              punkteLabel.textContent = 'Kosten (Zahl)';
+            }
           }
+
           modal.classList.add('active');
           textField.focus();
         },
@@ -1948,19 +1941,28 @@
           if (!item) return;
 
           const neuerText = document.getElementById('bearbeitenText').value.trim();
-          const neuePunkte = parseInt(document.getElementById('bearbeitenPunkte').value) || 0;
-
           if (!neuerText) { showToast('Bitte einen Text eingeben.', 'error'); return; }
-          if (neuePunkte < 0) { showToast('Punkte/Kosten müssen positiv sein.', 'error'); return; }
 
-          item.text = neuerText;
-          if (this._bearbeitenTyp === 'aufgabe') {
-            item.punkte = neuePunkte;
+          if (this._bearbeitenTyp === 'tagebuch') {
+            // Tagebuch: Text + Datum
+            const neuesDatum = document.getElementById('bearbeitenDatum').value;
+            if (!neuesDatum) { showToast('Bitte ein Datum auswählen.', 'error'); return; }
+            item.text = neuerText;
+            item.datum = neuesDatum;
+            DataManager.addLog(`Tagebucheintrag bearbeitet (Text + Datum).`);
           } else {
-            item.kosten = neuePunkte;
+            // Aufgaben/Einlösungen: Text + Punkte/Kosten
+            const neuePunkte = parseInt(document.getElementById('bearbeitenPunkte').value) || 0;
+            if (neuePunkte < 0) { showToast('Punkte/Kosten müssen positiv sein.', 'error'); return; }
+            item.text = neuerText;
+            if (this._bearbeitenTyp === 'aufgabe') {
+              item.punkte = neuePunkte;
+            } else {
+              item.kosten = neuePunkte;
+            }
+            DataManager.addLog(`${this._bearbeitenTyp} „${item.text}“ bearbeitet (Text + Punkte).`);
           }
 
-          DataManager.addLog(`${this._bearbeitenTyp} „${item.text}“ bearbeitet (Text + Punkte).`);
           this.modalSchliessen('bearbeitenModal');
           DataManager.save().then(() => UIRenderer.renderAlles(DataManager.lokaleDaten));
         },
