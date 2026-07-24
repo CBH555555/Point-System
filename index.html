@@ -365,7 +365,6 @@
       border-radius: 6px;
       border: 1px solid transparent;
       transition: var(--transition);
-      /* Kein cursor:text mehr, da nicht mehr editierbar per Klick */
     }
     .tagebuch-text:hover {
       border-color: var(--accent);
@@ -710,7 +709,7 @@
     <button class="tab-btn" data-tab="einstellungen">⚙️ Einstellungen</button>
   </div>
 
-  <button class="float-btn" id="floatNeuBtn" title="Neue Aufgabe / Einlösung">✚</button>
+  <button class="float-btn" id="floatNeuBtn" title="Neuer Eintrag">✚</button>
 
   <main>
 
@@ -728,22 +727,10 @@
       <div id="einloesungenContainer"></div>
     </section>
 
-    <!-- TAGEBUCH -->
+    <!-- TAGEBUCH (ohne Formular – nur Liste) -->
     <section id="tab-tagebuch" class="tab-content card" style="display:none;" role="tabpanel">
       <h2><span>📓 Mein Tagebuch</span><span class="tag">Privat</span></h2>
       <p class="sub">Gedanken, Erlebnisse, geheime Wünsche … (Klick auf Eintrag zeigt Text)</p>
-
-      <div class="form-group mt-8">
-        <label for="neuesDatum">Neuen Eintrag hinzufügen</label>
-        <input type="date" id="neuesDatum" style="margin-bottom:6px;">
-        <textarea id="neuerTagebuchText" rows="3" placeholder="Was ist heute passiert?"></textarea>
-        <div class="flex-wrap mt-8">
-          <label style="font-size:0.8rem; color:var(--text-muted);">Bild (optional):</label>
-          <input type="file" id="neuesBildInput" accept="image/*" style="flex:1; min-width:120px;">
-        </div>
-        <button class="btn-primary mt-8" id="tagebuchSpeichern" style="width:auto; padding:10px 24px;">💾 Eintrag speichern</button>
-      </div>
-
       <div id="tagebuchContainer"></div>
     </section>
 
@@ -800,17 +787,14 @@
   <div id="bearbeitenModal" class="modal">
     <div class="modal-content">
       <h3>✏️ Eintrag bearbeiten</h3>
-      <!-- Text -->
       <div class="form-group">
         <label for="bearbeitenText">Beschreibung / Text</label>
         <textarea id="bearbeitenText" rows="2" placeholder="Text"></textarea>
       </div>
-      <!-- Punkte / Kosten (nur bei Aufgaben/Einlösungen) -->
       <div class="form-group" id="bearbeitenPunkteGroup">
         <label for="bearbeitenPunkte" id="bearbeitenPunkteLabel">Punkte / Kosten</label>
         <input type="number" id="bearbeitenPunkte" min="0" step="1" value="0" inputmode="numeric">
       </div>
-      <!-- Datum (nur bei Tagebuch) -->
       <div class="form-group" id="bearbeitenDatumGroup" style="display:none;">
         <label for="bearbeitenDatum">Datum</label>
         <input type="date" id="bearbeitenDatum">
@@ -822,7 +806,7 @@
     </div>
   </div>
 
-  <!-- MODAL: Neu (für Float-Button) -->
+  <!-- MODAL: Neu (für Float-Button – jetzt mit Typ-Auswahl für Aufgaben, Einlösungen, Tagebuch) -->
   <div id="neuModal" class="modal">
     <div class="modal-content">
       <h3>➕ Neuen Eintrag</h3>
@@ -831,19 +815,34 @@
         <select id="neuTyp">
           <option value="aufgabe">Aufgabe (Ehemann sammelt)</option>
           <option value="einloesung">Einlösung (Ehemann gibt aus)</option>
+          <option value="tagebuch">Tagebuch (Privat)</option>
         </select>
       </div>
       <div class="form-group">
-        <label for="neuText">Beschreibung *</label>
+        <label for="neuText">Beschreibung / Text *</label>
         <input type="text" id="neuText" placeholder="z. B. Frühstück ans Bett bringen">
       </div>
-      <div class="form-group">
-        <label for="neuPunkte">Punkte (Richtwert) / Kosten</label>
-        <input type="number" id="neuPunkte" value="10" min="1">
+      <!-- Felder für Aufgabe/Einlösung -->
+      <div id="neuPunkteGroup">
+        <div class="form-group">
+          <label for="neuPunkte" id="neuPunkteLabel">Punkte / Kosten</label>
+          <input type="number" id="neuPunkte" value="10" min="1">
+        </div>
+        <div class="form-group">
+          <label for="neuHinweis">Notiz (optional)</label>
+          <input type="text" id="neuHinweis" placeholder="z. B. Cuckold, Romantik">
+        </div>
       </div>
-      <div class="form-group">
-        <label for="neuHinweis">Notiz (optional)</label>
-        <input type="text" id="neuHinweis" placeholder="z. B. Cuckold, Romantik">
+      <!-- Felder für Tagebuch -->
+      <div id="neuDatumGroup" style="display:none;">
+        <div class="form-group">
+          <label for="neuDatum">Datum</label>
+          <input type="date" id="neuDatum">
+        </div>
+        <div class="form-group">
+          <label for="neuTagebuchBild">Bild (optional)</label>
+          <input type="file" id="neuTagebuchBild" accept="image/*">
+        </div>
       </div>
       <div class="modal-buttons">
         <button class="btn-secondary" id="neuAbbrechen">Abbrechen</button>
@@ -1474,7 +1473,7 @@
           container.addEventListener('click', this._containerHandler);
         },
 
-        // ===== TAGEBUCH (nur noch Bearbeiten-Button, kein Text-Klick-Edit) =====
+        // ===== TAGEBUCH (nur Liste – kein Formular mehr) =====
         renderTagebuch(tagebuch) {
           const container = document.getElementById('tagebuchContainer');
           container.innerHTML = '';
@@ -1528,7 +1527,6 @@
             const actionsDiv = document.createElement('div');
             actionsDiv.className = 'tagebuch-actions';
 
-            // Bearbeiten-Button (der einzige Weg zum Editieren)
             const bearbeitenBtn = document.createElement('button');
             bearbeitenBtn.textContent = '✏️ Bearbeiten';
             bearbeitenBtn.className = 'tagebuch-bearbeiten';
@@ -1570,7 +1568,7 @@
             bodyDiv.appendChild(actionsDiv);
             div.appendChild(bodyDiv);
 
-            // Toggle: Klick auf den Eintrag (außer Buttons) klappt auf/zu
+            // Toggle
             div.addEventListener('click', function(e) {
               if (e.target.closest('button')) return;
               const body = this.querySelector('.tagebuch-body');
@@ -1591,8 +1589,7 @@
             container.appendChild(div);
           });
 
-          // Events für die Buttons (weiterhin einzeln)
-          // Tagebuch-Bearbeiten-Button öffnet das Bearbeiten-Modal
+          // Events für die Buttons
           container.querySelectorAll('.tagebuch-bearbeiten').forEach(btn => {
             btn.addEventListener('click', function(e) {
               e.stopPropagation();
@@ -1749,63 +1746,64 @@
             });
           });
 
-          // Tagebuch speichern
-          document.getElementById('tagebuchSpeichern').addEventListener('click', async () => {
-            const datum = document.getElementById('neuesDatum').value;
-            const text = document.getElementById('neuerTagebuchText').value.trim();
-            const bildInput = document.getElementById('neuesBildInput');
-            if (!datum) { showToast('Bitte Datum auswählen.', 'error'); return; }
-            if (!text) { showToast('Bitte Text eingeben.', 'error'); return; }
-
-            const file = bildInput.files[0];
-            let imageData = '';
-            if (file) {
-              try {
-                imageData = await compressImage(file);
-              } catch (err) {
-                showToast('Bild konnte nicht verarbeitet werden.', 'error');
-                console.error(err);
-                return;
-              }
-            }
-            DataManager.addTagebuchEintrag(datum, text, imageData);
-            DataManager.addLog(`Neuer Tagebucheintrag für ${datum}${file ? ' mit Bild' : ''}.`);
-            document.getElementById('neuesDatum').value = '';
-            document.getElementById('neuerTagebuchText').value = '';
-            bildInput.value = '';
-            try {
-              await DataManager.save();
-              UIRenderer.renderAlles(DataManager.lokaleDaten);
-              showToast('Tagebucheintrag gespeichert.', 'success');
-            } catch (e) {}
-          });
-
           // Float-Button -> Modal Neu
           document.getElementById('floatNeuBtn').addEventListener('click', () => {
             document.getElementById('neuModal').classList.add('active');
+            // Typ-Auswahl initialisieren
+            const typSelect = document.getElementById('neuTyp');
+            this.onNeuTypChange(typSelect.value);
             document.getElementById('neuText').focus();
+          });
+
+          // Neu-Modal: Typ-Wechsel
+          document.getElementById('neuTyp').addEventListener('change', function() {
+            App.onNeuTypChange(this.value);
           });
 
           // Neu-Modal speichern
           document.getElementById('neuSpeichern').addEventListener('click', async () => {
             const typ = document.getElementById('neuTyp').value;
             const text = document.getElementById('neuText').value.trim();
-            const punkte = parseInt(document.getElementById('neuPunkte').value) || 0;
-            const hinweis = document.getElementById('neuHinweis').value.trim();
-            if (!text) { showToast('Bitte Beschreibung eingeben.', 'error'); return; }
-            if (punkte < 1) { showToast('Punkte müssen positiv sein.', 'error'); return; }
+
+            if (!text) { showToast('Bitte Beschreibung / Text eingeben.', 'error'); return; }
 
             if (typ === 'aufgabe') {
+              const punkte = parseInt(document.getElementById('neuPunkte').value) || 0;
+              if (punkte < 1) { showToast('Punkte müssen positiv sein.', 'error'); return; }
               DataManager.addAufgabe(text, punkte);
               DataManager.addLog(`Neue Aufgabe: „${text}“ (${punkte} P.)`);
-            } else {
+            } else if (typ === 'einloesung') {
+              const punkte = parseInt(document.getElementById('neuPunkte').value) || 0;
+              const hinweis = document.getElementById('neuHinweis').value.trim();
+              if (punkte < 1) { showToast('Kosten müssen positiv sein.', 'error'); return; }
               DataManager.addEinloesung(text, punkte, hinweis);
               DataManager.addLog(`Neue Einlösung: „${text}“ (${punkte} P.)`);
+            } else if (typ === 'tagebuch') {
+              const datum = document.getElementById('neuDatum').value;
+              if (!datum) { showToast('Bitte Datum auswählen.', 'error'); return; }
+              const bildInput = document.getElementById('neuTagebuchBild');
+              let imageData = '';
+              if (bildInput.files[0]) {
+                try {
+                  imageData = await compressImage(bildInput.files[0]);
+                } catch (err) {
+                  showToast('Bild konnte nicht verarbeitet werden.', 'error');
+                  console.error(err);
+                  return;
+                }
+              }
+              DataManager.addTagebuchEintrag(datum, text, imageData);
+              DataManager.addLog(`Neuer Tagebucheintrag für ${datum}${bildInput.files[0] ? ' mit Bild' : ''}.`);
             }
+
+            // Modal schließen und Felder zurücksetzen
+            document.getElementById('neuModal').classList.remove('active');
             document.getElementById('neuText').value = '';
             document.getElementById('neuPunkte').value = '10';
             document.getElementById('neuHinweis').value = '';
-            document.getElementById('neuModal').classList.remove('active');
+            document.getElementById('neuDatum').value = '';
+            document.getElementById('neuTagebuchBild').value = '';
+
             try {
               await DataManager.save();
               UIRenderer.renderAlles(DataManager.lokaleDaten);
@@ -1895,6 +1893,19 @@
           });
         },
 
+        // ===== HILFE: Neu-Modal Felder je nach Typ =====
+        onNeuTypChange(typ) {
+          const punkteGroup = document.getElementById('neuPunkteGroup');
+          const datumGroup = document.getElementById('neuDatumGroup');
+          if (typ === 'tagebuch') {
+            punkteGroup.style.display = 'none';
+            datumGroup.style.display = 'block';
+          } else {
+            punkteGroup.style.display = 'block';
+            datumGroup.style.display = 'none';
+          }
+        },
+
         // ===== BEARBEITEN-MODAL (für alle Typen) =====
         openBearbeitenModal(id, typ) {
           const item = DataManager[`find${typ.charAt(0).toUpperCase() + typ.slice(1)}`](id);
@@ -1910,16 +1921,13 @@
           const datumGroup = document.getElementById('bearbeitenDatumGroup');
           const datumField = document.getElementById('bearbeitenDatum');
 
-          // Text immer setzen
           textField.value = item.text || '';
 
           if (typ === 'tagebuch') {
-            // Tagebuch: Datum anzeigen, Punkte ausblenden
             punkteGroup.style.display = 'none';
             datumGroup.style.display = 'block';
             datumField.value = item.datum || '';
           } else {
-            // Aufgaben/Einlösungen: Punkte anzeigen, Datum ausblenden
             punkteGroup.style.display = 'block';
             datumGroup.style.display = 'none';
             if (typ === 'aufgabe') {
@@ -1944,14 +1952,12 @@
           if (!neuerText) { showToast('Bitte einen Text eingeben.', 'error'); return; }
 
           if (this._bearbeitenTyp === 'tagebuch') {
-            // Tagebuch: Text + Datum
             const neuesDatum = document.getElementById('bearbeitenDatum').value;
             if (!neuesDatum) { showToast('Bitte ein Datum auswählen.', 'error'); return; }
             item.text = neuerText;
             item.datum = neuesDatum;
             DataManager.addLog(`Tagebucheintrag bearbeitet (Text + Datum).`);
           } else {
-            // Aufgaben/Einlösungen: Text + Punkte/Kosten
             const neuePunkte = parseInt(document.getElementById('bearbeitenPunkte').value) || 0;
             if (neuePunkte < 0) { showToast('Punkte/Kosten müssen positiv sein.', 'error'); return; }
             item.text = neuerText;
