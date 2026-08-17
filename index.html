@@ -748,7 +748,7 @@
       </div>
 
       <div class="settings-group">
-        <p style="font-size:0.85rem; color:var(--text-muted);">ℹ️ Alle Daten werden in der Supabase-Cloud gespeichert. Synchronisation erfolgt automatisch beim Speichern.</p>
+        <p style="font-size:0.85rem; color:var(--text-muted);">ℹ️ Alle Daten werden in der JSONBin-Cloud gespeichert. Synchronisation erfolgt automatisch beim Speichern.</p>
         <button id="exportDatenBtn" class="btn-primary" style="width:auto; padding:10px 20px; margin-top:8px; background:var(--bg); color:var(--text); border:1px solid var(--card-border);">📥 Daten exportieren (JSON)</button>
         <button id="importDatenBtn" class="btn-primary" style="width:auto; padding:10px 20px; margin-top:8px; background:var(--bg); color:var(--text); border:1px solid var(--card-border);">📤 Daten importieren (JSON)</button>
         <input type="file" id="importFileInput" accept=".json" style="display:none;">
@@ -857,11 +857,10 @@
 
       // ===== KONFIGURATION =====
       const CONFIG = {
-        SUPABASE_URL: 'https://wvggsmdnsdnwxtivdgsr.supabase.co',
-        SUPABASE_KEY: 'sb_publishable_S9NZCm46akp3HEHhl72Q0A_6kWnON7B',
-        SUPABASE_TABLE: 'punkte_system',
-        SUPABASE_ID: 'hauptkonto',
-        PIN: localStorage.getItem('pin') || '0000'
+        BIN_ID: '6a36c9e0f5f4af5e29151a52',
+        MASTER_KEY: '$2a$10$RXS/6UhoYPTh7nq/AcLtEeSOld4i4UdPbE25C2m90QuyLRxaGrLgS',
+        API_BASE: 'https://api.jsonbin.io/v3/b/6a36c9e0f5f4af5e29151a52',
+        PIN: '0000'
       };
 
       // ===== HELFER =====
@@ -915,15 +914,14 @@
         });
       }
 
-      // ===== DATA MANAGER (Supabase) =====
+      // ===== DATA MANAGER =====
       const DataManager = {
         lokaleDaten: { aufgaben: [], einloesungen: [], tagebuch: [], konto: 0, log: [] },
         aktuelleVersion: null,
 
         getHeaders(extra = {}) {
           return {
-            'apikey': CONFIG.SUPABASE_KEY,
-            'Authorization': `Bearer ${CONFIG.SUPABASE_KEY}`,
+            'X-Master-Key': CONFIG.MASTER_KEY,
             'Content-Type': 'application/json',
             ...extra
           };
@@ -990,26 +988,16 @@
         async load() {
           try {
             document.getElementById('syncStatus').textContent = ' (lade…)';
-            const url = `${CONFIG.SUPABASE_URL}/rest/v1/${CONFIG.SUPABASE_TABLE}?id=eq.${CONFIG.SUPABASE_ID}&select=*`;
-            const res = await fetch(url, { headers: this.getHeaders() });
-            if (!res.ok) {
-              if (res.status === 404) {
-                // Kein Datensatz gefunden -> Standarddaten erstellen
-                this.initDefaultData();
-                await this.save(true);
-                document.getElementById('syncStatus').textContent = ' ✅';
-                return true;
-              }
-              throw new Error(`HTTP ${res.status}`);
-            }
-            const records = await res.json();
-            if (!records || records.length === 0) {
+            const res = await fetch(`${CONFIG.API_BASE}/latest`, { headers: this.getHeaders() });
+            if (!res.ok) throw new Error(`HTTP ${res.status}`);
+            const json = await res.json();
+            this.aktuelleVersion = json.record.version;
+            const data = json.record;
+            if (!data.aufgaben || !data.einloesungen) {
               this.initDefaultData();
               await this.save(true);
             } else {
-              const record = records[0];
-              this.aktuelleVersion = record.version;
-              this.lokaleDaten = record.daten;   // <--- Spalte heißt "daten"
+              this.lokaleDaten = data;
               ['aufgaben', 'einloesungen', 'tagebuch'].forEach(key => {
                 (this.lokaleDaten[key] || []).forEach(e => {
                   if (!e.image) e.image = '';
@@ -1035,95 +1023,42 @@
 
         async save(initial = false) {
           try {
-            const baseUrl = `${CONFIG.SUPABASE_URL}/rest/v1/${CONFIG.SUPABASE_TABLE}`;
-            
-            if (initial) {
-              // Erstinstallation: Datensatz einfügen
-              const insertBody = {
-                id: CONFIG.SUPABASE_ID,
-                daten: this.lokaleDaten,      // <--- Spalte "daten"
-                version: 1
-              };
-              const res = await fetch(baseUrl, {
-                method: 'POST',
-                headers: this.getHeaders({ 'Prefer': 'return=representation' }),
-                body: JSON.stringify(insertBody)
-              });
-              if (!res.ok) {
-                const errText = await res.text();
-                throw new Error(`Initiales Speichern fehlgeschlagen (${res.status}): ${errText}`);
-              }
-              const result = await res.json();
-              if (result && result[0]) {
-                this.aktuelleVersion = result[0].version;
-              } else {
-                this.aktuelleVersion = 1;
-              }
-              document.getElementById('syncStatus').textContent = ' ✅';
-              showToast('Erstinstallation gespeichert.', 'success');
-              return;
-            }
-
-            // Nicht-initiales Speichern: erst aktuellen Stand holen
-            const getUrl = `${baseUrl}?id=eq.${CONFIG.SUPABASE_ID}&select=*`;
-            const getRes = await fetch(getUrl, { headers: this.getHeaders() });
-            if (!getRes.ok) {
-              throw new Error(`Server-Abfrage fehlgeschlagen (${getRes.status})`);
-            }
-            const current = await getRes.json();
-
-            if (!current || current.length === 0) {
-              // Datensatz existiert nicht mehr -> neu anlegen
-              return this.save(true);
-            }
-
-            const serverVersion = current[0].version;
-            if (this.aktuelleVersion !== serverVersion) {
-              const choice = confirm(
-                'Die Daten auf dem Server wurden von einem anderen Gerät geändert.\n' +
-                'Möchtest du deine lokalen Änderungen verwerfen und die Server-Daten laden?\n' +
-                '(OK = Server laden, Abbrechen = Server überschreiben)'
-              );
-              if (choice) {
-                // Server-Daten übernehmen
-                this.lokaleDaten = current[0].daten;
-                this.aktuelleVersion = serverVersion;
-                showToast('Server-Daten geladen.', 'info');
-                UIRenderer.renderAlles(this.lokaleDaten);
-                return;
-              } else {
-                // Überschreiben: wir verwenden die aktuelle Server-Version als Basis für den Filter
-                this.aktuelleVersion = serverVersion;
+            if (!initial) {
+              const latestRes = await fetch(`${CONFIG.API_BASE}/latest`, { headers: this.getHeaders() });
+              if (latestRes.ok) {
+                const latest = await latestRes.json();
+                if (latest.record.version !== this.aktuelleVersion) {
+                  const choice = confirm(
+                    'Die Daten auf dem Server wurden von einem anderen Gerät geändert.\n' +
+                    'Möchtest du deine lokalen Änderungen verwerfen und die Server-Daten laden?\n' +
+                    '(OK = Server laden, Abbrechen = Server überschreiben)'
+                  );
+                  if (choice) {
+                    this.lokaleDaten = latest.record;
+                    this.aktuelleVersion = latest.record.version;
+                    showToast('Server-Daten geladen.', 'info');
+                    UIRenderer.renderAlles(this.lokaleDaten);
+                    return;
+                  } else {
+                    this.aktuelleVersion = latest.record.version;
+                  }
+                }
               }
             }
 
-            // Optimistic Locking: PATCH mit Versionsfilter.
-            // Der Trigger erhöht die Version automatisch (old.version + 1).
-            const patchUrl = `${baseUrl}?id=eq.${CONFIG.SUPABASE_ID}&version=eq.${this.aktuelleVersion}`;
-            const patchBody = {
-              daten: this.lokaleDaten       // <--- Spalte "daten"
-            };
-            const patchRes = await fetch(patchUrl, {
-              method: 'PATCH',
-              headers: this.getHeaders({ 'Prefer': 'return=representation' }),
-              body: JSON.stringify(patchBody)
+            const putHeaders = this.getHeaders();
+            if (this.aktuelleVersion) putHeaders['X-Bin-Version'] = this.aktuelleVersion;
+            const res = await fetch(CONFIG.API_BASE, {
+              method: 'PUT',
+              headers: putHeaders,
+              body: JSON.stringify(this.lokaleDaten)
             });
-            if (!patchRes.ok) {
-              const errText = await patchRes.text();
-              if (patchRes.status === 404 || patchRes.status === 406) {
-                // Version nicht mehr aktuell -> Konflikt erneut behandeln
-                showToast('Konflikt erkannt – lade Server-Daten neu.', 'error');
-                return this.load();
-              }
-              throw new Error(`Speichern fehlgeschlagen (${patchRes.status}): ${errText}`);
+            if (!res.ok) {
+              const errText = await res.text();
+              throw new Error(`Speichern fehlgeschlagen (${res.status}): ${errText}`);
             }
-            const patchResult = await patchRes.json();
-            if (patchResult && patchResult[0]) {
-              this.aktuelleVersion = patchResult[0].version;
-            } else {
-              // Fallback: Version selbst erhöhen (sollte nicht passieren, da Trigger)
-              this.aktuelleVersion = serverVersion + 1;
-            }
+            const result = await res.json();
+            this.aktuelleVersion = result.record.version;
             document.getElementById('syncStatus').textContent = ' ✅';
             showToast('Gespeichert.', 'success');
           } catch (e) {
@@ -2084,7 +2019,7 @@
       };
 
       // ===== START =====
-      console.warn('⚠️ Sicherheitshinweis: Der Supabase-Key ist im Client-Code sichtbar – für Produktion RLS verwenden.');
+      console.warn('⚠️ Sicherheitshinweis: Der Master-Key ist im Client-Code sichtbar – nur für Tests geeignet.');
       document.addEventListener('DOMContentLoaded', () => App.init());
     })();
   </script>
