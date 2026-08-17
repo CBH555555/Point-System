@@ -1009,7 +1009,7 @@
             } else {
               const record = records[0];
               this.aktuelleVersion = record.version;
-              this.lokaleDaten = record.data;
+              this.lokaleDaten = record.daten;   // <--- Spalte heißt "daten"
               ['aufgaben', 'einloesungen', 'tagebuch'].forEach(key => {
                 (this.lokaleDaten[key] || []).forEach(e => {
                   if (!e.image) e.image = '';
@@ -1041,7 +1041,7 @@
               // Erstinstallation: Datensatz einfügen
               const insertBody = {
                 id: CONFIG.SUPABASE_ID,
-                data: this.lokaleDaten,
+                daten: this.lokaleDaten,      // <--- Spalte "daten"
                 version: 1
               };
               const res = await fetch(baseUrl, {
@@ -1086,7 +1086,7 @@
               );
               if (choice) {
                 // Server-Daten übernehmen
-                this.lokaleDaten = current[0].data;
+                this.lokaleDaten = current[0].daten;
                 this.aktuelleVersion = serverVersion;
                 showToast('Server-Daten geladen.', 'info');
                 UIRenderer.renderAlles(this.lokaleDaten);
@@ -1097,12 +1097,11 @@
               }
             }
 
-            // Optimistic Locking: PATCH mit Versionsfilter
-            const neueVersion = this.aktuelleVersion + 1;
+            // Optimistic Locking: PATCH mit Versionsfilter.
+            // Der Trigger erhöht die Version automatisch (old.version + 1).
             const patchUrl = `${baseUrl}?id=eq.${CONFIG.SUPABASE_ID}&version=eq.${this.aktuelleVersion}`;
             const patchBody = {
-              data: this.lokaleDaten,
-              version: neueVersion
+              daten: this.lokaleDaten       // <--- Spalte "daten"
             };
             const patchRes = await fetch(patchUrl, {
               method: 'PATCH',
@@ -1122,7 +1121,8 @@
             if (patchResult && patchResult[0]) {
               this.aktuelleVersion = patchResult[0].version;
             } else {
-              this.aktuelleVersion = neueVersion;
+              // Fallback: Version selbst erhöhen (sollte nicht passieren, da Trigger)
+              this.aktuelleVersion = serverVersion + 1;
             }
             document.getElementById('syncStatus').textContent = ' ✅';
             showToast('Gespeichert.', 'success');
