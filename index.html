@@ -1089,6 +1089,9 @@
     .word-input { width:100%; min-height:46px; padding:10px 13px; border-radius:12px; border:1px solid var(--card-border); background:var(--card-bg); color:var(--text); font:inherit; font-size:1rem; }
     .word-actions { display:flex; gap:8px; flex-wrap:wrap; }
     .word-actions button { padding:10px 14px; font-weight:700; }
+    .word-category-row { display:flex; align-items:center; gap:8px; margin:0 0 10px; flex-wrap:wrap; }
+    .word-category-row label { font-size:.76rem; font-weight:750; color:var(--text-muted); }
+    .word-category { min-height:42px; flex:1 1 190px; padding:8px 11px; border-radius:12px; border:1px solid var(--card-border); background:var(--card-bg); color:var(--text); font:inherit; font-size:.9rem; }
     .word-result { min-height:48px; margin-top:10px; padding:10px 12px; border-radius:12px; background:var(--card-bg); border:1px dashed var(--card-border); color:var(--text-muted); font-size:.8rem; line-height:1.45; }
     .word-result.win { color:var(--text); border-style:solid; }
 
@@ -1247,7 +1250,17 @@
 
       <div class="word-game puzzle-panel">
         <h3>🔤 Worträtsel</h3>
-        <p class="mini">Ein kleines Beziehungswort ist durcheinandergeraten. Richtige Antworten bringen zufällig Bildfortschritt oder einen frechen Ehemann-Spruch.</p>
+        <p class="mini">Wähle eine Kategorie. Jede richtige Antwort bringt immer einen passenden frechen Witz auf Kosten des Ehemanns und kann zusätzlich ein Bildfeld freischalten.</p>
+        <div class="word-category-row">
+          <label for="wordCategory">Kategorie</label>
+          <select id="wordCategory" class="word-category">
+            <option value="liebe">❤️ Liebe</option>
+            <option value="romantik">🌹 Romantik</option>
+            <option value="haushalt">🏠 Haushalt</option>
+            <option value="sex">🔥 Sex</option>
+            <option value="liebhaber">🍸 Liebhaber</option>
+          </select>
+        </div>
         <div class="word-clue">
           <small id="wordLevelLabel">Rätsel</small>
           <strong id="wordClue">Bereit für das erste Wort?</strong>
@@ -1260,7 +1273,7 @@
             <button type="button" id="wordNext">↻ Neues Wort</button>
           </div>
         </div>
-        <div class="word-result" id="wordResult" aria-live="polite">Richtige Antworten werden pro Level nur einmal belohnt.</div>
+        <div class="word-result" id="wordResult" aria-live="polite">Jede richtige Antwort liefert einen Kategorien-Witz; Bildfortschritt ist ein möglicher Bonus.</div>
       </div>
 
       <div class="puzzle-library puzzle-panel">
@@ -1520,13 +1533,15 @@
         if (!Number.isFinite(Number(p.moves))) p.moves = 0;
         if (!p.roundId) p.roundId = genId();
         if (typeof p.lastJoke !== 'string') p.lastJoke = '';
+        const allowedWordCategories = ['liebe','romantik','haushalt','sex','liebhaber'];
+        if (!allowedWordCategories.includes(p.wordCategory)) p.wordCategory = 'liebe';
         return p;
       }
 
 
       // ===== DATA MANAGER (Supabase) =====
       const DataManager = {
-        lokaleDaten: { aufgaben: [], einloesungen: [], tagebuch: [], konto: 0, gesamtVerdient: 0, log: [], puzzle: { level: 1, levels: {}, matches: 0, wordsSolved: 0, moves: 0, roundId: '' } },
+        lokaleDaten: { aufgaben: [], einloesungen: [], tagebuch: [], konto: 0, gesamtVerdient: 0, log: [], puzzle: { level: 1, levels: {}, matches: 0, wordsSolved: 0, moves: 0, roundId: '', wordCategory: 'liebe' } },
         aktuelleVersion: null,
 
         getHeaders(extra = {}) {
@@ -1594,7 +1609,7 @@
             konto: 0,
             gesamtVerdient: 0,
             log: [],
-            puzzle: { level: 1, levels: {}, matches: 0, wordsSolved: 0, moves: 0, roundId: '' }
+            puzzle: { level: 1, levels: {}, matches: 0, wordsSolved: 0, moves: 0, roundId: '', wordCategory: 'liebe' }
           };
         },
 
@@ -2445,71 +2460,113 @@
         currentWord: null,
         palette: ['#00000000','#ef6a67','#f2b84b','#67b889','#6f8ee8','#ae74d7','#e779b4'],
         levelThemes: [
-          ['Kaffee am Morgen','Blumenmoment','Kleine Nachricht','Frühstück zu zweit'],
-          ['Zuhören','Lieblingssnack','Handy weg','Kompliment'],
-          ['Küche erledigt','Wäsche geschafft','Einkauf übernommen','Bad glänzt'],
-          ['Kerzenabend','Picknick','Date Night','Liebesbrief'],
-          ['Massage','Bad & Ruhe','Wellnessabend','Ausschlafen'],
-          ['Ausflug','Wochenendtrip','Überraschungsziel','Neues entdecken'],
-          ['Kuscheln','Kuss','Tanzen','Umarmung'],
-          ['Flirt','Leidenschaft','Prickelnder Abend','Nur wir zwei'],
-          ['Queen Mode','Cocktail & Krone','Ihre Regeln','Königliche Pause'],
-          ['Diamantmoment','Finale Nacht','Ihr Lieblingsmann','Nahezu unersetzlich']
+          ['Bild 1','Bild 2','Bild 3','Bild 4'],
+          ['Bild 1','Bild 2','Bild 3','Bild 4'],
+          ['Bild 1','Bild 2','Bild 3','Bild 4'],
+          ['Bild 1','Bild 2','Bild 3','Bild 4'],
+          ['Bild 1','Bild 2','Bild 3','Bild 4'],
+          ['Bild 1','Bild 2','Bild 3','Bild 4'],
+          ['Bild 1','Bild 2','Bild 3','Bild 4'],
+          ['Bild 1','Bild 2','Bild 3','Bild 4'],
+          ['Bild 1','Bild 2','Bild 3','Bild 4'],
+          ['Bild 1','Bild 2','Bild 3','Bild 4']
         ],
-        symbols: ['♥','✦','●','◆','✿','★','♛','◇'],
+        categoryLabels: {
+          liebe:'❤️ Liebe', romantik:'🌹 Romantik', haushalt:'🏠 Haushalt', sex:'🔥 Sex', liebhaber:'🍸 Liebhaber'
+        },
         words: [
-          {id:'zuhoeren', word:'ZUHOEREN', clue:'Was sollte ein Ehemann können, bevor er schon wieder eine Lösung anbietet?'},
-          {id:'respekt', word:'RESPEKT', clue:'Was macht aus Zusammenleben eine Partnerschaft?'},
-          {id:'romantik', word:'ROMANTIK', clue:'Was darf zwischen Einkauf und Wäsche nicht völlig verschwinden?'},
-          {id:'teamwork', word:'TEAMWORK', clue:'Wie heißt Haushalt, wenn nicht nur einer alles bemerkt?'},
-          {id:'vertrauen', word:'VERTRAUEN', clue:'Was braucht Liebe mehr als Kontrolle?'},
-          {id:'kompliment', word:'KOMPLIMENT', clue:'Was kostet nichts und wird trotzdem erstaunlich oft vergessen?'},
-          {id:'massage', word:'MASSAGE', clue:'Was kann nach einem langen Tag deutlich überzeugender sein als „Alles gut?“'},
-          {id:'kuscheln', word:'KUSCHELN', clue:'Welche Tätigkeit funktioniert auch ohne Fernbedienung?'},
-          {id:'date', word:'DATE', clue:'Was sollte auch nach der Hochzeit noch gelegentlich geplant werden?'},
-          {id:'humor', word:'HUMOR', clue:'Was rettet erstaunlich viele kleine Ehekatastrophen?'},
-          {id:'geduld', word:'GEDULD', clue:'Was braucht man, wenn er behauptet, er hätte „gleich“ gesagt?'},
-          {id:'naehe', word:'NAEHE', clue:'Was entsteht nicht automatisch nur, weil zwei Menschen auf demselben Sofa sitzen?'},
-          {id:'ehrlich', word:'EHRLICH', clue:'Wie sollten Antworten auf „Ist wirklich alles okay?“ idealerweise sein?'},
-          {id:'hilfe', word:'HILFE', clue:'Was ist besser, wenn sie kommt, bevor man dreimal darum bitten muss?'},
-          {id:'ueberraschung', word:'UEBERRASCHUNG', clue:'Was ist besonders schön, wenn sie Aufmerksamkeit statt Chaos erzeugt?'},
-          {id:'fruehstueck', word:'FRUEHSTUECK', clue:'Was schmeckt am Bett oft besser als eine Ausrede?'},
-          {id:'aufmerksam', word:'AUFMERKSAM', clue:'Wie nennt man einen Mann, der Dinge tatsächlich selbst bemerkt?'},
-          {id:'liebe', word:'LIEBE', clue:'Worum geht es hier trotz aller Punkte am Ende eigentlich?'}
+          {id:'liebe_zuhoeren', category:'liebe', word:'ZUHOEREN', clue:'Was sollte ein Ehemann können, bevor er schon wieder ungefragt eine Lösung anbietet?'},
+          {id:'liebe_respekt', category:'liebe', word:'RESPEKT', clue:'Was hält eine Beziehung besser zusammen als Rechthaben?'},
+          {id:'liebe_vertrauen', category:'liebe', word:'VERTRAUEN', clue:'Was wächst durch Ehrlichkeit und Verlässlichkeit?'},
+          {id:'liebe_naehe', category:'liebe', word:'NAEHE', clue:'Was entsteht nicht automatisch, nur weil beide auf demselben Sofa sitzen?'},
+          {id:'liebe_ehrlich', category:'liebe', word:'EHRLICH', clue:'Wie sollte die Antwort auf „Ist wirklich alles okay?“ idealerweise sein?'},
+          {id:'liebe_aufmerksam', category:'liebe', word:'AUFMERKSAM', clue:'Wie nennt man einen Mann, der Dinge tatsächlich selbst bemerkt?'},
+          {id:'liebe_umarmung', category:'liebe', word:'UMARMUNG', clue:'Was kann manchmal mehr sagen als fünf schlechte Ratschläge?'},
+          {id:'liebe_team', category:'liebe', word:'TEAM', clue:'Was sollten zwei Menschen in einer Ehe sein – nicht Chef und Praktikant?'},
+
+          {id:'romantik_date', category:'romantik', word:'DATE', clue:'Was sollte auch nach der Hochzeit nicht ausgestorben sein?'},
+          {id:'romantik_blumen', category:'romantik', word:'BLUMEN', clue:'Welche klassische Kleinigkeit wirkt besser, wenn sie ohne Anlass kommt?'},
+          {id:'romantik_kompliment', category:'romantik', word:'KOMPLIMENT', clue:'Was kostet nichts und wird trotzdem erstaunlich oft vergessen?'},
+          {id:'romantik_kuss', category:'romantik', word:'KUSS', clue:'Was ist kurz, kostenlos und oft besser als ein Emoji?'},
+          {id:'romantik_kerzen', category:'romantik', word:'KERZEN', clue:'Was macht selbst Nudeln mit Soße plötzlich nach Date-Night?'},
+          {id:'romantik_liebesbrief', category:'romantik', word:'LIEBESBRIEF', clue:'Was beweist, dass Copy-Paste nicht immer die romantischste Lösung ist?'},
+          {id:'romantik_picknick', category:'romantik', word:'PICKNICK', clue:'Welches Date braucht Decke, Snacks und möglichst keinen Regen?'},
+          {id:'romantik_ueberraschung', category:'romantik', word:'UEBERRASCHUNG', clue:'Was ist romantisch, solange sie nicht mit zusätzlicher Hausarbeit endet?'},
+
+          {id:'haushalt_waesche', category:'haushalt', word:'WAESCHE', clue:'Was findet erstaunlicherweise nicht von selbst den Weg in die Maschine?'},
+          {id:'haushalt_spuelmaschine', category:'haushalt', word:'SPUELMASCHINE', clue:'Welches Gerät kann ein Ehemann auch ohne Meisterbrief vollständig einräumen?'},
+          {id:'haushalt_staubsauger', category:'haushalt', word:'STAUBSAUGER', clue:'Welches Haushaltsgerät funktioniert auch in Männerhänden?'},
+          {id:'haushalt_einkauf', category:'haushalt', word:'EINKAUF', clue:'Was klappt besser mit einer Liste als mit fünf Rückfragen per Handy?'},
+          {id:'haushalt_bad', category:'haushalt', word:'BADEZIMMER', clue:'Welcher Raum wird nicht sauberer, wenn man nur lange genug daran vorbeigeht?'},
+          {id:'haushalt_kueche', category:'haushalt', word:'KUECHE', clue:'Wo endet Kochen nicht automatisch mit dem letzten Bissen?'},
+          {id:'haushalt_ordnung', category:'haushalt', word:'ORDNUNG', clue:'Was entsteht selten dadurch, dass man Dinge nur von A nach B legt?'},
+          {id:'haushalt_mental', category:'haushalt', word:'MITDENKEN', clue:'Was ist im Haushalt hilfreicher als auf jede Aufgabe ausdrücklich zu warten?'},
+
+          {id:'sex_kuss', category:'sex', word:'KUESSEN', clue:'Was kann ein guter Anfang sein, ohne dass sofort ein Zeitplan daraus werden muss?'},
+          {id:'sex_massage', category:'sex', word:'MASSAGE', clue:'Was kann Nähe aufbauen und gleichzeitig verspannte Schultern retten?'},
+          {id:'sex_flirten', category:'sex', word:'FLIRTEN', clue:'Was sollte auch in einer langen Beziehung nicht komplett verlernt werden?'},
+          {id:'sex_vorspiel', category:'sex', word:'VORSPIEL', clue:'Was ist kein lästiger Ladebildschirm vor dem eigentlichen Programm?'},
+          {id:'sex_wunsch', category:'sex', word:'WUNSCH', clue:'Was sollte man aussprechen können, statt vom Partner Gedankenlesen zu erwarten?'},
+          {id:'sex_lust', category:'sex', word:'LUST', clue:'Was lässt sich schlecht befehlen, aber ziemlich gut fördern?'},
+          {id:'sex_naechte', category:'sex', word:'LEIDENSCHAFT', clue:'Was darf zwischen Alltag und Wäschekorb trotzdem gelegentlich auftauchen?'},
+          {id:'sex_zaertlich', category:'sex', word:'ZAERTLICH', clue:'Wie darf Nähe auch sein, ohne dabei langweilig zu werden?'},
+
+          {id:'liebhaber_konkurrenz', category:'liebhaber', word:'KONKURRENZ', clue:'Was erinnert einen Ehemann charmant daran, sich nicht zu sicher zu fühlen?'},
+          {id:'liebhaber_charme', category:'liebhaber', word:'CHARME', clue:'Was sollte ein Ehemann besitzen, bevor jemand anderes damit Eindruck macht?'},
+          {id:'liebhaber_cocktail', category:'liebhaber', word:'COCKTAIL', clue:'Was passt verdächtig gut zu einem Abend, an dem der Ehemann besonders aufmerksam sein sollte?'},
+          {id:'liebhaber_blick', category:'liebhaber', word:'BLICK', clue:'Was kann schon reichen, damit der Ehemann plötzlich wieder besonders höflich wird?'},
+          {id:'liebhaber_flirt', category:'liebhaber', word:'FLIRT', clue:'Was wirkt bei anderen plötzlich aufregend und beim Ehemann wie eine Erinnerung an seine Hausaufgaben?'},
+          {id:'liebhaber_anzug', category:'liebhaber', word:'ANZUG', clue:'Was lässt Konkurrenz manchmal gefährlicher aussehen als sie vielleicht ist?'},
+          {id:'liebhaber_aufmerksam', category:'liebhaber', word:'AUFMERKSAMKEIT', clue:'Was steigt beim Ehemann oft erstaunlich schnell, sobald Konkurrenz im Raum steht?'},
+          {id:'liebhaber_zweiter', category:'liebhaber', word:'ZWEITER', clue:'Welche Platzierung ist für einen sehr gut erzogenen Ehemann manchmal schon eine Charakterfrage?'}
         ],
-        jokes: [
-          'Ehemann des Tages: Er hat etwas erledigt, bevor daraus eine PowerPoint-Präsentation werden musste.',
-          'Konkurrenz belebt das Geschäft. Bei Ehemännern offenbar auch die Aufmerksamkeit.',
-          'Er nennt es Initiative. Sie nennt es: endlich ohne Erinnerung.',
-          'Ein guter Ehemann hört zu. Ein sehr guter erinnert sich morgen noch daran.',
-          'Heute schon fast selbstständig: Er fand den Wäschekorb ohne Navigationsgerät.',
-          'Sein romantisches Talent ist wie WLAN: manchmal stark, manchmal braucht es einen Neustart.',
-          'Er ist nicht langsam. Er gibt ihr nur genug Zeit, einen besseren Plan zu entwickeln.',
-          'Beziehungsfortschritt: Aus „Sag mir, was ich tun soll“ wird langsam „Ich hab’s schon gemacht“.',
-          'Man muss ihn nicht ersetzen. Regelmäßige Softwareupdates könnten reichen.',
-          'Er darf stolz sein: Heute war die Messlatte nicht einmal auf dem Boden.',
-          'Wenn Aufmerksamkeit Punkte gäbe … Moment, genau deshalb gibt es diese Seite.',
-          'Fast konkurrenzfähig. Jetzt nur nicht übermütig werden.',
-          'Seine Superkraft: nach dem dritten Hinweis so tun, als wäre es seine Idee gewesen.',
-          'Ein Ehemann ist wie ein gutes Rezept: Mit etwas Übung wird aus den Zutaten tatsächlich etwas Brauchbares.',
-          'Er hat seinen Platz gefunden. Praktischerweise dort, wo gerade Hilfe gebraucht wird.'
-        ],
+        jokes: {
+          liebe: [
+            'Liebe ist, wenn sie „Alles gut“ sagt und er inzwischen klug genug ist, noch einmal nachzufragen.',
+            'Er nennt es tiefe Verbundenheit. Sie nennt es einen historischen Moment, wenn er sich tatsächlich erinnert.',
+            'Sein Herz gehört ihr. Seine Aufmerksamkeit muss gelegentlich noch per Update nachinstalliert werden.',
+            'Liebe verzeiht vieles. Zum Glück für ihn sogar die Frage: „Was habe ich denn jetzt schon wieder gemacht?“',
+            'Er wollte ihr die Sterne vom Himmel holen. Sie wäre schon mit dem Müll zufrieden gewesen.'
+          ],
+          romantik: [
+            'Seine Romantik ist gereift: Früher gab es Tankstellenblumen, heute kennt er immerhin die richtige Ausfahrt.',
+            'Kerzenlicht macht jeden Ehemann attraktiver – vor allem, weil man seine kleinen Mängel schlechter sieht.',
+            'Er plante einen romantischen Abend ganz allein. Sie kontrollierte vorsichtshalber trotzdem die Reservierung.',
+            'Ein Liebesbrief von ihm ist besonders wertvoll: Man erkennt daran, dass die Autokorrektur auch Gefühle kann.',
+            'Er flüstert ihr süße Dinge ins Ohr. Meistens kurz nachdem er bemerkt hat, dass er etwas vergessen hat.'
+          ],
+          haushalt: [
+            'Heute fand er den Wäschekorb ohne Hinweis. Die Forschung spricht von einem Durchbruch.',
+            'Er räumte die Spülmaschine ein. Nicht perfekt, aber die Teller haben den Einsatz überlebt.',
+            'Seine Lieblingsposition im Haushalt? Früher Sofa. Inzwischen immerhin gelegentlich Staubsauger.',
+            'Er fragte nicht, was er tun soll. Für einen Moment war absolute Stille im Universum.',
+            'Man sagt, Hausarbeit sei unsichtbar. Für ihn war sie das offenbar jahrelang wirklich.'
+          ],
+          sex: [
+            'Er hält sich für unwiderstehlich. Sie hält ein bisschen Vorbereitung weiterhin für die sicherere Strategie.',
+            'Sein Selbstvertrauen im Bett ist beeindruckend. Seine Bewertung bleibt trotzdem in professionellen Händen.',
+            'Vorspiel ist für ihn inzwischen kein Fremdwort mehr. Fortschritt kann so schön sein.',
+            'Er wollte spontan Leidenschaft. Sie empfahl zunächst Zähneputzen und realistische Erwartungen.',
+            'Er nennt sich ihren Verführer. Sie nennt ihn ein Projekt mit erfreulicher Lernkurve.'
+          ],
+          liebhaber: [
+            'Konkurrenz macht ihn aufmerksam. Schade, dass man dafür offenbar erst einen imaginären Bewerber brauchte.',
+            'Ein charmanter Blick von jemand anderem – und plötzlich erinnert sich der Ehemann sogar an ihre Lieblingsblumen.',
+            'Er behauptet, völlig entspannt zu sein. Interessant, wie schnell er dabei plötzlich den Haushalt erledigt.',
+            'Ein möglicher Konkurrent muss gar nichts tun. Seine Existenz allein verbessert bereits die Servicequalität zuhause.',
+            'Sie braucht keinen Ersatz. Die bloße Möglichkeit hält das vorhandene Modell erstaunlich gut gewartet.',
+            'Er ist selbstverständlich die Nummer eins im Haushalt. Über andere Ranglisten wurde heute nicht gesprochen.'
+          ]
+        },
 
         data() { return ensurePuzzleData(DataManager.lokaleDaten); },
         levelState(level=this.data().level) { return this.data().levels[String(level)]; },
+        imagePath(level, variant) { return `level${level}-${variant+1}.jpg`; },
         currentLibraryItem(level=this.data().level) {
           const state=this.levelState(level);
           const variant=state?.selected ?? 0;
-          const name=this.levelThemes[level-1]?.[variant] || `Level ${level}`;
-          return { level, variant, name, data:this.makeStaticImage(level,variant,name) };
-        },
-        makeStaticImage(level,variant,name) {
-          const hues=[8,28,145,205,275,330,355,42,300,220];
-          const h=(hues[level-1] + variant*17) % 360;
-          const symbol=this.symbols[(level+variant)%this.symbols.length];
-          const safe=String(name).replace(/[&<>]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[m]));
-          const svg=`<svg xmlns="http://www.w3.org/2000/svg" width="800" height="1000" viewBox="0 0 800 1000"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="hsl(${h} 64% 58%)"/><stop offset="1" stop-color="hsl(${(h+52)%360} 52% 25%)"/></linearGradient><radialGradient id="r"><stop offset="0" stop-color="rgba(255,255,255,.48)"/><stop offset="1" stop-color="rgba(255,255,255,0)"/></radialGradient></defs><rect width="800" height="1000" rx="44" fill="url(#g)"/><circle cx="650" cy="170" r="250" fill="url(#r)"/><circle cx="145" cy="790" r="220" fill="rgba(255,255,255,.08)"/><text x="400" y="410" text-anchor="middle" fill="white" font-size="250" font-family="Arial,sans-serif">${symbol}</text><text x="400" y="650" text-anchor="middle" fill="white" font-size="46" font-weight="700" font-family="Arial,sans-serif">${safe}</text><text x="400" y="715" text-anchor="middle" fill="rgba(255,255,255,.78)" font-size="27" font-family="Arial,sans-serif">LEVEL ${level} · BILD ${variant+1}</text><rect x="170" y="770" width="460" height="2" fill="rgba(255,255,255,.35)"/><text x="400" y="835" text-anchor="middle" fill="rgba(255,255,255,.82)" font-size="24" font-family="Arial,sans-serif">Liebe · Alltag · ein bisschen Spiel</text></svg>`;
-          return 'data:image/svg+xml;charset=UTF-8,'+encodeURIComponent(svg);
+          const name=`Level ${level} · Bild ${variant+1}`;
+          return { level, variant, name, data:this.imagePath(level,variant) };
         },
         normalizeRevealed(state=this.levelState()) {
           if(!state)return[];
@@ -2703,7 +2760,12 @@
             this.levelThemes[level-1].forEach((name,variant)=>{
               const card=document.createElement('div');const chosen=variant===state.selected;
               card.className='level-image'+(chosen&&!isFuture?' chosen':'')+(isFuture?' locked':'');
-              const showBadge=chosen&&!isFuture;card.innerHTML=`<img src="${this.makeStaticImage(level,variant,name)}" alt="Level ${level}: ${esc(name)}"><div class="variant-name">${esc(name)}</div>${showBadge?'<div class="pick-badge">🎲 Zufallsbild dieser Runde</div>':''}`;grid.appendChild(card);
+              const showBadge=chosen&&!isFuture;
+              const file=this.imagePath(level,variant);
+              card.innerHTML=`<img src="${file}" alt="Level ${level}, Bild ${variant+1}"><div class="variant-name">${esc(file)}</div>${showBadge?'<div class="pick-badge">🎲 Zufallsbild dieser Runde</div>':''}`;
+              const img=card.querySelector('img');
+              img.addEventListener('error',()=>{img.style.display='none';card.classList.add('missing-image');const label=card.querySelector('.variant-name');if(label)label.textContent=`Fehlt: ${file}`;});
+              grid.appendChild(card);
             });
             wrap.appendChild(row);
           }
@@ -2716,29 +2778,46 @@
 
         normalizeAnswer(value){return String(value||'').trim().toUpperCase().replace(/Ä/g,'AE').replace(/Ö/g,'OE').replace(/Ü/g,'UE').replace(/ß/g,'SS').replace(/[^A-Z]/g,'');},
         scrambleWord(word){let a=word.split('');for(let tries=0;tries<8;tries++){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}if(a.join('')!==word)break;}return a.join(' ');},
+        currentCategory(){return this.data().wordCategory||'liebe';},
+        categoryWords(){const cat=this.currentCategory();return this.words.filter(w=>w.category===cat);},
+        categoryJoke(category=this.currentCategory()){
+          const list=this.jokes[category]||this.jokes.liebe||[];
+          return list.length?list[Math.floor(Math.random()*list.length)]:'Er bemüht sich. Das ist für heute bereits eine solide Pointe.';
+        },
+        setWordCategory(category){
+          const allowed=['liebe','romantik','haushalt','sex','liebhaber'];
+          if(!allowed.includes(category))category='liebe';
+          this.data().wordCategory=category;
+          this.currentWord=null;
+          this.pickWord(true);
+          this.scheduleSave(300);
+        },
         pickWord(force=false){
           const state=this.levelState();if(!state)return;
-          const available=this.words.filter(w=>!state.solvedWords.includes(w.id));
-          if(!available.length){this.currentWord=null;this.renderWord('Alle Worträtsel dieses Levels gelöst. Beim nächsten Level gibt es neue Belohnungen.',true);return;}
-          if(!this.currentWord||force||state.solvedWords.includes(this.currentWord.id))this.currentWord=available[Math.floor(Math.random()*available.length)];
+          const pool=this.categoryWords();
+          const available=pool.filter(w=>!state.solvedWords.includes(w.id));
+          if(!available.length){this.currentWord=null;this.renderWord(`Alle Rätsel in „${this.categoryLabels[this.currentCategory()]}“ für dieses Level gelöst. Wähle eine andere Kategorie.`,true);return;}
+          if(!this.currentWord||force||state.solvedWords.includes(this.currentWord.id)||this.currentWord.category!==this.currentCategory())this.currentWord=available[Math.floor(Math.random()*available.length)];
           this.renderWord();
         },
         renderWord(message='',noPick=false){
-          const clue=document.getElementById('wordClue'),scr=document.getElementById('wordScramble'),label=document.getElementById('wordLevelLabel'),result=document.getElementById('wordResult'),input=document.getElementById('wordGuess');if(!clue||!scr)return;
+          const clue=document.getElementById('wordClue'),scr=document.getElementById('wordScramble'),label=document.getElementById('wordLevelLabel'),result=document.getElementById('wordResult'),input=document.getElementById('wordGuess'),cat=document.getElementById('wordCategory');if(!clue||!scr)return;
+          if(cat&&cat.value!==this.currentCategory())cat.value=this.currentCategory();
           if(!this.currentWord&&!noPick){this.pickWord(true);return;}
-          if(!this.currentWord){clue.textContent='Alle Rätsel dieses Levels sind gelöst.';scr.textContent='✓';if(label)label.textContent=`Level ${this.data().level}`;if(input)input.value='';if(result){result.textContent=message||'Alle Rätsel dieses Levels gelöst.';result.classList.add('win');}return;}
-          clue.textContent=this.currentWord.clue;scr.textContent=this.scrambleWord(this.currentWord.word);if(label)label.textContent=`Level ${this.data().level} · ${this.currentWord.word.length} Buchstaben`;if(input)input.value='';if(result&&message){result.textContent=message;result.classList.toggle('win',message.startsWith('✓')||message.startsWith('🎁')||message.startsWith('😏'));}
+          if(!this.currentWord){clue.textContent='In dieser Kategorie sind alle Rätsel dieses Levels gelöst.';scr.textContent='✓';if(label)label.textContent=`Level ${this.data().level} · ${this.categoryLabels[this.currentCategory()]}`;if(input)input.value='';if(result){result.textContent=message||'Kategorie geschafft – wähle eine andere.';result.classList.add('win');}return;}
+          clue.textContent=this.currentWord.clue;scr.textContent=this.scrambleWord(this.currentWord.word);if(label)label.textContent=`Level ${this.data().level} · ${this.categoryLabels[this.currentWord.category]} · ${this.currentWord.word.length} Buchstaben`;if(input)input.value='';if(result&&message){result.textContent=message;result.classList.toggle('win',message.startsWith('✓')||message.startsWith('🎁')||message.startsWith('😏')||message.startsWith('😂'));}
         },
         checkWord(){
           if(!this.currentWord){this.pickWord(true);return;}const input=document.getElementById('wordGuess'),result=document.getElementById('wordResult');const guess=this.normalizeAnswer(input?.value),answer=this.normalizeAnswer(this.currentWord.word);
-          if(!guess){if(result){result.textContent='Erst eine Lösung eingeben – Gedankenlesen ist noch kein freigeschaltetes Feature.';result.classList.remove('win');}return;}
+          if(!guess){if(result){result.textContent='Erst eine Lösung eingeben – Gedankenlesen bleibt ihr vorbehalten.';result.classList.remove('win');}return;}
           if(guess!==answer){if(result){result.textContent='Noch nicht. Ein Ehemann darf sich ruhig ein zweites Mal bemühen.';result.classList.remove('win');}return;}
-          const state=this.levelState();if(!state.solvedWords.includes(this.currentWord.id)){state.solvedWords.push(this.currentWord.id);this.data().wordsSolved=(Number(this.data().wordsSolved)||0)+1;}
-          const rewardImage=Math.random()<.65;
-          let msg='';
-          if(rewardImage&&!state.completed){const n=this.revealTiles(2);msg=`🎁 Richtig! ${n} Bildfelder gratis freigeschaltet.`;}
-          else{const joke=this.jokes[Math.floor(Math.random()*this.jokes.length)];this.data().lastJoke=joke;msg='😏 '+joke;}
-          DataManager.addLog(`Worträtsel gelöst: ${this.currentWord.word}.`);this.scheduleSave(100);this.currentWord=null;this.pickWord(true);const r=document.getElementById('wordResult');if(r){r.textContent=msg;r.classList.add('win');}
+          const solved=this.currentWord;
+          const state=this.levelState();if(!state.solvedWords.includes(solved.id)){state.solvedWords.push(solved.id);this.data().wordsSolved=(Number(this.data().wordsSolved)||0)+1;}
+          const joke=this.categoryJoke(solved.category);this.data().lastJoke=joke;
+          let bonus='';
+          if(!state.completed&&Math.random()<.65){const n=this.revealTiles(1);if(n>0)bonus=` + 🎁 ${n} Bildfeld freigeschaltet.`;}
+          const msg=`😂 ${joke}${bonus}`;
+          DataManager.addLog(`Worträtsel gelöst (${this.categoryLabels[solved.category]}): ${solved.word}.`);this.scheduleSave(100);this.currentWord=null;this.pickWord(true);const r=document.getElementById('wordResult');if(r){r.textContent=msg;r.classList.add('win');}
         },
         newPictureRound(){
           if(!confirm('Neue Zufallsrunde starten? Alle Bildfreigaben und Worträtsel-Fortschritte der 10 Spiel-Level werden zurückgesetzt. Punkte werden dabei grundsätzlich nicht verändert.'))return;
@@ -2757,6 +2836,7 @@
           byId('colorPause')?.addEventListener('click',()=>this.pause());
           byId('colorNew')?.addEventListener('click',()=>{if(this.running&&!confirm('Aktuelles Farbfall-Brett wirklich neu aufbauen?'))return;this.resetBoard(true);});
           byId('colorLeft')?.addEventListener('click',()=>this.move(-1,0));byId('colorRight')?.addEventListener('click',()=>this.move(1,0));byId('colorDown')?.addEventListener('click',()=>this.move(0,1));byId('colorDrop')?.addEventListener('click',()=>this.hardDrop());
+          byId('wordCategory')?.addEventListener('change',e=>this.setWordCategory(e.target.value));
           byId('wordCheck')?.addEventListener('click',()=>this.checkWord());byId('wordNext')?.addEventListener('click',()=>this.pickWord(true));
           byId('wordGuess')?.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();this.checkWord();}});
           byId('newPictureRound')?.addEventListener('click',()=>this.newPictureRound());
