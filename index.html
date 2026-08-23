@@ -1068,6 +1068,7 @@
       border-radius:18px; background:linear-gradient(135deg,var(--card-border),var(--accent-light)); border:1px solid var(--card-border);
     }
     .reveal-frame img { width:100%; height:100%; display:block; object-fit:cover; }
+    .reveal-frame:not(.reveal-ready) img { visibility:hidden; }
     .reveal-grid { position:absolute; inset:0; display:grid; pointer-events:none; }
     .reveal-tile {
       background:color-mix(in srgb,var(--text) 92%,#000 8%); border:1px solid rgba(255,255,255,.08); opacity:1;
@@ -1111,6 +1112,9 @@
     .level-image img { width:100%; aspect-ratio:4/5; object-fit:cover; display:block; }
     .level-image.chosen { border-color:var(--accent); }
     .level-image.locked img { filter:saturate(.45) brightness(.62) blur(1px); }
+    .level-image.secret { aspect-ratio:4/5; display:flex; align-items:center; justify-content:center; background:linear-gradient(145deg,var(--bg),var(--card-border)); color:var(--text-muted); }
+    .level-image.secret::before { content:'🔒'; font-size:1.35rem; opacity:.72; }
+    .level-image.secret .variant-name { position:absolute; left:4px; right:4px; bottom:4px; padding:4px; border-radius:7px; background:color-mix(in srgb,var(--card-bg) 88%,transparent); text-align:center; }
     .level-image .pick-badge { position:absolute; left:5px; right:5px; bottom:5px; background:rgba(20,16,18,.78); color:#fff; border-radius:7px; padding:3px 4px; font-size:.55rem; text-align:center; }
     .level-image .variant-name { padding:5px 5px 6px; font-size:.58rem; color:var(--text-muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 
@@ -2740,12 +2744,16 @@
         },
         renderReveal() {
           const item=this.currentLibraryItem(),state=this.levelState();
-          const image=document.getElementById('puzzleRevealImage'),grid=document.getElementById('revealGrid'),ph=document.getElementById('revealPlaceholder'),name=document.getElementById('activePuzzleName');
+          const image=document.getElementById('puzzleRevealImage'),grid=document.getElementById('revealGrid'),ph=document.getElementById('revealPlaceholder'),name=document.getElementById('activePuzzleName'),frame=document.getElementById('revealFrame');
           if(!image||!grid||!ph||!state)return;
-          ph.classList.add('hidden');image.classList.remove('hidden');grid.classList.remove('hidden');image.src=item.data;
-          if(name)name.textContent=`Level ${item.level} · ${item.name} · automatisch aus 4 Bildern gewählt`;
-          const [cols,rows]=this.gridDims(),rev=this.normalizeRevealed(state);grid.style.gridTemplateColumns=`repeat(${cols},1fr)`;grid.style.gridTemplateRows=`repeat(${rows},1fr)`;grid.innerHTML='';
+          if(frame)frame.classList.remove('reveal-ready');
+          ph.classList.add('hidden');image.classList.remove('hidden');grid.classList.remove('hidden');
+          if(name)name.textContent=`Level ${item.level} · geheimes Zufallsbild`;
+          const [cols,rows]=this.gridDims(),rev=this.normalizeRevealed(state);
+          grid.style.gridTemplateColumns=`repeat(${cols},1fr)`;grid.style.gridTemplateRows=`repeat(${rows},1fr)`;grid.innerHTML='';
           for(let i=0;i<this.TILE_COUNT;i++){const tile=document.createElement('span');tile.className='reveal-tile'+(rev.includes(i)?' open':'');grid.appendChild(tile);}
+          image.src=item.data;
+          if(frame)requestAnimationFrame(()=>frame.classList.add('reveal-ready'));
           const p=Math.round(rev.length/this.TILE_COUNT*100),bar=document.getElementById('revealProgressBar'),pct=document.getElementById('revealPct');if(bar)bar.style.width=p+'%';if(pct)pct.textContent=p+' %';
         },
         renderLibrary() {
@@ -2754,17 +2762,23 @@
             const state=d.levels[String(level)],row=document.createElement('div');
             const isCurrent=level===d.level&&!state.completed,isCompleted=!!state.completed,isFuture=level>d.level;
             row.className='level-row'+(isCurrent?' current':'')+(isCompleted?' completed':'');
-            const stateText=isCompleted?'✓ geschafft':isCurrent?'● aktuelles Level':isFuture?'🔒 noch gesperrt':'bereit';
+            const stateText=isCompleted?'✓ Bild freigeschaltet':isCurrent?'● aktuelles Level':isFuture?'🔒 noch gesperrt':'bereit';
             row.innerHTML=`<div class="level-head"><strong>Level ${level}</strong><span class="level-state">${stateText}</span></div><div class="level-images"></div>`;
             const grid=row.querySelector('.level-images');
             this.levelThemes[level-1].forEach((name,variant)=>{
-              const card=document.createElement('div');const chosen=variant===state.selected;
-              card.className='level-image'+(chosen&&!isFuture?' chosen':'')+(isFuture?' locked':'');
-              const showBadge=chosen&&!isFuture;
+              const card=document.createElement('div');
+              const chosen=variant===state.selected;
+              const mayReveal=isCompleted&&chosen;
               const file=this.imagePath(level,variant);
-              card.innerHTML=`<img src="${file}" alt="Level ${level}, Bild ${variant+1}"><div class="variant-name">${esc(file)}</div>${showBadge?'<div class="pick-badge">🎲 Zufallsbild dieser Runde</div>':''}`;
-              const img=card.querySelector('img');
-              img.addEventListener('error',()=>{img.style.display='none';card.classList.add('missing-image');const label=card.querySelector('.variant-name');if(label)label.textContent=`Fehlt: ${file}`;});
+              if(mayReveal){
+                card.className='level-image chosen';
+                card.innerHTML=`<img src="${file}" alt="Freigeschaltetes Bild aus Level ${level}"><div class="variant-name">Freigeschaltet</div><div class="pick-badge">✓ geschafft</div>`;
+                const img=card.querySelector('img');
+                img.addEventListener('error',()=>{img.style.display='none';card.classList.add('secret');const label=card.querySelector('.variant-name');if(label)label.textContent=`Bilddatei fehlt`;});
+              }else{
+                card.className='level-image secret'+(isFuture?' locked':'');
+                card.innerHTML=`<div class="variant-name">Geheimnis ${variant+1}</div>`;
+              }
               grid.appendChild(card);
             });
             wrap.appendChild(row);
