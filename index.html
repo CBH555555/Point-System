@@ -280,6 +280,40 @@
 
     .progress-meta strong { color: var(--text); font-weight: 800; }
 
+    .milestone-current {
+      min-width: 0;
+      display: flex;
+      align-items: baseline;
+      gap: 7px;
+      flex-wrap: wrap;
+    }
+
+    .milestone-kicker {
+      color: var(--text-muted);
+      font-weight: 700;
+    }
+
+    #milestoneTitle {
+      color: var(--accent-strong);
+      font-size: .78rem;
+      line-height: 1.35;
+    }
+
+    .milestone-scale {
+      display: grid;
+      grid-template-columns: repeat(11, 1fr);
+      margin-top: 6px;
+      color: var(--text-muted);
+      font-size: .55rem;
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+      opacity: .78;
+    }
+
+    .milestone-scale span { text-align: center; }
+    .milestone-scale span:first-child { text-align: left; }
+    .milestone-scale span:last-child { text-align: right; }
+
     .progress-wrap {
       height: 8px;
       overflow: hidden;
@@ -928,8 +962,14 @@
   </header>
 
   <div class="progress-section">
-    <div class="progress-meta"><span>Meilenstein</span><strong id="progressLabel">0 / 1.000 Punkte</strong></div>
-    <div class="progress-wrap" id="progressWrap" role="progressbar" aria-label="Punktefortschritt" aria-valuemin="0" aria-valuemax="1000" aria-valuenow="0"><div class="bar" id="progressBar"></div></div>
+    <div class="progress-meta">
+      <span class="milestone-current"><span class="milestone-kicker">Meilenstein</span><strong id="milestoneTitle">🪑 Für mich ist er Luft.</strong></span>
+      <strong id="progressLabel">0 / 300 Punkte</strong>
+    </div>
+    <div class="progress-wrap" id="progressWrap" role="progressbar" aria-label="Meilenstein-Fortschritt" aria-valuemin="0" aria-valuemax="300" aria-valuenow="0"><div class="bar" id="progressBar"></div></div>
+    <div class="milestone-scale" aria-hidden="true">
+      <span>0</span><span>30</span><span>60</span><span>90</span><span>120</span><span>150</span><span>180</span><span>210</span><span>240</span><span>270</span><span>300</span>
+    </div>
   </div>
 
   <div class="tab-bar" role="tablist">
@@ -1443,12 +1483,33 @@
           const bar = document.getElementById('progressBar');
           const wrap = document.getElementById('progressWrap');
           const label = document.getElementById('progressLabel');
-          const max = 1000;
+          const title = document.getElementById('milestoneTitle');
+          const max = 300;
           const safeKonto = Math.max(0, Number(konto) || 0);
           const pct = Math.min(100, (safeKonto / max) * 100);
+
+          const milestones = [
+            { min: 0,   title: '🪑 Für mich ist er Luft.' },
+            { min: 30,  title: '👀 Er darf wenigstens zusehen.' },
+            { min: 60,  title: '🐕 Er hört, wenn ich etwas sage.' },
+            { min: 90,  title: '🎀 Er macht, was ich will.' },
+            { min: 120, title: '👠 Er weiß langsam, wofür er da ist.' },
+            { min: 150, title: '😏 Er bekommt, was für ihn übrig bleibt.' },
+            { min: 180, title: '🔐 Meine Wünsche kommen vor seinen.' },
+            { min: 210, title: '🍸 Er bedient mich – egal, wem meine Gedanken gehören.' },
+            { min: 240, title: '💋 Er ist nützlich, aber nie der Mittelpunkt.' },
+            { min: 270, title: '👑 Er hat gelernt, auch mit Platz zwei zufrieden zu sein.' },
+            { min: 300, title: '💎 Er gehört mir – ich gehöre niemandem.' }
+          ];
+          const current = milestones.reduce((result, item) => safeKonto >= item.min ? item : result, milestones[0]);
+
           bar.style.width = pct + '%';
-          if (wrap) wrap.setAttribute('aria-valuenow', String(Math.min(max, safeKonto)));
+          if (wrap) {
+            wrap.setAttribute('aria-valuenow', String(Math.min(max, safeKonto)));
+            wrap.setAttribute('aria-valuetext', `${safeKonto} von ${max} Punkten – ${current.title}`);
+          }
           if (label) label.textContent = `${safeKonto.toLocaleString('de-DE')} / ${max.toLocaleString('de-DE')} Punkte`;
+          if (title) title.textContent = current.title;
         },
 
         // ===== AUFGABEN =====
