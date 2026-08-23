@@ -331,6 +331,56 @@
       transition: width 600ms cubic-bezier(.2,.8,.2,1);
     }
 
+    .lifetime-progress {
+      margin-top: 10px;
+      padding-top: 9px;
+      border-top: 1px dashed color-mix(in srgb, var(--text-muted) 22%, transparent);
+    }
+
+    .lifetime-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 5px;
+      color: var(--text-muted);
+      font-size: .64rem;
+      font-weight: 750;
+    }
+
+    .lifetime-head strong {
+      color: var(--gold);
+      font-size: .7rem;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .lifetime-track {
+      height: 4px;
+      overflow: hidden;
+      border-radius: 999px;
+      background: color-mix(in srgb, var(--text-muted) 12%, transparent);
+    }
+
+    .lifetime-bar {
+      height: 100%;
+      width: 0%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, var(--gold), var(--accent));
+      transition: width .45s ease;
+    }
+
+    .lifetime-scale {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 3px;
+      color: var(--text-muted);
+      font-size: .48rem;
+      font-weight: 700;
+      opacity: .68;
+      font-variant-numeric: tabular-nums;
+    }
+
+
     .tab-bar {
       position: sticky;
       top: max(10px, env(safe-area-inset-top));
@@ -904,8 +954,34 @@
       .konto-wrap { justify-self: stretch; grid-template-columns: auto 1fr auto; grid-template-areas: "label konto icon"; min-width: 0; }
       .konto-wrap .konto { justify-self: end; margin-right: 2px; }
       .progress-section { margin-inline: 2px; }
-      .tab-bar { top: max(6px, env(safe-area-inset-top)); border-radius: 17px; padding: 5px; gap: 4px; }
-      .tab-btn { flex: 0 0 auto; min-height: 40px; padding: 8px 12px; font-size: .75rem; border-radius: 12px; }
+      .tab-bar {
+        top: max(6px, env(safe-area-inset-top));
+        display: grid;
+        grid-template-columns: repeat(6, minmax(0, 1fr));
+        gap: 6px;
+        overflow: visible;
+        border-radius: 18px;
+        padding: 7px;
+      }
+      .tab-btn {
+        width: 100%;
+        min-width: 0;
+        min-height: 48px;
+        padding: 8px 6px;
+        border-radius: 13px;
+        font-size: .72rem;
+        line-height: 1.15;
+        white-space: normal;
+        text-align: center;
+      }
+      .tab-btn:nth-child(1),
+      .tab-btn:nth-child(2),
+      .tab-btn:nth-child(3) { grid-column: span 2; }
+      .tab-btn:nth-child(4),
+      .tab-btn:nth-child(5) { grid-column: span 3; }
+      .tab-btn.active {
+        box-shadow: 0 6px 16px var(--accent-glow);
+      }
       .card { padding: 17px 13px; border-radius: 21px; }
       .card::before { left: 18px; right: 18px; }
       .entry, .tagebuch-eintrag { padding: 13px 13px 13px 15px; border-radius: 15px; }
@@ -930,6 +1006,8 @@
       .konto-wrap { padding: 13px 14px; }
       .konto-wrap::after { width: 38px; height: 38px; border-radius: 13px; }
       .progress-meta { font-size: .66rem; }
+      .tab-bar { gap: 5px; padding: 6px; }
+      .tab-btn { min-height: 46px; padding: 7px 4px; font-size: .69rem; }
       .entry-header .badge { min-height: 28px; min-width: 55px; font-size: .69rem; }
       .entry-actions button, .tagebuch-actions button { flex: 1 1 auto; }
       .modal-buttons { flex-direction: column-reverse; }
@@ -939,6 +1017,113 @@
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
     }
+
+
+    /* ===== SPIELE / FARBFALL + BILDFREIGABE ===== */
+    .puzzle-layout {
+      display: grid;
+      grid-template-columns: minmax(250px, .82fr) minmax(300px, 1.18fr);
+      gap: 18px;
+      align-items: start;
+    }
+    .puzzle-panel {
+      background: var(--bg);
+      border: 1px solid var(--card-border);
+      border-radius: 18px;
+      padding: 14px;
+      min-width: 0;
+    }
+    .puzzle-panel h3 { margin: 0 0 5px; font-size: 1rem; color: var(--text); }
+    .puzzle-panel .mini { margin: 0 0 12px; color: var(--text-muted); font-size: .78rem; line-height: 1.45; }
+    .puzzle-stats { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-bottom:10px; }
+    .puzzle-stat { background:var(--card-bg); border:1px solid var(--card-border); border-radius:13px; padding:9px 7px; text-align:center; }
+    .puzzle-stat span { display:block; color:var(--text-muted); font-size:.64rem; text-transform:uppercase; letter-spacing:.55px; }
+    .puzzle-stat strong { display:block; margin-top:2px; font-size:1rem; color:var(--text); }
+
+    .color-shell {
+      width:min(100%, 288px); margin:0 auto; padding:8px; border-radius:18px;
+      background:#181416; border:1px solid rgba(255,255,255,.08);
+      box-shadow:inset 0 0 0 1px rgba(255,255,255,.025);
+    }
+    #colorDropCanvas { display:block; width:100%; height:auto; border-radius:11px; background:#100d0f; touch-action:manipulation; }
+    .next-ball-row { display:flex; align-items:center; justify-content:center; gap:8px; margin:8px 0 0; color:var(--text-muted); font-size:.72rem; }
+    .next-ball { width:22px; height:22px; border-radius:50%; border:2px solid rgba(255,255,255,.45); box-shadow:inset 0 2px 5px rgba(255,255,255,.32), 0 3px 8px rgba(0,0,0,.18); }
+    .game-controls { display:grid; grid-template-columns:repeat(4,1fr); gap:7px; margin-top:10px; }
+    .game-controls button,
+    .puzzle-actions button,
+    .word-actions button {
+      border:1px solid var(--card-border); background:var(--card-bg); color:var(--text); border-radius:12px;
+      min-height:44px; cursor:pointer; font:inherit; transition:var(--transition);
+    }
+    .game-controls button { font-size:1.12rem; font-weight:800; }
+    .game-controls button:active, .puzzle-actions button:active, .word-actions button:active { transform:scale(.96); }
+    .puzzle-actions { display:flex; gap:8px; flex-wrap:wrap; margin-top:10px; }
+    .puzzle-actions button { flex:1 1 120px; padding:9px 12px; font-size:.8rem; font-weight:700; }
+    .puzzle-actions .start { background:var(--accent); color:#fff; border-color:var(--accent); }
+    .puzzle-actions button:disabled, .game-controls button:disabled, .word-actions button:disabled { opacity:.4; cursor:not-allowed; transform:none; }
+    .puzzle-status { min-height:21px; margin-top:8px; text-align:center; color:var(--text-muted); font-size:.75rem; }
+
+    .reveal-frame {
+      position:relative; width:100%; max-width:520px; margin:0 auto; aspect-ratio:4/5; overflow:hidden;
+      border-radius:18px; background:linear-gradient(135deg,var(--card-border),var(--accent-light)); border:1px solid var(--card-border);
+    }
+    .reveal-frame img { width:100%; height:100%; display:block; object-fit:cover; }
+    .reveal-grid { position:absolute; inset:0; display:grid; pointer-events:none; }
+    .reveal-tile {
+      background:color-mix(in srgb,var(--text) 92%,#000 8%); border:1px solid rgba(255,255,255,.08); opacity:1;
+      transition:opacity .45s ease,transform .45s ease;
+    }
+    .reveal-tile.open { opacity:0; transform:scale(.82); }
+    .reveal-placeholder { height:100%; display:flex; align-items:center; justify-content:center; text-align:center; color:var(--text-muted); padding:24px; font-size:.9rem; }
+    .reveal-progress { margin:12px 0 4px; }
+    .reveal-progress-head { display:flex; justify-content:space-between; gap:10px; font-size:.75rem; color:var(--text-muted); margin-bottom:5px; }
+    .reveal-progress-track { height:8px; border-radius:999px; overflow:hidden; background:var(--card-border); }
+    .reveal-progress-bar { height:100%; width:0; border-radius:inherit; background:linear-gradient(90deg,var(--accent),var(--gold)); transition:width .35s ease; }
+
+    .word-game { margin-top:18px; }
+    .word-box { display:grid; grid-template-columns:minmax(0,1fr) auto; gap:10px; align-items:end; }
+    .word-clue { background:var(--card-bg); border:1px solid var(--card-border); border-radius:14px; padding:12px; margin-bottom:10px; }
+    .word-clue small { color:var(--text-muted); display:block; margin-bottom:4px; }
+    .word-clue strong { display:block; font-size:.95rem; }
+    .scramble { font-size:1.35rem; font-weight:850; letter-spacing:.16em; color:var(--accent); margin-top:8px; word-break:break-word; }
+    .word-input { width:100%; min-height:46px; padding:10px 13px; border-radius:12px; border:1px solid var(--card-border); background:var(--card-bg); color:var(--text); font:inherit; font-size:1rem; }
+    .word-actions { display:flex; gap:8px; flex-wrap:wrap; }
+    .word-actions button { padding:10px 14px; font-weight:700; }
+    .word-result { min-height:48px; margin-top:10px; padding:10px 12px; border-radius:12px; background:var(--card-bg); border:1px dashed var(--card-border); color:var(--text-muted); font-size:.8rem; line-height:1.45; }
+    .word-result.win { color:var(--text); border-style:solid; }
+
+    .puzzle-library { margin-top:18px; }
+    .library-toolbar { display:flex; gap:8px; flex-wrap:wrap; align-items:center; justify-content:space-between; margin-bottom:12px; }
+    .library-toolbar .round-info { color:var(--text-muted); font-size:.75rem; }
+    .library-toolbar button { min-height:42px; padding:8px 13px; border-radius:12px; border:1px solid var(--card-border); background:var(--card-bg); color:var(--text); font:inherit; font-size:.76rem; font-weight:700; cursor:pointer; }
+    .level-library { display:grid; gap:12px; }
+    .level-row { border:1px solid var(--card-border); border-radius:16px; padding:10px; background:var(--card-bg); }
+    .level-row.current { border-color:var(--accent); box-shadow:0 0 0 2px color-mix(in srgb,var(--accent) 12%,transparent); }
+    .level-row.completed { opacity:.86; }
+    .level-head { display:flex; justify-content:space-between; align-items:center; gap:10px; margin-bottom:8px; }
+    .level-head strong { font-size:.84rem; }
+    .level-state { font-size:.65rem; color:var(--text-muted); white-space:nowrap; }
+    .level-images { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:7px; }
+    .level-image { position:relative; overflow:hidden; border-radius:11px; border:2px solid transparent; background:var(--bg); min-width:0; }
+    .level-image img { width:100%; aspect-ratio:4/5; object-fit:cover; display:block; }
+    .level-image.chosen { border-color:var(--accent); }
+    .level-image.locked img { filter:saturate(.45) brightness(.62) blur(1px); }
+    .level-image .pick-badge { position:absolute; left:5px; right:5px; bottom:5px; background:rgba(20,16,18,.78); color:#fff; border-radius:7px; padding:3px 4px; font-size:.55rem; text-align:center; }
+    .level-image .variant-name { padding:5px 5px 6px; font-size:.58rem; color:var(--text-muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+
+    @media (max-width:760px) {
+      .puzzle-layout { grid-template-columns:1fr; }
+      .color-shell { width:min(100%,270px); }
+      .word-box { grid-template-columns:1fr; }
+    }
+    @media (max-width:420px) {
+      .puzzle-panel { padding:10px; }
+      .puzzle-stats { gap:5px; }
+      .game-controls { gap:5px; }
+      .level-images { gap:4px; }
+      .level-image .variant-name { font-size:.52rem; }
+    }
+
   </style>
 </head>
 <body>
@@ -970,12 +1155,18 @@
     <div class="milestone-scale" aria-hidden="true">
       <span>0</span><span>30</span><span>60</span><span>90</span><span>120</span><span>150</span><span>180</span><span>210</span><span>240</span><span>270</span><span>300</span>
     </div>
+    <div class="lifetime-progress" aria-label="Jemals verdiente Punkte">
+      <div class="lifetime-head"><span>🏅 Jemals durch Aufgaben verdient</span><strong id="lifetimePointsLabel">0 P.</strong></div>
+      <div class="lifetime-track"><div class="lifetime-bar" id="lifetimePointsBar"></div></div>
+      <div class="lifetime-scale" aria-hidden="true"><span>0</span><span>150</span><span>300+</span></div>
+    </div>
   </div>
 
   <div class="tab-bar" role="tablist">
     <button class="tab-btn active" data-tab="aufgaben" id="tabBtn-aufgaben" role="tab" aria-selected="true" aria-controls="tab-aufgaben">📋 Aufgaben</button>
     <button class="tab-btn" data-tab="einloesungen" id="tabBtn-einloesungen" role="tab" aria-selected="false" aria-controls="tab-einloesungen">🎁 Einlösungen</button>
     <button class="tab-btn" data-tab="tagebuch" id="tabBtn-tagebuch" role="tab" aria-selected="false" aria-controls="tab-tagebuch">📓 Tagebuch</button>
+    <button class="tab-btn" data-tab="puzzle" id="tabBtn-puzzle" role="tab" aria-selected="false" aria-controls="tab-puzzle">🎮 Spiele</button>
     <button class="tab-btn" data-tab="einstellungen" id="tabBtn-einstellungen" role="tab" aria-selected="false" aria-controls="tab-einstellungen">⚙️ Einstellungen</button>
   </div>
 
@@ -1004,7 +1195,87 @@
       <div id="tagebuchContainer"></div>
     </section>
 
-    <!-- EINSTELLUNGEN (mit integriertem Verlauf) -->
+
+
+    <!-- PUZZLE / TETRIS BILD-FREIGABE -->
+    <section id="tab-puzzle" class="tab-content card" style="display:none;" role="tabpanel" aria-labelledby="tabBtn-puzzle">
+      <h2><span>🎮 Spiele &amp; Bilder</span><span class="tag">10 Level</span></h2>
+      <p class="sub">Farbkugeln kombinieren oder Worträtsel lösen. 10 feste Level haben jeweils vier Bilder im Pool; pro Runde wird automatisch eines davon zufällig ausgewählt.</p>
+
+      <div class="puzzle-layout">
+        <div class="puzzle-panel">
+          <h3>🔴 Farbfall</h3>
+          <p class="mini">Eine farbige Kugel fällt von oben. Verbinde mindestens vier gleiche Farben. Die Gruppe löst sich auf und alles darüber fällt nach unten.</p>
+          <div class="puzzle-stats">
+            <div class="puzzle-stat"><span>Züge</span><strong id="puzzleMoves">0</strong></div>
+            <div class="puzzle-stat"><span>Ketten</span><strong id="puzzleMatches">0</strong></div>
+            <div class="puzzle-stat"><span>Level</span><strong id="puzzleLevel">1/10</strong></div>
+          </div>
+          <div class="color-shell">
+            <canvas id="colorDropCanvas" width="256" height="384" aria-label="Farbfall-Spielfeld"></canvas>
+            <div class="next-ball-row">Nächste Kugel <span class="next-ball" id="nextBallPreview" aria-hidden="true"></span></div>
+          </div>
+          <div class="game-controls" aria-label="Farbfall-Steuerung">
+            <button type="button" id="colorLeft" aria-label="Nach links">←</button>
+            <button type="button" id="colorDown" aria-label="Schneller nach unten">↓</button>
+            <button type="button" id="colorRight" aria-label="Nach rechts">→</button>
+            <button type="button" id="colorDrop" aria-label="Fallen lassen">⇣</button>
+          </div>
+          <div class="puzzle-actions">
+            <button type="button" class="start" id="colorStart">▶ Spiel starten</button>
+            <button type="button" id="colorPause">⏸ Pause</button>
+            <button type="button" id="colorNew">↺ Brett neu</button>
+          </div>
+          <div class="puzzle-status" id="puzzleStatus" aria-live="polite">Level 1 ist bereit.</div>
+        </div>
+
+        <div class="puzzle-panel">
+          <h3>🖼️ Zufallsbild</h3>
+          <p class="mini" id="activePuzzleName">Das Bild für Level 1 wird automatisch bestimmt.</p>
+          <div class="reveal-frame" id="revealFrame">
+            <div class="reveal-placeholder" id="revealPlaceholder">Das Levelbild wird vorbereitet …</div>
+            <img id="puzzleRevealImage" alt="Verdecktes Levelbild" class="hidden">
+            <div class="reveal-grid hidden" id="revealGrid" aria-hidden="true"></div>
+          </div>
+          <div class="reveal-progress">
+            <div class="reveal-progress-head"><span>Freigelegt</span><strong id="revealPct">0 %</strong></div>
+            <div class="reveal-progress-track"><div class="reveal-progress-bar" id="revealProgressBar"></div></div>
+          </div>
+          <p class="mini" style="margin-top:10px;">Nur Treffer öffnen das Bild: Sobald mindestens 4 gleichfarbige Kugeln zusammen verschwinden, wird 1 Bildfeld freigelegt. Kettenreaktionen können mehrere Felder öffnen. Ein Bild besteht aus 30 Feldern.</p>
+        </div>
+      </div>
+
+      <div class="word-game puzzle-panel">
+        <h3>🔤 Worträtsel</h3>
+        <p class="mini">Ein kleines Beziehungswort ist durcheinandergeraten. Richtige Antworten bringen zufällig Bildfortschritt oder einen frechen Ehemann-Spruch.</p>
+        <div class="word-clue">
+          <small id="wordLevelLabel">Rätsel</small>
+          <strong id="wordClue">Bereit für das erste Wort?</strong>
+          <div class="scramble" id="wordScramble">—</div>
+        </div>
+        <div class="word-box">
+          <input class="word-input" id="wordGuess" type="text" autocomplete="off" placeholder="Lösung eingeben …" aria-label="Lösung des Worträtsels">
+          <div class="word-actions">
+            <button type="button" id="wordCheck">✓ Prüfen</button>
+            <button type="button" id="wordNext">↻ Neues Wort</button>
+          </div>
+        </div>
+        <div class="word-result" id="wordResult" aria-live="polite">Richtige Antworten werden pro Level nur einmal belohnt.</div>
+      </div>
+
+      <div class="puzzle-library puzzle-panel">
+        <div class="library-toolbar">
+          <div>
+            <h3 style="margin-bottom:3px;">🗂️ Feste Bildbibliothek</h3>
+            <div class="round-info">10 Level · je 4 Bilder · keine manuelle Auswahl</div>
+          </div>
+          <button type="button" id="newPictureRound">🎲 Neue Zufallsrunde</button>
+        </div>
+        <div id="puzzleLibrary" class="level-library"></div>
+      </div>
+    </section>
+
+        <!-- EINSTELLUNGEN (mit integriertem Verlauf) -->
     <section id="tab-einstellungen" class="tab-content card" style="display:none;" role="tabpanel" aria-labelledby="tabBtn-einstellungen">
       <h2>⚙️ Einstellungen &amp; Verlauf</h2>
 
@@ -1211,9 +1482,51 @@
         });
       }
 
+
+      function ensureLifetimePoints(daten) {
+        if (!daten || typeof daten !== 'object') return 0;
+        if (!Number.isFinite(Number(daten.gesamtVerdient))) {
+          let ausLog = 0;
+          (Array.isArray(daten.log) ? daten.log : []).forEach(e => {
+            const m = String(e?.text || '').match(/Frau vergibt\s+(\d+)\s+P\./i);
+            if (m) ausLog += Number(m[1]) || 0;
+          });
+          daten.gesamtVerdient = Math.max(ausLog, Math.max(0, Number(daten.konto) || 0));
+        }
+        daten.gesamtVerdient = Math.max(0, Number(daten.gesamtVerdient) || 0);
+        return daten.gesamtVerdient;
+      }
+
+      function ensurePuzzleData(daten) {
+        if (!daten.puzzle || typeof daten.puzzle !== 'object') daten.puzzle = {};
+        const p = daten.puzzle;
+        if (!Number.isInteger(Number(p.level))) p.level = 1;
+        p.level = Math.min(10, Math.max(1, Number(p.level) || 1));
+        if (!p.levels || typeof p.levels !== 'object' || Array.isArray(p.levels)) p.levels = {};
+        for (let level = 1; level <= 10; level++) {
+          const key = String(level);
+          if (!p.levels[key] || typeof p.levels[key] !== 'object') p.levels[key] = {};
+          const state = p.levels[key];
+          if (!Number.isInteger(Number(state.selected)) || Number(state.selected) < 0 || Number(state.selected) > 3) state.selected = Math.floor(Math.random() * 4);
+          state.selected = Number(state.selected);
+          if (!Array.isArray(state.revealed)) state.revealed = [];
+          state.revealed = [...new Set(state.revealed.map(Number).filter(i => Number.isInteger(i) && i >= 0 && i < 30))];
+          if (!Array.isArray(state.solvedWords)) state.solvedWords = [];
+          state.solvedWords = [...new Set(state.solvedWords.map(String))];
+          if (typeof state.completed !== 'boolean') state.completed = state.revealed.length >= 30;
+        }
+        if (!Number.isFinite(Number(p.matches))) p.matches = 0;
+        if (!Number.isFinite(Number(p.wordsSolved))) p.wordsSolved = 0;
+        if (!Number.isFinite(Number(p.moves))) p.moves = 0;
+        if (!p.roundId) p.roundId = genId();
+        if (typeof p.lastJoke !== 'string') p.lastJoke = '';
+        return p;
+      }
+
+
       // ===== DATA MANAGER (Supabase) =====
       const DataManager = {
-        lokaleDaten: { aufgaben: [], einloesungen: [], tagebuch: [], konto: 0, log: [] },
+        lokaleDaten: { aufgaben: [], einloesungen: [], tagebuch: [], konto: 0, gesamtVerdient: 0, log: [], puzzle: { level: 1, levels: {}, matches: 0, wordsSolved: 0, moves: 0, roundId: '' } },
         aktuelleVersion: null,
 
         getHeaders(extra = {}) {
@@ -1279,7 +1592,9 @@
               { id: genId(), datum: '2026-07-12', text: 'Sie scherzte heute, ich solle bloß keinen Zentimeter dazulügen …', image: '', kommentare: [] }
             ],
             konto: 0,
-            log: []
+            gesamtVerdient: 0,
+            log: [],
+            puzzle: { level: 1, levels: {}, matches: 0, wordsSolved: 0, moves: 0, roundId: '' }
           };
         },
 
@@ -1306,6 +1621,8 @@
               const record = records[0];
               this.aktuelleVersion = record.version;
               this.lokaleDaten = record.daten;   // <--- Spalte heißt "daten"
+              ensureLifetimePoints(this.lokaleDaten);
+              ensurePuzzleData(this.lokaleDaten);
               ['aufgaben', 'einloesungen', 'tagebuch'].forEach(key => {
                 (this.lokaleDaten[key] || []).forEach(e => {
                   if (!e.image) e.image = '';
@@ -1329,7 +1646,7 @@
           }
         },
 
-        async save(initial = false) {
+        async save(initial = false, silent = false) {
           try {
             const baseUrl = `${CONFIG.SUPABASE_URL}/rest/v1/${CONFIG.SUPABASE_TABLE}`;
             
@@ -1421,7 +1738,7 @@
               this.aktuelleVersion = serverVersion + 1;
             }
             document.getElementById('syncStatus').textContent = ' ✅';
-            showToast('Gespeichert.', 'success');
+            if (!silent) showToast('Gespeichert.', 'success');
           } catch (e) {
             console.error('Save error:', e);
             document.getElementById('syncStatus').textContent = ' ❌';
@@ -1461,19 +1778,27 @@
           this.lokaleDaten.log.push({ text, time: now() });
         },
         updateKonto(änderung) {
-          this.lokaleDaten.konto = (this.lokaleDaten.konto || 0) + änderung;
+          this.lokaleDaten.konto = Math.max(0, (Number(this.lokaleDaten.konto) || 0) + (Number(änderung) || 0));
+        },
+        awardAufgabenPunkte(punkte) {
+          const wert = Math.max(0, Number(punkte) || 0);
+          ensureLifetimePoints(this.lokaleDaten);
+          this.lokaleDaten.konto = (Number(this.lokaleDaten.konto) || 0) + wert;
+          this.lokaleDaten.gesamtVerdient = (Number(this.lokaleDaten.gesamtVerdient) || 0) + wert;
         }
       };
 
       // ===== UI RENDERER =====
       const UIRenderer = {
         renderAlles(daten) {
+          ensureLifetimePoints(daten);
           this.renderKonto(daten.konto);
           this.renderAufgaben(daten.aufgaben);
           this.renderEinloesungen(daten.einloesungen);
           this.renderTagebuch(daten.tagebuch);
           this.renderLog(daten.log);
           this.updateProgress(daten.konto);
+          if (typeof PuzzleGame !== 'undefined') PuzzleGame.render();
         },
 
         renderKonto(konto) {
@@ -1510,6 +1835,11 @@
           }
           if (label) label.textContent = `${safeKonto.toLocaleString('de-DE')} / ${max.toLocaleString('de-DE')} Punkte`;
           if (title) title.textContent = current.title;
+          const lifetime = ensureLifetimePoints(DataManager.lokaleDaten);
+          const lifetimeLabel = document.getElementById('lifetimePointsLabel');
+          const lifetimeBar = document.getElementById('lifetimePointsBar');
+          if (lifetimeLabel) lifetimeLabel.textContent = `${lifetime.toLocaleString('de-DE')} P.`;
+          if (lifetimeBar) lifetimeBar.style.width = Math.min(100, (lifetime / max) * 100) + '%';
         },
 
         // ===== AUFGABEN =====
@@ -2094,6 +2424,347 @@
         }
       };
 
+
+      // ===== SPIELE: FARBFALL + WORTRÄTSEL + 10-LEVEL-BILDBIBLIOTHEK =====
+      const PuzzleGame = {
+        COLS: 8,
+        ROWS: 12,
+        CELL: 32,
+        TILE_COUNT: 30,
+        board: [],
+        ball: null,
+        nextColor: 1,
+        running: false,
+        paused: false,
+        timer: null,
+        lastDrop: 0,
+        saveTimer: null,
+        saveBusy: false,
+        saveAgain: false,
+        initialized: false,
+        currentWord: null,
+        palette: ['#00000000','#ef6a67','#f2b84b','#67b889','#6f8ee8','#ae74d7','#e779b4'],
+        levelThemes: [
+          ['Kaffee am Morgen','Blumenmoment','Kleine Nachricht','Frühstück zu zweit'],
+          ['Zuhören','Lieblingssnack','Handy weg','Kompliment'],
+          ['Küche erledigt','Wäsche geschafft','Einkauf übernommen','Bad glänzt'],
+          ['Kerzenabend','Picknick','Date Night','Liebesbrief'],
+          ['Massage','Bad & Ruhe','Wellnessabend','Ausschlafen'],
+          ['Ausflug','Wochenendtrip','Überraschungsziel','Neues entdecken'],
+          ['Kuscheln','Kuss','Tanzen','Umarmung'],
+          ['Flirt','Leidenschaft','Prickelnder Abend','Nur wir zwei'],
+          ['Queen Mode','Cocktail & Krone','Ihre Regeln','Königliche Pause'],
+          ['Diamantmoment','Finale Nacht','Ihr Lieblingsmann','Nahezu unersetzlich']
+        ],
+        symbols: ['♥','✦','●','◆','✿','★','♛','◇'],
+        words: [
+          {id:'zuhoeren', word:'ZUHOEREN', clue:'Was sollte ein Ehemann können, bevor er schon wieder eine Lösung anbietet?'},
+          {id:'respekt', word:'RESPEKT', clue:'Was macht aus Zusammenleben eine Partnerschaft?'},
+          {id:'romantik', word:'ROMANTIK', clue:'Was darf zwischen Einkauf und Wäsche nicht völlig verschwinden?'},
+          {id:'teamwork', word:'TEAMWORK', clue:'Wie heißt Haushalt, wenn nicht nur einer alles bemerkt?'},
+          {id:'vertrauen', word:'VERTRAUEN', clue:'Was braucht Liebe mehr als Kontrolle?'},
+          {id:'kompliment', word:'KOMPLIMENT', clue:'Was kostet nichts und wird trotzdem erstaunlich oft vergessen?'},
+          {id:'massage', word:'MASSAGE', clue:'Was kann nach einem langen Tag deutlich überzeugender sein als „Alles gut?“'},
+          {id:'kuscheln', word:'KUSCHELN', clue:'Welche Tätigkeit funktioniert auch ohne Fernbedienung?'},
+          {id:'date', word:'DATE', clue:'Was sollte auch nach der Hochzeit noch gelegentlich geplant werden?'},
+          {id:'humor', word:'HUMOR', clue:'Was rettet erstaunlich viele kleine Ehekatastrophen?'},
+          {id:'geduld', word:'GEDULD', clue:'Was braucht man, wenn er behauptet, er hätte „gleich“ gesagt?'},
+          {id:'naehe', word:'NAEHE', clue:'Was entsteht nicht automatisch nur, weil zwei Menschen auf demselben Sofa sitzen?'},
+          {id:'ehrlich', word:'EHRLICH', clue:'Wie sollten Antworten auf „Ist wirklich alles okay?“ idealerweise sein?'},
+          {id:'hilfe', word:'HILFE', clue:'Was ist besser, wenn sie kommt, bevor man dreimal darum bitten muss?'},
+          {id:'ueberraschung', word:'UEBERRASCHUNG', clue:'Was ist besonders schön, wenn sie Aufmerksamkeit statt Chaos erzeugt?'},
+          {id:'fruehstueck', word:'FRUEHSTUECK', clue:'Was schmeckt am Bett oft besser als eine Ausrede?'},
+          {id:'aufmerksam', word:'AUFMERKSAM', clue:'Wie nennt man einen Mann, der Dinge tatsächlich selbst bemerkt?'},
+          {id:'liebe', word:'LIEBE', clue:'Worum geht es hier trotz aller Punkte am Ende eigentlich?'}
+        ],
+        jokes: [
+          'Ehemann des Tages: Er hat etwas erledigt, bevor daraus eine PowerPoint-Präsentation werden musste.',
+          'Konkurrenz belebt das Geschäft. Bei Ehemännern offenbar auch die Aufmerksamkeit.',
+          'Er nennt es Initiative. Sie nennt es: endlich ohne Erinnerung.',
+          'Ein guter Ehemann hört zu. Ein sehr guter erinnert sich morgen noch daran.',
+          'Heute schon fast selbstständig: Er fand den Wäschekorb ohne Navigationsgerät.',
+          'Sein romantisches Talent ist wie WLAN: manchmal stark, manchmal braucht es einen Neustart.',
+          'Er ist nicht langsam. Er gibt ihr nur genug Zeit, einen besseren Plan zu entwickeln.',
+          'Beziehungsfortschritt: Aus „Sag mir, was ich tun soll“ wird langsam „Ich hab’s schon gemacht“.',
+          'Man muss ihn nicht ersetzen. Regelmäßige Softwareupdates könnten reichen.',
+          'Er darf stolz sein: Heute war die Messlatte nicht einmal auf dem Boden.',
+          'Wenn Aufmerksamkeit Punkte gäbe … Moment, genau deshalb gibt es diese Seite.',
+          'Fast konkurrenzfähig. Jetzt nur nicht übermütig werden.',
+          'Seine Superkraft: nach dem dritten Hinweis so tun, als wäre es seine Idee gewesen.',
+          'Ein Ehemann ist wie ein gutes Rezept: Mit etwas Übung wird aus den Zutaten tatsächlich etwas Brauchbares.',
+          'Er hat seinen Platz gefunden. Praktischerweise dort, wo gerade Hilfe gebraucht wird.'
+        ],
+
+        data() { return ensurePuzzleData(DataManager.lokaleDaten); },
+        levelState(level=this.data().level) { return this.data().levels[String(level)]; },
+        currentLibraryItem(level=this.data().level) {
+          const state=this.levelState(level);
+          const variant=state?.selected ?? 0;
+          const name=this.levelThemes[level-1]?.[variant] || `Level ${level}`;
+          return { level, variant, name, data:this.makeStaticImage(level,variant,name) };
+        },
+        makeStaticImage(level,variant,name) {
+          const hues=[8,28,145,205,275,330,355,42,300,220];
+          const h=(hues[level-1] + variant*17) % 360;
+          const symbol=this.symbols[(level+variant)%this.symbols.length];
+          const safe=String(name).replace(/[&<>]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[m]));
+          const svg=`<svg xmlns="http://www.w3.org/2000/svg" width="800" height="1000" viewBox="0 0 800 1000"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="hsl(${h} 64% 58%)"/><stop offset="1" stop-color="hsl(${(h+52)%360} 52% 25%)"/></linearGradient><radialGradient id="r"><stop offset="0" stop-color="rgba(255,255,255,.48)"/><stop offset="1" stop-color="rgba(255,255,255,0)"/></radialGradient></defs><rect width="800" height="1000" rx="44" fill="url(#g)"/><circle cx="650" cy="170" r="250" fill="url(#r)"/><circle cx="145" cy="790" r="220" fill="rgba(255,255,255,.08)"/><text x="400" y="410" text-anchor="middle" fill="white" font-size="250" font-family="Arial,sans-serif">${symbol}</text><text x="400" y="650" text-anchor="middle" fill="white" font-size="46" font-weight="700" font-family="Arial,sans-serif">${safe}</text><text x="400" y="715" text-anchor="middle" fill="rgba(255,255,255,.78)" font-size="27" font-family="Arial,sans-serif">LEVEL ${level} · BILD ${variant+1}</text><rect x="170" y="770" width="460" height="2" fill="rgba(255,255,255,.35)"/><text x="400" y="835" text-anchor="middle" fill="rgba(255,255,255,.82)" font-size="24" font-family="Arial,sans-serif">Liebe · Alltag · ein bisschen Spiel</text></svg>`;
+          return 'data:image/svg+xml;charset=UTF-8,'+encodeURIComponent(svg);
+        },
+        normalizeRevealed(state=this.levelState()) {
+          if(!state)return[];
+          state.revealed=[...new Set((state.revealed||[]).map(Number).filter(i=>Number.isInteger(i)&&i>=0&&i<this.TILE_COUNT))];
+          return state.revealed;
+        },
+        gridDims(){ return [5,6]; },
+
+        resetBoard(seed=true) {
+          this.board=Array.from({length:this.ROWS},()=>Array(this.COLS).fill(0));
+          if(seed) {
+            for(let x=0;x<this.COLS;x++) {
+              const height=1+Math.floor(Math.random()*3);
+              for(let n=0;n<height;n++) this.board[this.ROWS-1-n][x]=1+Math.floor(Math.random()*6);
+            }
+            // Sofortige Vierergruppen im Startfeld vermeiden.
+            for(let guard=0;guard<20;guard++) {
+              const groups=this.findAllGroups();
+              if(!groups.length)break;
+              groups.forEach(g=>g.forEach(([y,x])=>{this.board[y][x]=1+((this.board[y][x]+Math.floor(Math.random()*5))%6);}));
+            }
+          }
+          this.ball=null;
+          this.gameOver=false;
+          this.nextColor=1+Math.floor(Math.random()*6);
+          this.stopLoop(); this.running=false; this.paused=false;
+          this.draw(); this.renderNextBall();
+          this.updateStatus(`Level ${this.data().level} ist bereit.`);
+        },
+        newBall() {
+          const color=this.nextColor || 1+Math.floor(Math.random()*6);
+          this.nextColor=1+Math.floor(Math.random()*6);
+          this.renderNextBall();
+          return {x:Math.floor(this.COLS/2),y:0,color};
+        },
+        collides(ball,dx=0,dy=0) {
+          const x=ball.x+dx,y=ball.y+dy;
+          if(x<0||x>=this.COLS||y>=this.ROWS)return true;
+          return y>=0 && !!this.board[y][x];
+        },
+        move(dx,dy) {
+          if(!this.running||this.paused||!this.ball)return;
+          if(!this.collides(this.ball,dx,dy)){this.ball.x+=dx;this.ball.y+=dy;this.draw();}
+          else if(dy>0)this.lockBall();
+        },
+        hardDrop() {
+          if(!this.running||this.paused||!this.ball)return;
+          while(!this.collides(this.ball,0,1))this.ball.y++;
+          this.lockBall();
+        },
+        neighbors(y,x){return [[y-1,x],[y+1,x],[y,x-1],[y,x+1]].filter(([yy,xx])=>yy>=0&&yy<this.ROWS&&xx>=0&&xx<this.COLS);},
+        groupAt(y,x,visited=new Set()) {
+          const color=this.board[y]?.[x]; if(!color)return[];
+          const key=`${y},${x}`; if(visited.has(key))return[];
+          const stack=[[y,x]],group=[]; visited.add(key);
+          while(stack.length){const [cy,cx]=stack.pop();group.push([cy,cx]);for(const [ny,nx] of this.neighbors(cy,cx)){const k=`${ny},${nx}`;if(!visited.has(k)&&this.board[ny][nx]===color){visited.add(k);stack.push([ny,nx]);}}}
+          return group;
+        },
+        findAllGroups() {
+          const visited=new Set(),groups=[];
+          for(let y=0;y<this.ROWS;y++)for(let x=0;x<this.COLS;x++)if(this.board[y][x]){const k=`${y},${x}`;if(visited.has(k))continue;const g=this.groupAt(y,x,visited);if(g.length>=4)groups.push(g);}
+          return groups;
+        },
+        applyGravity() {
+          for(let x=0;x<this.COLS;x++){
+            const vals=[];for(let y=this.ROWS-1;y>=0;y--)if(this.board[y][x])vals.push(this.board[y][x]);
+            for(let y=this.ROWS-1,i=0;y>=0;y--,i++)this.board[y][x]=i<vals.length?vals[i]:0;
+          }
+        },
+        resolveGroups() {
+          let totalCleared=0,chains=0,bonus=0;
+          for(let cascade=0;cascade<8;cascade++){
+            const groups=this.findAllGroups(); if(!groups.length)break;
+            chains+=groups.length;
+            groups.forEach(g=>{totalCleared+=g.length;bonus+=Math.max(1,Math.floor(g.length/2));g.forEach(([y,x])=>this.board[y][x]=0);});
+            this.applyGravity();
+          }
+          if(chains)this.data().matches=(Number(this.data().matches)||0)+chains;
+          return {chains,totalCleared,bonus};
+        },
+        revealTiles(count) {
+          const state=this.levelState(); if(!state)return 0;
+          const revealed=this.normalizeRevealed(state),pool=[];
+          for(let i=0;i<this.TILE_COUNT;i++)if(!revealed.includes(i))pool.push(i);
+          let n=0;while(n<count&&pool.length){const pos=Math.floor(Math.random()*pool.length);revealed.push(pool.splice(pos,1)[0]);n++;}
+          state.revealed=[...new Set(revealed)];
+          if(state.revealed.length>=this.TILE_COUNT&&!state.completed){state.completed=true;state.completedAt=now();this.onLevelComplete();}
+          this.renderReveal();this.renderStats();this.renderLibrary();
+          return n;
+        },
+        onLevelComplete() {
+          const d=this.data(),old=d.level;
+          DataManager.addLog(`Spiel-Level ${old} abgeschlossen: „${this.currentLibraryItem(old).name}“ freigelegt.`);
+          if(old<10){
+            d.level=old+1;
+            const next=this.levelState(d.level); if(!Number.isInteger(next.selected))next.selected=Math.floor(Math.random()*4);
+            showToast(`🎉 Level ${old} geschafft – Level ${d.level} ist offen!`,'success');
+            this.stop(`🎉 Bild komplett! Level ${d.level} wurde freigeschaltet.`);
+            this.resetBoard(true);
+            this.pickWord(true);
+          }else{
+            showToast('🏆 Alle 10 Spiel-Level geschafft!','success');
+            this.stop('🏆 Alle 10 Level abgeschlossen.');
+          }
+          this.scheduleSave(80);
+        },
+        handleLoss() {
+          this.gameOver=true;
+          this.ball=null;
+          this.running=false;
+          this.paused=false;
+          this.stopLoop();
+          this.updateStatus('💥 Runde verloren – dein freigelegtes Bild bleibt erhalten. Drücke „Dort weiterspielen“ für ein frisches Brett.');
+          this.renderButtons();
+          this.scheduleSave(80);
+        },
+        lockBall() {
+          if(!this.ball)return;
+          if(this.ball.y<0||this.board[this.ball.y]?.[this.ball.x]){this.handleLoss();return;}
+          const levelBefore=this.data().level;
+          this.board[this.ball.y][this.ball.x]=this.ball.color;
+          this.data().moves=(Number(this.data().moves)||0)+1;
+          const res=this.resolveGroups();
+          const opened=res.chains ? this.revealTiles(res.chains) : 0;
+          this.scheduleSave();
+          if(this.data().level!==levelBefore || (levelBefore===10 && this.levelState(10).completed)){
+            this.ball=null;
+            this.updateStatus(levelBefore<10?`🎉 Level ${levelBefore} geschafft – Level ${levelBefore+1} ist bereit.`:'🏆 Alle 10 Level abgeschlossen.');
+            this.draw();return;
+          }
+          if(res.chains)this.updateStatus(`✨ ${res.totalCleared} Kugeln verschwunden · ${opened} Bildfeld${opened===1?'':'er'} freigelegt.`);
+          else this.updateStatus('Kein Vierer-Treffer – das Bild bleibt noch verdeckt.');
+          this.ball=this.newBall();
+          if(this.collides(this.ball,0,0)){this.handleLoss();this.draw();this.renderStats();return;}
+          this.draw();this.renderStats();
+        },
+        start() {
+          if(this.levelState().completed&&this.data().level>=10){showToast('Alle Level sind bereits abgeschlossen.','info');return;}
+          if(this.gameOver){
+            const keepLevel=this.data().level;
+            const keepRevealed=[...this.normalizeRevealed(this.levelState())];
+            this.resetBoard(true);
+            this.data().level=keepLevel;
+            this.levelState().revealed=keepRevealed;
+            this.gameOver=false;
+            this.renderReveal();
+          } else if(!this.board.length) this.resetBoard(true);
+          if(!this.ball)this.ball=this.newBall();
+          if(this.collides(this.ball,0,0)){this.handleLoss();return;}
+          this.running=true;this.paused=false;this.lastDrop=performance.now();
+          this.updateStatus('Läuft – erst ab 4 verbundenen Kugeln gleicher Farbe wird ein Bildfeld geöffnet.');
+          this.stopLoop();
+          const loop=t=>{if(!this.running)return;if(!this.paused&&t-this.lastDrop>720){this.move(0,1);this.lastDrop=t;}this.draw();this.timer=requestAnimationFrame(loop);};
+          this.timer=requestAnimationFrame(loop);this.renderButtons();
+        },
+        pause(show=true){if(!this.running)return;this.paused=!this.paused;if(show)this.updateStatus(this.paused?'Pausiert.':'Weiter geht’s.');this.renderButtons();},
+        stop(message='Gestoppt.'){this.running=false;this.paused=false;this.stopLoop();this.updateStatus(message);this.renderButtons();this.scheduleSave(80);},
+        stopLoop(){if(this.timer)cancelAnimationFrame(this.timer);this.timer=null;},
+        updateStatus(text){const el=document.getElementById('puzzleStatus');if(el)el.textContent=text;},
+        renderNextBall(){const el=document.getElementById('nextBallPreview');if(el)el.style.background=this.palette[this.nextColor]||this.palette[1];},
+        draw() {
+          const canvas=document.getElementById('colorDropCanvas');if(!canvas)return;
+          const ctx=canvas.getContext('2d'),c=this.CELL;
+          ctx.clearRect(0,0,canvas.width,canvas.height);ctx.fillStyle='#100d0f';ctx.fillRect(0,0,canvas.width,canvas.height);
+          ctx.strokeStyle='rgba(255,255,255,.035)';ctx.lineWidth=1;
+          for(let x=0;x<=this.COLS;x++){ctx.beginPath();ctx.moveTo(x*c,0);ctx.lineTo(x*c,this.ROWS*c);ctx.stroke();}
+          for(let y=0;y<=this.ROWS;y++){ctx.beginPath();ctx.moveTo(0,y*c);ctx.lineTo(this.COLS*c,y*c);ctx.stroke();}
+          const orb=(x,y,color)=>{if(y<0)return;const cx=x*c+c/2,cy=y*c+c/2,r=c*.39;const g=ctx.createRadialGradient(cx-r*.35,cy-r*.4,r*.1,cx,cy,r);g.addColorStop(0,'rgba(255,255,255,.92)');g.addColorStop(.22,this.palette[color]||'#ef6a67');g.addColorStop(1,'rgba(25,15,20,.9)');ctx.fillStyle=g;ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);ctx.fill();ctx.strokeStyle='rgba(255,255,255,.22)';ctx.stroke();};
+          for(let y=0;y<this.ROWS;y++)for(let x=0;x<this.COLS;x++)if(this.board[y]?.[x])orb(x,y,this.board[y][x]);
+          if(this.ball)orb(this.ball.x,this.ball.y,this.ball.color);
+        },
+        renderReveal() {
+          const item=this.currentLibraryItem(),state=this.levelState();
+          const image=document.getElementById('puzzleRevealImage'),grid=document.getElementById('revealGrid'),ph=document.getElementById('revealPlaceholder'),name=document.getElementById('activePuzzleName');
+          if(!image||!grid||!ph||!state)return;
+          ph.classList.add('hidden');image.classList.remove('hidden');grid.classList.remove('hidden');image.src=item.data;
+          if(name)name.textContent=`Level ${item.level} · ${item.name} · automatisch aus 4 Bildern gewählt`;
+          const [cols,rows]=this.gridDims(),rev=this.normalizeRevealed(state);grid.style.gridTemplateColumns=`repeat(${cols},1fr)`;grid.style.gridTemplateRows=`repeat(${rows},1fr)`;grid.innerHTML='';
+          for(let i=0;i<this.TILE_COUNT;i++){const tile=document.createElement('span');tile.className='reveal-tile'+(rev.includes(i)?' open':'');grid.appendChild(tile);}
+          const p=Math.round(rev.length/this.TILE_COUNT*100),bar=document.getElementById('revealProgressBar'),pct=document.getElementById('revealPct');if(bar)bar.style.width=p+'%';if(pct)pct.textContent=p+' %';
+        },
+        renderLibrary() {
+          const wrap=document.getElementById('puzzleLibrary');if(!wrap)return;const d=this.data();wrap.innerHTML='';
+          for(let level=1;level<=10;level++){
+            const state=d.levels[String(level)],row=document.createElement('div');
+            const isCurrent=level===d.level&&!state.completed,isCompleted=!!state.completed,isFuture=level>d.level;
+            row.className='level-row'+(isCurrent?' current':'')+(isCompleted?' completed':'');
+            const stateText=isCompleted?'✓ geschafft':isCurrent?'● aktuelles Level':isFuture?'🔒 noch gesperrt':'bereit';
+            row.innerHTML=`<div class="level-head"><strong>Level ${level}</strong><span class="level-state">${stateText}</span></div><div class="level-images"></div>`;
+            const grid=row.querySelector('.level-images');
+            this.levelThemes[level-1].forEach((name,variant)=>{
+              const card=document.createElement('div');const chosen=variant===state.selected;
+              card.className='level-image'+(chosen&&!isFuture?' chosen':'')+(isFuture?' locked':'');
+              const showBadge=chosen&&!isFuture;card.innerHTML=`<img src="${this.makeStaticImage(level,variant,name)}" alt="Level ${level}: ${esc(name)}"><div class="variant-name">${esc(name)}</div>${showBadge?'<div class="pick-badge">🎲 Zufallsbild dieser Runde</div>':''}`;grid.appendChild(card);
+            });
+            wrap.appendChild(row);
+          }
+        },
+        renderStats(){const z=document.getElementById('puzzleMoves');if(z)z.textContent=Number(this.data().moves)||0;const m=document.getElementById('puzzleMatches');if(m)m.textContent=Number(this.data().matches)||0;const l=document.getElementById('puzzleLevel');if(l)l.textContent=`${this.data().level}/10`;},
+        renderButtons(){const start=document.getElementById('colorStart'),pause=document.getElementById('colorPause');if(start)start.textContent=this.running?'▶ Läuft':this.gameOver?'↻ Dort weiterspielen':'▶ Spiel starten';if(pause){pause.textContent=this.paused?'▶ Weiter':'⏸ Pause';pause.disabled=!this.running;}},
+        render(){if(!document.getElementById('tab-puzzle'))return;this.renderReveal();this.renderLibrary();this.renderStats();this.renderButtons();this.renderNextBall();this.draw();this.renderWord();},
+        scheduleSave(delay=900){clearTimeout(this.saveTimer);this.saveTimer=setTimeout(()=>this.flushSave(),delay);},
+        async flushSave(){if(this.saveBusy){this.saveAgain=true;return;}this.saveBusy=true;try{await DataManager.save(false,true);}catch(e){console.error('Game save:',e);}finally{this.saveBusy=false;if(this.saveAgain){this.saveAgain=false;this.scheduleSave(250);}}},
+
+        normalizeAnswer(value){return String(value||'').trim().toUpperCase().replace(/Ä/g,'AE').replace(/Ö/g,'OE').replace(/Ü/g,'UE').replace(/ß/g,'SS').replace(/[^A-Z]/g,'');},
+        scrambleWord(word){let a=word.split('');for(let tries=0;tries<8;tries++){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}if(a.join('')!==word)break;}return a.join(' ');},
+        pickWord(force=false){
+          const state=this.levelState();if(!state)return;
+          const available=this.words.filter(w=>!state.solvedWords.includes(w.id));
+          if(!available.length){this.currentWord=null;this.renderWord('Alle Worträtsel dieses Levels gelöst. Beim nächsten Level gibt es neue Belohnungen.',true);return;}
+          if(!this.currentWord||force||state.solvedWords.includes(this.currentWord.id))this.currentWord=available[Math.floor(Math.random()*available.length)];
+          this.renderWord();
+        },
+        renderWord(message='',noPick=false){
+          const clue=document.getElementById('wordClue'),scr=document.getElementById('wordScramble'),label=document.getElementById('wordLevelLabel'),result=document.getElementById('wordResult'),input=document.getElementById('wordGuess');if(!clue||!scr)return;
+          if(!this.currentWord&&!noPick){this.pickWord(true);return;}
+          if(!this.currentWord){clue.textContent='Alle Rätsel dieses Levels sind gelöst.';scr.textContent='✓';if(label)label.textContent=`Level ${this.data().level}`;if(input)input.value='';if(result){result.textContent=message||'Alle Rätsel dieses Levels gelöst.';result.classList.add('win');}return;}
+          clue.textContent=this.currentWord.clue;scr.textContent=this.scrambleWord(this.currentWord.word);if(label)label.textContent=`Level ${this.data().level} · ${this.currentWord.word.length} Buchstaben`;if(input)input.value='';if(result&&message){result.textContent=message;result.classList.toggle('win',message.startsWith('✓')||message.startsWith('🎁')||message.startsWith('😏'));}
+        },
+        checkWord(){
+          if(!this.currentWord){this.pickWord(true);return;}const input=document.getElementById('wordGuess'),result=document.getElementById('wordResult');const guess=this.normalizeAnswer(input?.value),answer=this.normalizeAnswer(this.currentWord.word);
+          if(!guess){if(result){result.textContent='Erst eine Lösung eingeben – Gedankenlesen ist noch kein freigeschaltetes Feature.';result.classList.remove('win');}return;}
+          if(guess!==answer){if(result){result.textContent='Noch nicht. Ein Ehemann darf sich ruhig ein zweites Mal bemühen.';result.classList.remove('win');}return;}
+          const state=this.levelState();if(!state.solvedWords.includes(this.currentWord.id)){state.solvedWords.push(this.currentWord.id);this.data().wordsSolved=(Number(this.data().wordsSolved)||0)+1;}
+          const rewardImage=Math.random()<.65;
+          let msg='';
+          if(rewardImage&&!state.completed){const n=this.revealTiles(2);msg=`🎁 Richtig! ${n} Bildfelder gratis freigeschaltet.`;}
+          else{const joke=this.jokes[Math.floor(Math.random()*this.jokes.length)];this.data().lastJoke=joke;msg='😏 '+joke;}
+          DataManager.addLog(`Worträtsel gelöst: ${this.currentWord.word}.`);this.scheduleSave(100);this.currentWord=null;this.pickWord(true);const r=document.getElementById('wordResult');if(r){r.textContent=msg;r.classList.add('win');}
+        },
+        newPictureRound(){
+          if(!confirm('Neue Zufallsrunde starten? Alle Bildfreigaben und Worträtsel-Fortschritte der 10 Spiel-Level werden zurückgesetzt. Punkte werden dabei grundsätzlich nicht verändert.'))return;
+          const d=this.data();const old={};for(let level=1;level<=10;level++)old[level]=d.levels[String(level)]?.selected;
+          d.level=1;d.matches=0;d.wordsSolved=0;d.moves=0;d.roundId=genId();
+          for(let level=1;level<=10;level++){
+            let pick=Math.floor(Math.random()*4);if(pick===old[level])pick=(pick+1+Math.floor(Math.random()*3))%4;
+            d.levels[String(level)]={selected:pick,revealed:[],solvedWords:[],completed:false};
+          }
+          this.currentWord=null;this.resetBoard(true);this.pickWord(true);this.render();this.scheduleSave(100);showToast('🎲 Neue Bildrunde gestartet.','success');
+        },
+        init(){
+          if(this.initialized)return;this.initialized=true;ensurePuzzleData(DataManager.lokaleDaten);this.resetBoard(true);this.pickWord(true);
+          const byId=id=>document.getElementById(id);
+          byId('colorStart')?.addEventListener('click',()=>this.start());
+          byId('colorPause')?.addEventListener('click',()=>this.pause());
+          byId('colorNew')?.addEventListener('click',()=>{if(this.running&&!confirm('Aktuelles Farbfall-Brett wirklich neu aufbauen?'))return;this.resetBoard(true);});
+          byId('colorLeft')?.addEventListener('click',()=>this.move(-1,0));byId('colorRight')?.addEventListener('click',()=>this.move(1,0));byId('colorDown')?.addEventListener('click',()=>this.move(0,1));byId('colorDrop')?.addEventListener('click',()=>this.hardDrop());
+          byId('wordCheck')?.addEventListener('click',()=>this.checkWord());byId('wordNext')?.addEventListener('click',()=>this.pickWord(true));
+          byId('wordGuess')?.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();this.checkWord();}});
+          byId('newPictureRound')?.addEventListener('click',()=>this.newPictureRound());
+          document.addEventListener('keydown',e=>{const tab=document.getElementById('tab-puzzle');if(!tab||tab.style.display==='none'||!this.running||this.paused)return;if(['INPUT','TEXTAREA','SELECT'].includes(document.activeElement?.tagName))return;if(e.key==='ArrowLeft'){e.preventDefault();this.move(-1,0);}else if(e.key==='ArrowRight'){e.preventDefault();this.move(1,0);}else if(e.key==='ArrowDown'){e.preventDefault();this.move(0,1);}else if(e.code==='Space'||e.key==='ArrowUp'){e.preventDefault();this.hardDrop();}});
+          this.render();
+        }
+      };
+
       // ===== APP =====
       const App = {
         _bearbeitenId: null,
@@ -2146,8 +2817,14 @@
               document.getElementById(`tab-${tabName}`).style.display = 'block';
               btn.classList.add('active');
               btn.setAttribute('aria-selected', 'true');
+              const floatBtn = document.getElementById('floatNeuBtn');
+              if (floatBtn) floatBtn.style.display = tabName === 'puzzle' ? 'none' : 'flex';
+              if (tabName !== 'puzzle' && PuzzleGame.running && !PuzzleGame.paused) PuzzleGame.pause(false);
+              if (tabName === 'puzzle') PuzzleGame.render();
             });
           });
+
+          PuzzleGame.init();
 
           // Float-Button -> Modal Neu
           document.getElementById('floatNeuBtn').addEventListener('click', () => {
@@ -2298,6 +2975,8 @@
                 }
                 if (confirm('Daten importieren? Alle lokalen Daten werden überschrieben.')) {
                   DataManager.lokaleDaten = imported;
+                  ensureLifetimePoints(DataManager.lokaleDaten);
+                  ensurePuzzleData(DataManager.lokaleDaten);
                   ['aufgaben', 'einloesungen', 'tagebuch'].forEach(key => {
                     (DataManager.lokaleDaten[key] || []).forEach(e => {
                       if (!e.image) e.image = '';
@@ -2422,7 +3101,7 @@
           if (punkte <= 0) { showToast('Bitte positive Punkte vergeben.', 'error'); return; }
           if (qualitaet < 1 || qualitaet > 10) { showToast('Qualität muss zwischen 1 und 10 liegen.', 'error'); return; }
 
-          DataManager.updateKonto(punkte);
+          DataManager.awardAufgabenPunkte(punkte);
           a.lastQuality = qualitaet;
           a.lastComment = kommentar;
           a.status = 'offen';
