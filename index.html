@@ -1144,6 +1144,19 @@
     .pair-reality-item { padding:10px; border:1px solid var(--card-border); border-radius:12px; background:var(--surface-solid); text-align:center; }
     .pair-reality-item span { display:block; color:var(--text-muted); font-size:.62rem; line-height:1.35; }
     .pair-reality-item strong { display:block; margin-top:4px; color:var(--text); font-size:1rem; }
+    .pair-meaning { padding:11px 12px; border:1px solid var(--card-border); border-radius:13px; background:var(--surface-solid); }
+    .pair-meaning-head { display:flex; justify-content:space-between; gap:10px; align-items:flex-start; margin-bottom:5px; }
+    .pair-meaning-head strong { color:var(--text); font-size:.78rem; line-height:1.3; }
+    .pair-meaning-head span { flex-shrink:0; color:var(--text-muted); font-size:.63rem; font-weight:800; }
+    .pair-meaning p { margin:0; color:var(--text-muted); font-size:.72rem; line-height:1.48; }
+    .pair-answer-list { display:grid; gap:8px; }
+    .pair-answer-item { padding:10px 11px; border:1px solid var(--card-border); border-radius:12px; background:var(--surface-solid); }
+    .pair-answer-item strong { display:block; margin-bottom:4px; color:var(--text); font-size:.72rem; line-height:1.4; }
+    .pair-answer-item span { color:var(--text-muted); font-size:.64rem; font-weight:750; }
+    .pair-answer-item.good { border-color:color-mix(in srgb,var(--green) 32%,var(--card-border)); background:color-mix(in srgb,var(--green-light) 55%,var(--surface-solid)); }
+    .pair-answer-item.talk { border-color:color-mix(in srgb,var(--warning) 32%,var(--card-border)); background:color-mix(in srgb,var(--gold-light) 55%,var(--surface-solid)); }
+    .pair-answer-item.boundary { border-color:color-mix(in srgb,var(--text-muted) 24%,var(--card-border)); }
+    .pair-reality-note { margin-top:6px !important; font-size:.62rem !important; line-height:1.35 !important; }
     .pair-history { display:grid; gap:8px; margin-top:12px; }
     .pair-history-row { display:grid; grid-template-columns:minmax(130px,1.2fr) repeat(4,minmax(70px,.7fr)); gap:7px; align-items:center; padding:9px 10px; border:1px solid var(--card-border); border-radius:11px; background:var(--surface-solid); font-size:.66rem; color:var(--text-muted); }
     .pair-history-row strong { color:var(--text); }
@@ -1387,7 +1400,7 @@
                 <svg class="compass-radar" id="compassRadar" viewBox="0 0 360 330" role="img" aria-label="Radarprofil der Antworten"></svg>
               </div>
               <div class="compass-result-card">
-                <h3>Dimensionen</h3>
+                <h3>Was sagen deine Antworten?</h3>
                 <div class="compass-score-list" id="compassScoreList"></div>
                 <div id="compassSignal" style="margin-top:14px;"></div>
               </div>
@@ -1420,17 +1433,19 @@
                 <svg class="compass-radar" id="compassPairRadar" viewBox="0 0 360 330" role="img" aria-label="Überlagerter Paar-Kompass"></svg>
               </div>
               <div class="compass-result-card">
-                <h3>Übereinstimmung nach Dimension</h3>
+                <h3>Was heißt das für uns?</h3>
+                <p class="compass-disclaimer">Die Grafik allein ist nur Orientierung. Hier wird jede Achse in eine konkrete Paar-Aussage übersetzt.</p>
                 <div id="compassPairDistances" class="pair-distance-list"></div>
               </div>
             </div>
             <div class="pair-summary-grid">
-              <div class="compass-result-card"><h3>❤️ Das verbindet euch</h3><div id="pairShared"></div></div>
-              <div class="compass-result-card"><h3>💬 Gesprächsbereiche</h3><div id="pairTalk"></div></div>
-              <div class="compass-result-card"><h3>⛔ Kein gemeinsamer Handlungsspielraum</h3><div id="pairNoSpace"></div></div>
+              <div class="compass-result-card"><h3>❤️ Gemeinsame starke Interessen</h3><div id="pairShared"></div></div>
+              <div class="compass-result-card"><h3>↔️ Größte Unterschiede</h3><div id="pairTalk"></div></div>
+              <div class="compass-result-card"><h3>🧱 Gemeinsame Grenzen</h3><div id="pairNoSpace"></div></div>
             </div>
             <div class="compass-result-card">
-              <h3>Realer gemeinsamer Spielraum</h3>
+              <h3>Was wäre real gemeinsam denkbar?</h3>
+              <p class="compass-disclaimer">Für reale Schritte zählt immer der niedrigere Bereitschaftswert. Ein hoher Wert des einen hebt eine Grenze des anderen nicht an.</p>
               <div id="pairReality"></div>
             </div>
           </div>
@@ -2824,40 +2839,127 @@
           const results=document.getElementById('compassResults'); if(results)results.classList.toggle('visible',this.isComplete(role)); if(this.isComplete(role))this.evaluate(false);
         },
         updateProgress(){const role=this.role(),n=this.completedCount(role),total=this.allIds().length,pct=Math.round(n/total*100);document.getElementById('compassProgressText').textContent=`${n} / ${total} Fragen`;document.getElementById('compassProgressBar').style.width=`${pct}%`;document.getElementById('compassEvaluate').disabled=n!==total;document.getElementById('compassSnapshot').disabled=n!==total;},
-        radarSvg(s){const keys=[['Teilen',s.teilen],['Autonomie',s.autonomie],['Demut',s.demut],['Dienen',s.dienst],['Emotion',s.emotion],['Realität',s.realitaet],['Nachsorge',s.nachsorge],['Sicherheit',s.sicherheit]],cx=180,cy=158,r=105,n=keys.length,pt=(i,v)=>{const a=-Math.PI/2+i*2*Math.PI/n,rr=r*v/5;return[cx+Math.cos(a)*rr,cy+Math.sin(a)*rr]};let svg='';for(let ring=1;ring<=5;ring++)svg+=`<polygon class="grid" points="${keys.map((_,i)=>pt(i,ring).join(',')).join(' ')}"></polygon>`;keys.forEach((_,i)=>{const p=pt(i,5);svg+=`<line class="axis" x1="${cx}" y1="${cy}" x2="${p[0]}" y2="${p[1]}"></line>`});svg+=`<polygon class="shape" points="${keys.map(([,v],i)=>pt(i,v).join(',')).join(' ')}"></polygon>`;keys.forEach(([l,v],i)=>{const p=pt(i,v),lp=pt(i,5.75);svg+=`<circle class="dot" cx="${p[0]}" cy="${p[1]}" r="3.5"></circle><text x="${lp[0]}" y="${lp[1]}" text-anchor="middle" dominant-baseline="middle">${esc(l)} ${v.toFixed(1)}</text>`});return svg;},
-        insightList(s,role){
-          const out=[]; const label=this.roleLabels[role];
-          const dims=this.scoreGroups.map(g=>[g.label,s[g.key]]).filter(x=>!['Grenzen & Sicherheit','Stopp & Gesprächsfähigkeit'].includes(x[0])).sort((a,b)=>b[1]-a[1]).slice(0,3);
-          out.push({title:`Stärkste Themen · ${label}`,text:dims.map(([k,v])=>`${k} ${v.toFixed(1)}/5`).join(' · ')});
-          if(s.fantasyRealityGap>=1)out.push({title:'Fantasie deutlich stärker als reale Offenheit',text:`Fantasie ${s.fantasie.toFixed(1)}/5 · reale Umsetzung ${s.realitaet.toFixed(1)}/5. Das spricht dafür, Fantasie und konkrete Handlungswünsche nicht gleichzusetzen.`});
-          if(s.fantasieGenuegt>=3.8)out.push({title:'Fantasie oder Rollenspiel könnte viel abdecken',text:`Der Wert „Fantasie/Rollenspiel genügt“ liegt bei ${s.fantasieGenuegt.toFixed(1)}/5. Das kann realen Handlungsdruck deutlich relativieren.`});
-          if(s.absicherung>=3.7)out.push({title:'Bindungsabsicherung ist wichtig',text:`Absicherungsbedarf ${s.absicherung.toFixed(1)}/5. Bestätigung, Nähe und klare Rückkehr in die Paarbeziehung sind wahrscheinlich wichtige Bedingungen.`});
-          if(s.sicherheit>=4.2)out.push({title:'Sehr klare Schutzorientierung',text:`Grenzen & Sicherheit ${s.sicherheit.toFixed(1)}/5. Zustimmung, Veto, STI-/Verhütungsregeln und Nüchternheit werden stark gewichtet.`});
-          if(s.regulation<3.2)out.push({title:'Gesprächs- und Stoppfähigkeit zuerst stärken',text:`Stopp & Gespräch ${s.regulation.toFixed(1)}/5. Vor realen Schritten wäre ein belastbarer Umgang mit Überforderung besonders wichtig.`});
+        clamp(v,min=1,max=5){return Math.max(min,Math.min(max,Number(v)||0));},
+        axisValues(role=this.role()){
+          const s=this.scores(role);
+          const fantasyReality=this.clamp(3+(s.realitaet-s.fantasieGenuegt)/2);
+          const together=this.mean(['A1','A6'],role), autonomous=this.mean(['B4','B5'],role);
+          const togetherAutonomy=this.clamp(3+(autonomous-together)/2);
+          const recurring=this.clamp(this.mean(['E1','E2','E5'],role));
+          const emotional=this.clamp(this.mean(['E3','E4','E6'],role));
+          const power=this.clamp((s.demut+s.dienst)/2);
+          const aftercare=this.clamp(this.mean(['J1','J3','J6'],role));
+          return {fantasyReality,togetherAutonomy,recurring,emotional,power,aftercare};
+        },
+        pairAxes(){return [
+          {key:'fantasyReality',short:'Fantasie ↔ real',title:'Nur Fantasie ↔ real erleben',low:'eher Fantasie/Rollenspiel',high:'mehr reale Umsetzung'},
+          {key:'togetherAutonomy',short:'Dabei ↔ eigenständig',title:'Gemeinsam dabei ↔ eigenständig',low:'mehr gemeinsame Einbindung',high:'mehr Eigenständigkeit'},
+          {key:'recurring',short:'Einmalig ↔ wiederh.',title:'Einmalig ↔ wiederkehrend',low:'eher einmalig',high:'eher wiederkehrend'},
+          {key:'emotional',short:'Körperl. ↔ emotional',title:'Nur körperlich ↔ auch emotional',low:'eher körperlich',high:'mehr emotionale Nähe'},
+          {key:'power',short:'Gleich ↔ Machtgef.',title:'Gleichberechtigt ↔ Machtgefälle',low:'wenig Machtgefälle',high:'stärkeres Machtgefälle'},
+          {key:'aftercare',short:'Wenig ↔ viel Nähe',title:'Wenig Nachsorge ↔ viel Nähe danach',low:'weniger Nachsorgebedarf',high:'viel Nähe danach'}
+        ];},
+        radarSvg(s,role=this.role()){
+          const vals=this.axisValues(role),items=this.pairAxes(),cx=180,cy=158,r=105,n=items.length,pt=(i,v)=>{const a=-Math.PI/2+i*2*Math.PI/n,rr=r*v/5;return[cx+Math.cos(a)*rr,cy+Math.sin(a)*rr]};
+          let svg='';for(let ring=1;ring<=5;ring++)svg+=`<polygon class="grid" points="${items.map((_,i)=>pt(i,ring).join(',')).join(' ')}"></polygon>`;
+          items.forEach((_,i)=>{const p=pt(i,5);svg+=`<line class="axis" x1="${cx}" y1="${cy}" x2="${p[0]}" y2="${p[1]}"></line>`});
+          svg+=`<polygon class="shape" points="${items.map((x,i)=>pt(i,vals[x.key]).join(',')).join(' ')}"></polygon>`;
+          items.forEach((x,i)=>{const v=vals[x.key],p=pt(i,v),lp=pt(i,5.75);svg+=`<circle class="dot" cx="${p[0]}" cy="${p[1]}" r="3.5"></circle><text x="${lp[0]}" y="${lp[1]}" text-anchor="middle" dominant-baseline="middle">${esc(x.short)}</text>`});return svg;
+        },
+        profilePlainInsights(role=this.role()){
+          const s=this.scores(role), vals=this.axisValues(role), out=[];
+          if(vals.fantasyReality<=2.4)out.push(['Fantasie und Realität bleiben klar getrennt','Die Antworten sprechen eher dafür, dass Fantasie oder Rollenspiel bereits viel abdecken können. Ein erotischer Gedanke ist damit nicht automatisch ein Wunsch nach Umsetzung.']);
+          else if(vals.fantasyReality>=3.6)out.push(['Reale Umsetzung ist grundsätzlich vorstellbarer','Die Antworten ziehen stärker in Richtung Realität. Für konkrete Schritte bleiben die Antworten des Partners und die gemeinsame Zustimmung entscheidend.']);
+          else out.push(['Fantasie und Realität liegen dazwischen','Es gibt weder ein klares „nur Fantasie“ noch einen eindeutigen Umsetzungsdrang. Einzelne konkrete Situationen sind deshalb aussagekräftiger als ein Gesamtwert.']);
+          if(vals.emotional>=3.6)out.push(['Emotionale Nähe gehört zur Fantasie','Zärtlichkeit, Kontinuität oder Gefühle sind nicht vollständig vom sexuellen Reiz getrennt. Das wäre für einen Paarvergleich ein wichtiges Gesprächsthema.']);
+          if(vals.aftercare>=3.6)out.push(['Nähe danach ist wichtig','Kuscheln, Wiederannäherung und eine klare Rückkehr in die Paarbindung werden stark gewichtet.']);
+          if(s.sicherheit>=4.2)out.push(['Klare Regeln haben hohen Stellenwert','Zustimmung, Veto, Verhütung/STI-Schutz und vorherige Absprachen werden sehr deutlich bejaht.']);
+          const ranked=this.allIds().map(id=>({id,v:this.answer(id,role),text:this.questionText(id,role)})).sort((a,b)=>b.v-a.v).slice(0,3);
+          out.push(['Die drei stärksten Einzelantworten',ranked.map(x=>`${x.id}: ${x.v}/5 – ${x.text}`).join(' | ')]);
           return out;
         },
-        evaluate(scroll=true){const role=this.role();if(!this.isComplete(role)){showToast('Bitte zuerst alle 60 Fragen dieses Profils beantworten.','error');return;}const s=this.scores(role),radar=document.getElementById('compassRadar'),list=document.getElementById('compassScoreList'),ins=document.getElementById('compassInsights'),sig=document.getElementById('compassSignal'),res=document.getElementById('compassResults');radar.innerHTML=this.radarSvg(s);const rows=this.scoreGroups.map(g=>[g.label,s[g.key]]);list.innerHTML=rows.map(([l,v])=>`<div class="compass-score-row"><span>${esc(l)}</span><div class="compass-score-track"><div class="compass-score-fill" style="width:${v/5*100}%"></div></div><strong>${v.toFixed(1)}</strong></div>`).join('');const pressure=(s.realitaet>=3.8&&s.sicherheit<3.5)?['red','Vor realen Schritten zuerst Schutzregeln klären','Reale Offenheit ist hoch, die Schutzorientierung aber vergleichsweise niedriger.']:((s.realitaet>=3.6||s.emotion>=3.8||s.absicherung>=4)?['yellow','Einige Themen verdienen ein klares Gespräch','Wunsch, reale Bereitschaft, Grenzen und Nachsorge sollten getrennt besprochen werden.']:['green','Profil ist gut differenziert','Starke Einzelwünsche können trotzdem wichtig sein; entscheidend sind konkrete Übereinstimmung und Zustimmung.']);sig.innerHTML=`<div class="compass-signal ${pressure[0]}"><span class="lamp"></span><div><strong>${pressure[1]}</strong><p>${pressure[2]}</p></div></div>`;ins.innerHTML=`<div class="compass-insights">${this.insightList(s,role).map(x=>`<div class="compass-insight"><strong>${esc(x.title)}</strong><p>${esc(x.text)}</p></div>`).join('')}</div>`;res.classList.add('visible');if(scroll)res.scrollIntoView({behavior:'smooth',block:'start'});},
+        evaluate(scroll=true){
+          const role=this.role();if(!this.isComplete(role)){showToast('Bitte zuerst alle 60 Fragen dieses Profils beantworten.','error');return;}
+          const s=this.scores(role),radar=document.getElementById('compassRadar'),list=document.getElementById('compassScoreList'),ins=document.getElementById('compassInsights'),sig=document.getElementById('compassSignal'),res=document.getElementById('compassResults');
+          radar.innerHTML=this.radarSvg(s,role);
+          const plain=this.profilePlainInsights(role);
+          list.innerHTML=plain.slice(0,3).map(([t,txt])=>`<div class="pair-meaning"><div class="pair-meaning-head"><strong>${esc(t)}</strong></div><p>${esc(txt)}</p></div>`).join('');
+          sig.innerHTML='<div class="compass-signal green"><span class="lamp"></span><div><strong>Keine Diagnose, sondern Gesprächshilfe</strong><p>Entscheidend werden diese Antworten erst im Vergleich mit dem anderen Profil: Übereinstimmung, Unterschied und gemeinsame Grenzen.</p></div></div>';
+          ins.innerHTML=`<div class="compass-insights">${plain.slice(3).map(([t,txt])=>`<div class="compass-insight"><strong>${esc(t)}</strong><p>${esc(txt)}</p></div>`).join('')}</div>`;
+          res.classList.add('visible');if(scroll)res.scrollIntoView({behavior:'smooth',block:'start'});
+        },
         async snapshot(){const role=this.role();if(!this.isComplete(role))return;const p=this.profile(role);p.history.unshift({at:new Date().toISOString(),schemaVersion:3,scores:this.scores(role),answers:{...p.answers}});p.history=p.history.slice(0,24);p.updatedAt=new Date().toISOString();await this.saveCloud(false);this.renderHistory();showToast(`Stand für ${this.roleLabels[role]} gespeichert.`,'success');},
         renderHistory(){const root=document.getElementById('compassHistory');if(!root)return;const h=this.profile().history||[];root.innerHTML=h.length?h.map(x=>{const d=new Date(x.at),s=x.scores||{};return `<div class="compass-history-row"><strong>${esc(Number.isNaN(d.getTime())?x.at:d.toLocaleString('de-DE',{dateStyle:'short',timeStyle:'short'}))}</strong><span>Real ${Number(s.realitaet||0).toFixed(1)}</span><span>Teilen ${Number(s.teilen||0).toFixed(1)}</span><span>Emotion ${Number(s.emotion||0).toFixed(1)}</span><span>Nachs. ${Number(s.nachsorge||0).toFixed(1)}</span></div>`}).join(''):'<p class="compass-disclaimer">Noch kein gespeicherter Stand für dieses Profil.</p>';},
-        pairDimensions(){return [
-          ['Teilen & Stolz','teilen'],['Eigenständigkeit','autonomie'],['Vergleich & Demütigung','demut'],['Unterordnung & Dienen','dienst'],['Kontinuität','kontinuitaet'],['Emotionale Öffnung','emotion'],['Reale Umsetzung','realitaet'],['Bindungsabsicherung','absicherung'],['Nachsorge','nachsorge'],['Grenzen & Sicherheit','sicherheit']
-        ];},
-        pairRadarSvg(a,b){const items=this.pairDimensions().slice(0,8),cx=180,cy=158,r=105,n=items.length,pt=(i,v)=>{const ang=-Math.PI/2+i*2*Math.PI/n,rr=r*v/5;return[cx+Math.cos(ang)*rr,cy+Math.sin(ang)*rr]},poly=(vals,cls)=>`<polygon class="${cls}" points="${items.map(([,k],i)=>pt(i,vals[k]).join(',')).join(' ')}"></polygon>`;let svg='';for(let ring=1;ring<=5;ring++)svg+=`<polygon class="grid" points="${items.map((_,i)=>pt(i,ring).join(',')).join(' ')}"></polygon>`;items.forEach((_,i)=>{const p=pt(i,5);svg+=`<line class="axis" x1="${cx}" y1="${cy}" x2="${p[0]}" y2="${p[1]}"></line>`});const common={};items.forEach(([,k])=>common[k]=Math.min(a[k],b[k]));svg+=poly(common,'shape-common')+poly(a,'shape-er')+poly(b,'shape-sie');items.forEach(([l,k],i)=>{const lp=pt(i,5.75);svg+=`<text x="${lp[0]}" y="${lp[1]}" text-anchor="middle" dominant-baseline="middle">${esc(l)}</text>`});return svg;},
+        axisMeaning(axis,av,bv){
+          const diff=Math.abs(av-bv),avg=(av+bv)/2,near=diff<=0.6,far=diff>=1.5;
+          let base='';
+          if(axis.key==='fantasyReality'){
+            if(av<=2.4&&bv<=2.4)base='Bei euch beiden bleibt das Thema eher im Bereich Fantasie oder Rollenspiel. Das ist eine wichtige Übereinstimmung: starke Fantasien müssen nicht in reale Erwartungen übersetzt werden.';
+            else if(av>=3.6&&bv>=3.6)base='Ihr seid beide vergleichsweise offen dafür, Fantasie in Realität zu übersetzen. Welche konkrete Handlung tatsächlich passt, muss trotzdem Frage für Frage gemeinsam bestimmt werden.';
+            else base='Einer von euch zieht stärker Richtung reale Umsetzung, der andere stärker Richtung Fantasie/Rollenspiel. Das ist besonders wichtig, weil Fantasie und Erwartung sonst leicht verwechselt werden.';
+          } else if(axis.key==='togetherAutonomy'){
+            if(avg>=3.6)base='Die Antworten tendieren eher zu mehr Eigenständigkeit der Ehefrau innerhalb vereinbarter Grenzen.';
+            else if(avg<=2.4)base='Die Antworten tendieren eher dazu, dass der Ehemann eingebunden bleibt und die Situation stärker gemeinsam erlebt wird.';
+            else base='Zwischen gemeinsamer Einbindung und Eigenständigkeit gibt es keine starke gemeinsame Richtung.';
+          } else if(axis.key==='recurring'){
+            if(avg>=3.6)base='Wiederkehrende Begegnungen oder ein längerfristiger Kontakt gehören deutlich zur Vorstellung.';
+            else if(avg<=2.4)base='Ein einmaliger oder wenig kontinuierlicher Rahmen passt eher zu euren Antworten.';
+            else base='Beim Thema einmalig versus wiederkehrend liegt ihr im mittleren Bereich.';
+          } else if(axis.key==='emotional'){
+            if(avg>=3.6)base='Emotionale Nähe zum Dritten ist in euren Antworten nicht vollständig ausgeschlossen und sollte ausdrücklich besprochen werden.';
+            else if(avg<=2.4)base='Ihr tendiert beide eher dazu, Sexualität mit einem Dritten körperlich zu begrenzen und emotionale Nähe klein zu halten.';
+            else base='Die Grenze zwischen rein körperlich und emotionaler Nähe ist nicht eindeutig.';
+          } else if(axis.key==='power'){
+            if(avg>=3.6)base='Machtgefälle, Unterordnung oder Demütigung sind ein deutlicher Teil des erotischen Reizes.';
+            else if(avg<=2.4)base='Ein starkes Machtgefälle ist für euch eher kein zentraler Bestandteil der Fantasie.';
+            else base='Machtgefälle spielt eine gewisse Rolle, ist aber nicht eindeutig zentral.';
+          } else if(axis.key==='aftercare'){
+            if(avg>=3.6)base='Nähe, Rückversicherung und Wiederannäherung danach sind für euch deutlich wichtig.';
+            else if(avg<=2.4)base='Ihr gebt intensiver Nachsorge vergleichsweise wenig Gewicht.';
+            else base='Nachsorge ist relevant, aber nicht bei beiden besonders stark ausgeprägt.';
+          }
+          if(near)return base+' Ihr liegt dabei sehr nah beieinander.';
+          if(far)return base+' Eure Werte liegen deutlich auseinander – genau hier lohnt sich ein konkretes Gespräch über Bedürfnisse und Grenzen.';
+          return base+' Ihr seid ähnlich orientiert, aber nicht ganz gleich stark.';
+        },
+        pairRadarSvg(a,b){
+          const av=this.axisValues('er'),bv=this.axisValues('sie'),items=this.pairAxes(),cx=180,cy=158,r=105,n=items.length,pt=(i,v)=>{const ang=-Math.PI/2+i*2*Math.PI/n,rr=r*v/5;return[cx+Math.cos(ang)*rr,cy+Math.sin(ang)*rr]},poly=(vals,cls)=>`<polygon class="${cls}" points="${items.map((x,i)=>pt(i,vals[x.key]).join(',')).join(' ')}"></polygon>`;
+          let svg='';for(let ring=1;ring<=5;ring++)svg+=`<polygon class="grid" points="${items.map((_,i)=>pt(i,ring).join(',')).join(' ')}"></polygon>`;items.forEach((_,i)=>{const p=pt(i,5);svg+=`<line class="axis" x1="${cx}" y1="${cy}" x2="${p[0]}" y2="${p[1]}"></line>`});
+          const common={};items.forEach(x=>common[x.key]=Math.min(av[x.key],bv[x.key]));svg+=poly(common,'shape-common')+poly(av,'shape-er')+poly(bv,'shape-sie');items.forEach((x,i)=>{const lp=pt(i,5.75);svg+=`<text x="${lp[0]}" y="${lp[1]}" text-anchor="middle" dominant-baseline="middle">${esc(x.short)}</text>`});return svg;
+        },
+        scenarioText(id){
+          const t=this.questionText(id,'er');
+          return t.replace(/^Mich (reizt|erregt) (es|die Vorstellung),?\s*/i,'').replace(/^Ich wäre offen dafür,?\s*/i,'').replace(/^Ich wünsche mir derzeit\s*/i,'');
+        },
+        pairQuestionSets(){
+          const rows=this.allIds().map(id=>{const er=this.answer(id,'er'),sie=this.answer(id,'sie');return {id,er,sie,diff:Math.abs(er-sie),common:Math.min(er,sie),max:Math.max(er,sie),text:this.scenarioText(id)};});
+          return {
+            shared:rows.filter(x=>x.er>=4&&x.sie>=4&&x.diff<=1).sort((a,b)=>b.common-a.common||a.diff-b.diff).slice(0,5),
+            differences:rows.filter(x=>x.diff>=2).sort((a,b)=>b.diff-a.diff||b.max-a.max).slice(0,5),
+            boundaries:rows.filter(x=>x.er<=2&&x.sie<=2&&x.diff<=1).sort((a,b)=>a.max-b.max).slice(0,5)
+          };
+        },
+        answerList(items,cls,empty){
+          if(!items.length)return `<p class="compass-disclaimer">${esc(empty)}</p>`;
+          return `<div class="pair-answer-list">${items.map(x=>`<div class="pair-answer-item ${cls}"><strong>${esc(x.id+' · '+x.text)}</strong><span>Er ${x.er}/5 · Sie ${x.sie}/5${cls==='talk'?` · Abstand ${x.diff}`:''}</span></div>`).join('')}</div>`;
+        },
         renderPair(){
           const missing=document.getElementById('compassPairMissing'),results=document.getElementById('compassPairResults');
           if(!this.isComplete('er')||!this.isComplete('sie')){results.classList.add('hidden');missing.classList.remove('hidden');missing.innerHTML=`<h3>Noch nicht vergleichbar</h3><p class="compass-disclaimer">Er: ${this.completedCount('er')}/60 · Sie: ${this.completedCount('sie')}/60. Für einen fairen Paarvergleich sollten beide Profile vollständig sein.</p>`;document.getElementById('compassPairSnapshot').disabled=true;return;}
           missing.classList.add('hidden');results.classList.remove('hidden');document.getElementById('compassPairSnapshot').disabled=false;
-          const a=this.scores('er'),b=this.scores('sie');document.getElementById('compassPairRadar').innerHTML=this.pairRadarSvg(a,b);
-          const dims=this.pairDimensions();document.getElementById('compassPairDistances').innerHTML=dims.map(([l,k])=>{const av=a[k],bv=b[k],diff=Math.abs(av-bv),common=Math.min(av,bv);return `<div class="pair-distance-row"><div class="pair-distance-head"><strong>${esc(l)}</strong><span>Abstand ${diff.toFixed(1)} · gemeinsam ${common.toFixed(1)}</span></div><div class="pair-distance-track"><span class="pair-marker er" style="left:${av/5*100}%"></span><span class="pair-marker sie" style="left:${bv/5*100}%"></span></div><div class="pair-distance-meta"><span>Er ${av.toFixed(1)}</span><span>Sie ${bv.toFixed(1)}</span></div></div>`}).join('');
-          const shared=[],talk=[],stop=[];dims.forEach(([l,k])=>{const av=a[k],bv=b[k],diff=Math.abs(av-bv),common=Math.min(av,bv),mx=Math.max(av,bv);if((common>=3.5&&diff<=1)||(mx<=2&&diff<=1))shared.push(l);else if(k==='realitaet'&&common<=2&&mx>=4)stop.push(l);else if(diff>=1.2)talk.push(l);});
-          const chips=(arr,cls,empty)=>arr.length?`<div class="pair-chip-list">${arr.map(x=>`<span class="pair-chip ${cls}">${esc(x)}</span>`).join('')}</div>`:`<p class="compass-disclaimer">${empty}</p>`;
-          document.getElementById('pairShared').innerHTML=chips(shared,'good','Noch keine besonders klare gemeinsame Zone.');document.getElementById('pairTalk').innerHTML=chips(talk,'talk','Aktuell keine größeren Dimensionsabstände.');document.getElementById('pairNoSpace').innerHTML=chips(stop,'stop','Aktuell kein klarer 5-vs-1/2-Konflikt bei realer Umsetzung.');
-          const realItems=[['Flirt/Kuss','F3'],['Sex unter Regeln','F4'],['Wiederholung','F5'],['Schritte in 3 Monaten','F6']];document.getElementById('pairReality').innerHTML=`<div class="pair-reality-grid">${realItems.map(([l,id])=>{const av=this.answer(id,'er'),bv=this.answer(id,'sie'),c=Math.min(av,bv);return `<div class="pair-reality-item"><span>${esc(l)}<br>Er ${av} · Sie ${bv}</span><strong>${c.toFixed(0)}/5</strong><span>gemeinsamer Spielraum</span></div>`}).join('')}</div>`;
+          const a=this.scores('er'),b=this.scores('sie'),av=this.axisValues('er'),bv=this.axisValues('sie');document.getElementById('compassPairRadar').innerHTML=this.pairRadarSvg(a,b);
+          const axes=this.pairAxes();document.getElementById('compassPairDistances').innerHTML=axes.map(axis=>{const ev=av[axis.key],sv=bv[axis.key],diff=Math.abs(ev-sv);return `<div class="pair-meaning"><div class="pair-meaning-head"><strong>${esc(axis.title)}</strong><span>Er ${ev.toFixed(1)} · Sie ${sv.toFixed(1)} · Δ ${diff.toFixed(1)}</span></div><p>${esc(this.axisMeaning(axis,ev,sv))}</p></div>`}).join('');
+          const sets=this.pairQuestionSets();
+          document.getElementById('pairShared').innerHTML=this.answerList(sets.shared,'good','Noch keine fünf klaren gemeinsamen starken Interessen – das ist völlig in Ordnung.');
+          document.getElementById('pairTalk').innerHTML=this.answerList(sets.differences,'talk','Keine großen Frage-für-Frage-Abstände von mindestens 2 Punkten.');
+          document.getElementById('pairNoSpace').innerHTML=this.answerList(sets.boundaries,'boundary','Keine besonders klaren gemeinsamen niedrigen Bewertungen gefunden.');
+          const realItems=[['Flirt/Kuss','F3'],['Sex unter klaren Regeln','F4'],['Wiederholte Begegnungen','F5'],['Konkrete Schritte in 3 Monaten','F6']];
+          document.getElementById('pairReality').innerHTML=`<div class="pair-reality-grid">${realItems.map(([l,id])=>{const er=this.answer(id,'er'),sie=this.answer(id,'sie'),c=Math.min(er,sie),mx=Math.max(er,sie);let verdict='';if(c<=2&&mx>=4)verdict='Deutlicher Unterschied – aktuell kein gemeinsamer realer Spielraum.';else if(c<=2)verdict='Aktuell eher keine gemeinsame reale Bereitschaft.';else if(c===3)verdict='Grundsätzlich verhandelbar, aber nicht eindeutig beidseitig gewollt.';else verdict='Beide grundsätzlich offen – konkrete Zustimmung bleibt trotzdem erforderlich.';return `<div class="pair-reality-item"><span>${esc(l)}<br>Er ${er} · Sie ${sie}</span><strong>${c}/5</strong><span>gemeinsamer Spielraum</span><span class="pair-reality-note">${esc(verdict)}</span></div>`}).join('')}</div>`;
         },
         async pairSnapshot(){if(!this.isComplete('er')||!this.isComplete('sie'))return;const c=this.data();c.pairHistory.unshift({at:new Date().toISOString(),schemaVersion:3,er:this.scores('er'),sie:this.scores('sie')});c.pairHistory=c.pairHistory.slice(0,24);await this.saveCloud(false);this.renderDevelopment();showToast('Gemeinsamer Paarstand gespeichert.','success');},
         trendSvg(history,key){const h=[...history].reverse(),w=280,hh=105,pad=14,n=Math.max(1,h.length-1),x=i=>pad+(w-pad*2)*(i/n),y=v=>hh-pad-(hh-pad*2)*(Math.max(0,Math.min(5,Number(v)||0))/5),pathFor=role=>h.map((item,i)=>`${i?'L':'M'} ${x(i).toFixed(1)} ${y(item[role]?.[key]).toFixed(1)}`).join(' ');let svg=`<line class="gridline" x1="${pad}" y1="${y(2.5)}" x2="${w-pad}" y2="${y(2.5)}"></line>`;if(h.length===1){const ex=x(0),ey=y(h[0].er?.[key]),sy=y(h[0].sie?.[key]);svg+=`<circle class="point-er" cx="${ex}" cy="${ey}" r="4"></circle><circle class="point-sie" cx="${ex}" cy="${sy}" r="4"></circle>`;}else{svg+=`<path class="line-er" d="${pathFor('er')}"></path><path class="line-sie" d="${pathFor('sie')}"></path>`;h.forEach((item,i)=>{svg+=`<circle class="point-er" cx="${x(i)}" cy="${y(item.er?.[key])}" r="2.7"></circle><circle class="point-sie" cx="${x(i)}" cy="${y(item.sie?.[key])}" r="2.7"></circle>`;});}return `<svg class="pair-trend-svg" viewBox="0 0 ${w} ${hh}" aria-hidden="true">${svg}</svg>`;},
-        renderDevelopment(){const root=document.getElementById('compassPairHistory'),trend=document.getElementById('compassTrendGrid');if(!root)return;const h=this.data().pairHistory||[];if(!h.length){if(trend)trend.innerHTML='';root.innerHTML='<p class="compass-disclaimer">Noch kein Paarstand gespeichert. Im Bereich „Gemeinsam“ kann ein gemeinsamer Zeitpunkt festgehalten werden.</p>';return;}if(trend){const defs=[['Reale Umsetzung','realitaet'],['Vergleich & Demütigung','demut'],['Emotionale Öffnung','emotion'],['Nachsorge','nachsorge']];trend.innerHTML=defs.map(([label,key])=>{const latest=h[0],av=Number(latest.er?.[key]||0),bv=Number(latest.sie?.[key]||0);return `<div class="pair-trend-card"><strong>${esc(label)}</strong>${this.trendSvg(h,key)}<div class="pair-trend-meta"><span>👨 ${av.toFixed(1)}</span><span>👩 ${bv.toFixed(1)}</span><span>Δ ${Math.abs(av-bv).toFixed(1)}</span></div></div>`}).join('');}root.innerHTML=h.map(x=>{const d=new Date(x.at),a=x.er||{},b=x.sie||{},gap=(k)=>Math.abs(Number(a[k]||0)-Number(b[k]||0));return `<div class="pair-history-row"><strong>${esc(Number.isNaN(d.getTime())?x.at:d.toLocaleString('de-DE',{dateStyle:'short',timeStyle:'short'}))}</strong><span>Real Δ ${gap('realitaet').toFixed(1)}</span><span>Demut Δ ${gap('demut').toFixed(1)}</span><span>Emotion Δ ${gap('emotion').toFixed(1)}</span><span>Nachs. Δ ${gap('nachsorge').toFixed(1)}</span></div>`}).join('');},
-        exportData(){const payload={exportedAt:new Date().toISOString(),type:'liebe-einsatz-paar-kompass-v3',data:this.data()},blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=`paar-kompass-${new Date().toISOString().slice(0,10)}.json`;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),500);},
+        renderDevelopment(){const root=document.getElementById('compassPairHistory'),trend=document.getElementById('compassTrendGrid');if(!root)return;const h=this.data().pairHistory||[];if(!h.length){if(trend)trend.innerHTML='';root.innerHTML='<p class="compass-disclaimer">Noch kein Paarstand gespeichert. Im Bereich „Gemeinsam“ kann ein gemeinsamer Zeitpunkt festgehalten werden.</p>';return;}if(trend){const defs=[['Real erleben','realitaet'],['Machtgefälle','demut'],['Emotionale Nähe','emotion'],['Nähe danach','nachsorge']];trend.innerHTML=defs.map(([label,key])=>{const latest=h[0],av=Number(latest.er?.[key]||0),bv=Number(latest.sie?.[key]||0);return `<div class="pair-trend-card"><strong>${esc(label)}</strong>${this.trendSvg(h,key)}<div class="pair-trend-meta"><span>👨 ${av.toFixed(1)}</span><span>👩 ${bv.toFixed(1)}</span><span>Δ ${Math.abs(av-bv).toFixed(1)}</span></div></div>`}).join('');}root.innerHTML=h.map(x=>{const d=new Date(x.at),a=x.er||{},b=x.sie||{},gap=(k)=>Math.abs(Number(a[k]||0)-Number(b[k]||0));return `<div class="pair-history-row"><strong>${esc(Number.isNaN(d.getTime())?x.at:d.toLocaleString('de-DE',{dateStyle:'short',timeStyle:'short'}))}</strong><span>Real Δ ${gap('realitaet').toFixed(1)}</span><span>Macht Δ ${gap('demut').toFixed(1)}</span><span>Emotional Δ ${gap('emotion').toFixed(1)}</span><span>Nähe danach Δ ${gap('nachsorge').toFixed(1)}</span></div>`}).join('');},
+        exportData(){const payload={exportedAt:new Date().toISOString(),type:'liebe-einsatz-paar-kompass-v4',data:this.data()},blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=`paar-kompass-${new Date().toISOString().slice(0,10)}.json`;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),500);},
         async reset(){const role=this.role();if(!confirm(`Aktuelle Antworten für „${this.roleLabels[role]}“ löschen? Gespeicherte Verlaufspunkte bleiben erhalten.`))return;this.profile(role).answers={};this.profile(role).updatedAt=new Date().toISOString();document.getElementById('compassResults').classList.remove('visible');this.renderProfile();await this.saveCloud(false);showToast('Aktuelle Antworten gelöscht.','success');},
         bind(){const root=document.getElementById('tab-kompass');if(!root)return;root.addEventListener('click',e=>{const vb=e.target.closest('[data-compass-view]');if(vb){this.setView(vb.dataset.compassView);return;}const b=e.target.closest('[data-compass-id]');if(b){const p=this.profile();p.answers[b.dataset.compassId]=Number(b.dataset.value);p.updatedAt=new Date().toISOString();this.scheduleSave();this.renderProfile();return;}});document.getElementById('compassEvaluate')?.addEventListener('click',()=>this.evaluate(true));document.getElementById('compassSnapshot')?.addEventListener('click',()=>this.snapshot());document.getElementById('compassPairSnapshot')?.addEventListener('click',()=>this.pairSnapshot());document.getElementById('compassExport')?.addEventListener('click',()=>this.exportData());document.getElementById('compassReset')?.addEventListener('click',()=>this.reset());},
         refreshFromCloud(){ensureCompassData(DataManager.lokaleDaten);this.render();const status=document.getElementById('compassCloudStatus');if(status)status.textContent='Cloud-Daten geladen ✓';},
