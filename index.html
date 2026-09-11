@@ -1292,102 +1292,150 @@
 
 
     /* ===== MEDIEN-ARCHIV ===== */
-    .media-intro {
-      display:flex;
-      align-items:flex-start;
-      justify-content:space-between;
-      gap:14px;
-      margin-bottom:18px;
-      padding:14px 15px;
-      border:1px solid color-mix(in srgb,var(--accent) 22%,var(--card-border));
-      border-radius:16px;
-      background:linear-gradient(135deg,var(--accent-light),var(--surface-soft));
-    }
-    .media-intro strong { display:block; margin-bottom:4px; color:var(--text); font-size:.88rem; }
-    .media-intro p { margin:0; color:var(--text-muted); font-size:.75rem; line-height:1.5; }
-    .media-intro .media-count { flex:0 0 auto; padding:6px 9px; border-radius:999px; background:var(--surface-solid); border:1px solid var(--card-border); color:var(--accent-strong); font-size:.68rem; font-weight:850; }
     .media-category-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px; }
-    .media-category { min-width:0; padding:16px; border:1px solid var(--card-border); border-radius:18px; background:var(--surface-soft); }
-    .media-category-head { display:flex; align-items:flex-start; justify-content:space-between; gap:10px; margin-bottom:12px; }
-    .media-category-head h3 { margin:0; color:var(--text); font-size:.96rem; }
-    .media-category-head p { margin:3px 0 0; color:var(--text-muted); font-size:.67rem; line-height:1.4; }
-    .media-category-icon { flex:0 0 auto; display:grid; place-items:center; width:38px; height:38px; border-radius:12px; background:var(--surface-solid); border:1px solid var(--card-border); font-size:1.15rem; }
-    .media-items { display:grid; gap:9px; }
-    .media-placeholder {
-      position:relative;
-      min-height:104px;
-      display:flex;
-      flex-direction:column;
-      align-items:center;
-      justify-content:center;
-      gap:6px;
-      padding:13px;
-      border:1px dashed color-mix(in srgb,var(--text-muted) 38%,var(--card-border));
-      border-radius:14px;
-      background:color-mix(in srgb,var(--surface-solid) 72%,transparent);
-      color:var(--text-muted);
-      text-align:center;
+    .media-category {
+      min-width:0;
+      min-height:82px;
+      padding:16px;
+      border:1px solid var(--card-border);
+      border-radius:18px;
+      background:var(--surface-soft);
     }
-    .media-placeholder .placeholder-icon { font-size:1.45rem; opacity:.8; }
-    .media-placeholder strong { color:var(--text); font-size:.76rem; }
-    .media-placeholder span { max-width:320px; font-size:.64rem; line-height:1.4; }
-    .media-placeholder code { padding:2px 5px; border-radius:6px; background:var(--bg); color:var(--accent-strong); font-family:var(--mono); font-size:.6rem; }
-    .media-tip { margin-top:14px; padding:11px 12px; border:1px solid var(--card-border); border-radius:13px; background:var(--surface-solid); color:var(--text-muted); font-size:.68rem; line-height:1.5; }
-    .media-tip strong { color:var(--text); }
+    .media-category-head { display:flex; align-items:center; justify-content:space-between; gap:10px; }
+    .media-category-head h3 { margin:0; color:var(--text); font-size:.96rem; }
+    .media-category-icon {
+      flex:0 0 auto;
+      display:grid;
+      place-items:center;
+      width:38px;
+      height:38px;
+      border-radius:12px;
+      background:var(--surface-solid);
+      border:1px solid var(--card-border);
+      font-size:1.15rem;
+    }
     .media-comics { grid-column:1 / -1; }
-    .media-comics .media-items { grid-template-columns:repeat(3,minmax(0,1fr)); }
 
-    /* Comic-Galerie */
-    .comic-gallery { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:11px; }
-    .comic-page { margin:0; min-width:0; }
-    .comic-open {
-      width:100%; padding:0; overflow:hidden; border:1px solid var(--card-border); border-radius:14px;
-      background:var(--surface-solid); cursor:zoom-in; box-shadow:var(--shadow-sm); text-align:left;
+    /* Comic: Im Archiv ist nur das Titelbild sichtbar. */
+    .comic-cover-wrap { display:flex; justify-content:center; padding-top:14px; }
+    .comic-cover-open {
+      width:min(100%,330px);
+      padding:0;
+      overflow:hidden;
+      border:1px solid var(--card-border);
+      border-radius:16px;
+      background:var(--surface-solid);
+      color:var(--text);
+      cursor:pointer;
+      box-shadow:var(--shadow-sm);
+      text-align:left;
       transition:transform var(--transition), box-shadow var(--transition), border-color var(--transition);
     }
-    .comic-open:hover { transform:translateY(-2px); border-color:color-mix(in srgb,var(--accent) 38%,var(--card-border)); box-shadow:var(--shadow); }
-    .comic-open img { display:block; width:100%; aspect-ratio:3 / 4; object-fit:cover; object-position:top; background:var(--bg); }
-    .comic-caption { display:flex; justify-content:space-between; gap:8px; padding:8px 9px; color:var(--text-muted); font-size:.65rem; font-weight:750; }
-    .comic-caption strong { color:var(--text); font-size:.68rem; }
+    .comic-cover-open:hover {
+      transform:translateY(-2px);
+      border-color:color-mix(in srgb,var(--accent) 38%,var(--card-border));
+      box-shadow:var(--shadow);
+    }
+    .comic-cover-open img {
+      display:block;
+      width:100%;
+      height:auto;
+      aspect-ratio:3 / 4;
+      object-fit:cover;
+      object-position:top;
+      background:var(--bg);
+    }
+    .comic-cover-caption {
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      padding:10px 12px;
+      color:var(--text-muted);
+      font-size:.72rem;
+      font-weight:800;
+    }
+    .comic-cover-caption strong { color:var(--text); }
 
-    /* Vollbild-Zoom für Bilder */
+    /* Vollbild-Comic / Bild-Zoom */
     .media-lightbox {
-      position:fixed; inset:0; z-index:100000; display:none; background:rgba(8,7,8,.92);
-      backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
+      position:fixed;
+      inset:0;
+      z-index:100000;
+      display:none;
+      background:rgba(8,7,8,.92);
+      backdrop-filter:blur(10px);
+      -webkit-backdrop-filter:blur(10px);
     }
     .media-lightbox.active { display:flex; flex-direction:column; animation:overlayIn 160ms ease both; }
     .media-lightbox-toolbar {
-      flex:0 0 auto; display:flex; align-items:center; justify-content:space-between; gap:10px;
-      padding:10px max(12px,env(safe-area-inset-right)) 10px max(12px,env(safe-area-inset-left)); color:#fff;
-      background:rgba(0,0,0,.28); border-bottom:1px solid rgba(255,255,255,.12);
+      flex:0 0 auto;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      padding:10px max(12px,env(safe-area-inset-right)) 10px max(12px,env(safe-area-inset-left));
+      color:#fff;
+      background:rgba(0,0,0,.28);
+      border-bottom:1px solid rgba(255,255,255,.12);
     }
-    .media-lightbox-title { min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-size:.78rem; font-weight:800; }
+    .media-lightbox-title {
+      min-width:0;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      white-space:nowrap;
+      font-size:.78rem;
+      font-weight:800;
+    }
     .media-lightbox-controls { display:flex; align-items:center; gap:7px; }
     .media-lightbox-controls button {
-      min-width:40px; min-height:40px; padding:7px 10px; border:1px solid rgba(255,255,255,.18); border-radius:11px;
-      background:rgba(255,255,255,.10); color:#fff; cursor:pointer; font-weight:850;
+      min-width:40px;
+      min-height:40px;
+      padding:7px 10px;
+      border:1px solid rgba(255,255,255,.18);
+      border-radius:11px;
+      background:rgba(255,255,255,.10);
+      color:#fff;
+      cursor:pointer;
+      font-weight:850;
     }
-    .media-lightbox-controls button:hover { background:rgba(255,255,255,.18); }
-    .media-lightbox-stage { flex:1 1 auto; overflow:auto; display:grid; place-items:center; padding:18px; overscroll-behavior:contain; }
+    .media-lightbox-controls button:hover:not(:disabled) { background:rgba(255,255,255,.18); }
+    .media-lightbox-controls button:disabled { opacity:.3; cursor:default; }
+    .media-lightbox-stage {
+      flex:1 1 auto;
+      overflow:auto;
+      display:grid;
+      place-items:center;
+      padding:18px;
+      overscroll-behavior:contain;
+    }
     .media-lightbox-image {
-      display:block; max-width:94vw; max-height:calc(100vh - 90px); width:auto; height:auto; border-radius:10px;
-      box-shadow:0 24px 80px rgba(0,0,0,.55); transform-origin:center center; transition:transform 120ms ease;
-      user-select:none; -webkit-user-drag:none; cursor:zoom-in;
+      display:block;
+      max-width:94vw;
+      max-height:calc(100vh - 90px);
+      width:auto;
+      height:auto;
+      border-radius:10px;
+      box-shadow:0 24px 80px rgba(0,0,0,.55);
+      transform-origin:center center;
+      transition:transform 120ms ease;
+      user-select:none;
+      -webkit-user-drag:none;
+      cursor:zoom-in;
     }
     .media-lightbox-image.zoomed { max-width:none; max-height:none; cursor:zoom-out; }
-
 
     @media (max-width:760px) {
       .media-category-grid { grid-template-columns:1fr; }
       .media-comics { grid-column:auto; }
-      .media-comics .media-items { grid-template-columns:1fr; }
-      .comic-gallery { grid-template-columns:repeat(2,minmax(0,1fr)); }
-      .media-intro { flex-direction:column; }
+      .media-lightbox-toolbar { align-items:flex-start; }
+      .media-lightbox-controls { flex-wrap:wrap; justify-content:flex-end; }
     }
     @media (max-width:480px) {
-      .comic-gallery { grid-template-columns:1fr; }
       .media-lightbox-stage { padding:8px; }
-      .media-lightbox-controls button { min-width:37px; min-height:37px; padding:6px 8px; }
+      .media-lightbox-controls { gap:5px; }
+      .media-lightbox-controls button { min-width:35px; min-height:35px; padding:5px 7px; font-size:.76rem; }
+      .media-lightbox-title { padding-top:8px; font-size:.7rem; }
     }
 
   </style>
@@ -1660,266 +1708,50 @@
     <!-- MEDIEN-ARCHIV -->
     <section id="tab-medien" class="tab-content card" style="display:none;" role="tabpanel" aria-labelledby="tabBtn-medien">
       <h2><span>🖼️ Medien-Archiv</span><span class="tag">Sammlung</span></h2>
-      <p class="sub">Bilder, Videos, Links und GIFs bleiben vorbereitet; die Comic-Kategorie lädt jetzt deine 27 GitHub-Seiten in der richtigen Reihenfolge.</p>
-
-      <div class="media-intro">
-        <div>
-          <strong>Deine gemeinsame Mediensammlung</strong>
-          <p>Nutze die Kategorien für Erinnerungen, Lieblingsclips, externe Seiten, animierte GIFs oder eigene Comic-Seiten.</p>
-        </div>
-        <span class="media-count">5 Kategorien</span>
-      </div>
 
       <div class="media-category-grid">
         <article class="media-category">
           <div class="media-category-head">
-            <div><h3>🖼️ Bilder</h3><p>Fotos, Screenshots und andere Bilddateien.</p></div>
+            <h3>🖼️ Bilder</h3>
             <div class="media-category-icon" aria-hidden="true">📷</div>
           </div>
-          <div class="media-items">
-            <div class="media-placeholder">
-              <span class="placeholder-icon">＋</span>
-              <strong>Bild-Platzhalter</strong>
-              <span>Später z. B. durch <code>&lt;img src=&quot;bilder/dein-bild.jpg&quot;&gt;</code> ersetzen.</span>
-            </div>
-            <div class="media-placeholder">
-              <span class="placeholder-icon">＋</span>
-              <strong>Weiteres Bild</strong>
-              <span>Diesen Block kannst du beliebig kopieren.</span>
-            </div>
-          </div>
         </article>
 
         <article class="media-category">
           <div class="media-category-head">
-            <div><h3>🎬 Videos</h3><p>Lokale Videos oder eingebettete Clips.</p></div>
+            <h3>🎬 Videos</h3>
             <div class="media-category-icon" aria-hidden="true">▶️</div>
           </div>
-          <div class="media-items">
-            <div class="media-placeholder">
-              <span class="placeholder-icon">＋</span>
-              <strong>Video-Platzhalter</strong>
-              <span>Für lokale Dateien eignet sich später ein <code>&lt;video controls&gt;</code>-Element.</span>
-            </div>
-            <div class="media-placeholder">
-              <span class="placeholder-icon">＋</span>
-              <strong>Externer Clip</strong>
-              <span>Hier kann später z. B. eine eingebettete Video-URL stehen.</span>
-            </div>
-          </div>
         </article>
 
         <article class="media-category">
           <div class="media-category-head">
-            <div><h3>🔗 Links</h3><p>Webseiten, Beiträge und andere externe Fundstücke.</p></div>
+            <h3>🔗 Links</h3>
             <div class="media-category-icon" aria-hidden="true">🌐</div>
           </div>
-          <div class="media-items">
-            <div class="media-placeholder">
-              <span class="placeholder-icon">＋</span>
-              <strong>Link-Platzhalter</strong>
-              <span>Später z. B. als <code>&lt;a href=&quot;https://…&quot;&gt;</code> einfügen.</span>
-            </div>
-            <div class="media-placeholder">
-              <span class="placeholder-icon">＋</span>
-              <strong>Weiterer Link</strong>
-              <span>Für Lieblingsseiten, Artikel oder Social-Media-Links.</span>
-            </div>
-          </div>
         </article>
 
         <article class="media-category">
           <div class="media-category-head">
-            <div><h3>✨ GIFs</h3><p>Animierte Bilder und Reaktions-GIFs.</p></div>
+            <h3>✨ GIFs</h3>
             <div class="media-category-icon" aria-hidden="true">💫</div>
-          </div>
-          <div class="media-items">
-            <div class="media-placeholder">
-              <span class="placeholder-icon">＋</span>
-              <strong>GIF-Platzhalter</strong>
-              <span>Eine GIF-Datei kann später ganz normal über <code>&lt;img src=&quot;gifs/datei.gif&quot;&gt;</code> eingebunden werden.</span>
-            </div>
-            <div class="media-placeholder">
-              <span class="placeholder-icon">＋</span>
-              <strong>Weiteres GIF</strong>
-              <span>Platz für lustige, romantische oder persönliche Animationen.</span>
-            </div>
           </div>
         </article>
 
         <article class="media-category media-comics">
           <div class="media-category-head">
-            <div><h3>💬 Comics</h3><p>27 Seiten · Klick auf eine Seite öffnet die Großansicht. Dort kannst du zusätzlich hinein- und herauszoomen.</p></div>
+            <h3>💬 Comics</h3>
             <div class="media-category-icon" aria-hidden="true">📚</div>
           </div>
-          <div class="comic-gallery">
-            <figure class="comic-page">
-              <button class="comic-open zoomable-media" type="button" data-full-src="comics/9Cloud.us_0000-001%20C01P001.jpg" data-title="Comic · Seite 01" aria-label="Comic Seite 1 groß anzeigen">
-                <img src="comics/9Cloud.us_0000-001%20C01P001.jpg" alt="Comic Seite 1" loading="lazy">
-                <span class="comic-caption"><strong>Seite 01</strong><span>🔍 Vergrößern</span></span>
-              </button>
-            </figure>
-            <figure class="comic-page">
-              <button class="comic-open zoomable-media" type="button" data-full-src="comics/9Cloud.us_0001-002%20C01P002.jpg" data-title="Comic · Seite 02" aria-label="Comic Seite 2 groß anzeigen">
-                <img src="comics/9Cloud.us_0001-002%20C01P002.jpg" alt="Comic Seite 2" loading="lazy">
-                <span class="comic-caption"><strong>Seite 02</strong><span>🔍 Vergrößern</span></span>
-              </button>
-            </figure>
-            <figure class="comic-page">
-              <button class="comic-open zoomable-media" type="button" data-full-src="comics/9Cloud.us_0002-003%20C01P003.jpg" data-title="Comic · Seite 03" aria-label="Comic Seite 3 groß anzeigen">
-                <img src="comics/9Cloud.us_0002-003%20C01P003.jpg" alt="Comic Seite 3" loading="lazy">
-                <span class="comic-caption"><strong>Seite 03</strong><span>🔍 Vergrößern</span></span>
-              </button>
-            </figure>
-            <figure class="comic-page">
-              <button class="comic-open zoomable-media" type="button" data-full-src="comics/9Cloud.us_0003-004%20C01P004.jpg" data-title="Comic · Seite 04" aria-label="Comic Seite 4 groß anzeigen">
-                <img src="comics/9Cloud.us_0003-004%20C01P004.jpg" alt="Comic Seite 4" loading="lazy">
-                <span class="comic-caption"><strong>Seite 04</strong><span>🔍 Vergrößern</span></span>
-              </button>
-            </figure>
-            <figure class="comic-page">
-              <button class="comic-open zoomable-media" type="button" data-full-src="comics/9Cloud.us_0004-005%20C01P005.jpg" data-title="Comic · Seite 05" aria-label="Comic Seite 5 groß anzeigen">
-                <img src="comics/9Cloud.us_0004-005%20C01P005.jpg" alt="Comic Seite 5" loading="lazy">
-                <span class="comic-caption"><strong>Seite 05</strong><span>🔍 Vergrößern</span></span>
-              </button>
-            </figure>
-            <figure class="comic-page">
-              <button class="comic-open zoomable-media" type="button" data-full-src="comics/9Cloud.us_0005-006%20C01P006.jpg" data-title="Comic · Seite 06" aria-label="Comic Seite 6 groß anzeigen">
-                <img src="comics/9Cloud.us_0005-006%20C01P006.jpg" alt="Comic Seite 6" loading="lazy">
-                <span class="comic-caption"><strong>Seite 06</strong><span>🔍 Vergrößern</span></span>
-              </button>
-            </figure>
-            <figure class="comic-page">
-              <button class="comic-open zoomable-media" type="button" data-full-src="comics/9Cloud.us_0006-007%20C01P007.jpg" data-title="Comic · Seite 07" aria-label="Comic Seite 7 groß anzeigen">
-                <img src="comics/9Cloud.us_0006-007%20C01P007.jpg" alt="Comic Seite 7" loading="lazy">
-                <span class="comic-caption"><strong>Seite 07</strong><span>🔍 Vergrößern</span></span>
-              </button>
-            </figure>
-            <figure class="comic-page">
-              <button class="comic-open zoomable-media" type="button" data-full-src="comics/9Cloud.us_0007-008%20C01P008.jpg" data-title="Comic · Seite 08" aria-label="Comic Seite 8 groß anzeigen">
-                <img src="comics/9Cloud.us_0007-008%20C01P008.jpg" alt="Comic Seite 8" loading="lazy">
-                <span class="comic-caption"><strong>Seite 08</strong><span>🔍 Vergrößern</span></span>
-              </button>
-            </figure>
-            <figure class="comic-page">
-              <button class="comic-open zoomable-media" type="button" data-full-src="comics/9Cloud.us_0008-009%20C01P009.jpg" data-title="Comic · Seite 09" aria-label="Comic Seite 9 groß anzeigen">
-                <img src="comics/9Cloud.us_0008-009%20C01P009.jpg" alt="Comic Seite 9" loading="lazy">
-                <span class="comic-caption"><strong>Seite 09</strong><span>🔍 Vergrößern</span></span>
-              </button>
-            </figure>
-            <figure class="comic-page">
-              <button class="comic-open zoomable-media" type="button" data-full-src="comics/9Cloud.us_0009-010%20C01P010.jpg" data-title="Comic · Seite 10" aria-label="Comic Seite 10 groß anzeigen">
-                <img src="comics/9Cloud.us_0009-010%20C01P010.jpg" alt="Comic Seite 10" loading="lazy">
-                <span class="comic-caption"><strong>Seite 10</strong><span>🔍 Vergrößern</span></span>
-              </button>
-            </figure>
-            <figure class="comic-page">
-              <button class="comic-open zoomable-media" type="button" data-full-src="comics/9Cloud.us_0010-011%20C01P011.jpg" data-title="Comic · Seite 11" aria-label="Comic Seite 11 groß anzeigen">
-                <img src="comics/9Cloud.us_0010-011%20C01P011.jpg" alt="Comic Seite 11" loading="lazy">
-                <span class="comic-caption"><strong>Seite 11</strong><span>🔍 Vergrößern</span></span>
-              </button>
-            </figure>
-            <figure class="comic-page">
-              <button class="comic-open zoomable-media" type="button" data-full-src="comics/9Cloud.us_0011-012%20C01P012.jpg" data-title="Comic · Seite 12" aria-label="Comic Seite 12 groß anzeigen">
-                <img src="comics/9Cloud.us_0011-012%20C01P012.jpg" alt="Comic Seite 12" loading="lazy">
-                <span class="comic-caption"><strong>Seite 12</strong><span>🔍 Vergrößern</span></span>
-              </button>
-            </figure>
-            <figure class="comic-page">
-              <button class="comic-open zoomable-media" type="button" data-full-src="comics/9Cloud.us_0012-013%20C01P013.jpg" data-title="Comic · Seite 13" aria-label="Comic Seite 13 groß anzeigen">
-                <img src="comics/9Cloud.us_0012-013%20C01P013.jpg" alt="Comic Seite 13" loading="lazy">
-                <span class="comic-caption"><strong>Seite 13</strong><span>🔍 Vergrößern</span></span>
-              </button>
-            </figure>
-            <figure class="comic-page">
-              <button class="comic-open zoomable-media" type="button" data-full-src="comics/9Cloud.us_0013-014%20C01P014.jpg" data-title="Comic · Seite 14" aria-label="Comic Seite 14 groß anzeigen">
-                <img src="comics/9Cloud.us_0013-014%20C01P014.jpg" alt="Comic Seite 14" loading="lazy">
-                <span class="comic-caption"><strong>Seite 14</strong><span>🔍 Vergrößern</span></span>
-              </button>
-            </figure>
-            <figure class="comic-page">
-              <button class="comic-open zoomable-media" type="button" data-full-src="comics/9Cloud.us_0014-015%20C01P015.jpg" data-title="Comic · Seite 15" aria-label="Comic Seite 15 groß anzeigen">
-                <img src="comics/9Cloud.us_0014-015%20C01P015.jpg" alt="Comic Seite 15" loading="lazy">
-                <span class="comic-caption"><strong>Seite 15</strong><span>🔍 Vergrößern</span></span>
-              </button>
-            </figure>
-            <figure class="comic-page">
-              <button class="comic-open zoomable-media" type="button" data-full-src="comics/9Cloud.us_0015-016%20C01P016.jpg" data-title="Comic · Seite 16" aria-label="Comic Seite 16 groß anzeigen">
-                <img src="comics/9Cloud.us_0015-016%20C01P016.jpg" alt="Comic Seite 16" loading="lazy">
-                <span class="comic-caption"><strong>Seite 16</strong><span>🔍 Vergrößern</span></span>
-              </button>
-            </figure>
-            <figure class="comic-page">
-              <button class="comic-open zoomable-media" type="button" data-full-src="comics/9Cloud.us_0016-017%20C01P017.jpg" data-title="Comic · Seite 17" aria-label="Comic Seite 17 groß anzeigen">
-                <img src="comics/9Cloud.us_0016-017%20C01P017.jpg" alt="Comic Seite 17" loading="lazy">
-                <span class="comic-caption"><strong>Seite 17</strong><span>🔍 Vergrößern</span></span>
-              </button>
-            </figure>
-            <figure class="comic-page">
-              <button class="comic-open zoomable-media" type="button" data-full-src="comics/9Cloud.us_0017-018%20C01P018.jpg" data-title="Comic · Seite 18" aria-label="Comic Seite 18 groß anzeigen">
-                <img src="comics/9Cloud.us_0017-018%20C01P018.jpg" alt="Comic Seite 18" loading="lazy">
-                <span class="comic-caption"><strong>Seite 18</strong><span>🔍 Vergrößern</span></span>
-              </button>
-            </figure>
-            <figure class="comic-page">
-              <button class="comic-open zoomable-media" type="button" data-full-src="comics/9Cloud.us_0018-019%20C01P019.jpg" data-title="Comic · Seite 19" aria-label="Comic Seite 19 groß anzeigen">
-                <img src="comics/9Cloud.us_0018-019%20C01P019.jpg" alt="Comic Seite 19" loading="lazy">
-                <span class="comic-caption"><strong>Seite 19</strong><span>🔍 Vergrößern</span></span>
-              </button>
-            </figure>
-            <figure class="comic-page">
-              <button class="comic-open zoomable-media" type="button" data-full-src="comics/9Cloud.us_0019-020%20C01P020.jpg" data-title="Comic · Seite 20" aria-label="Comic Seite 20 groß anzeigen">
-                <img src="comics/9Cloud.us_0019-020%20C01P020.jpg" alt="Comic Seite 20" loading="lazy">
-                <span class="comic-caption"><strong>Seite 20</strong><span>🔍 Vergrößern</span></span>
-              </button>
-            </figure>
-            <figure class="comic-page">
-              <button class="comic-open zoomable-media" type="button" data-full-src="comics/9Cloud.us_0020-021%20C01P021.jpg" data-title="Comic · Seite 21" aria-label="Comic Seite 21 groß anzeigen">
-                <img src="comics/9Cloud.us_0020-021%20C01P021.jpg" alt="Comic Seite 21" loading="lazy">
-                <span class="comic-caption"><strong>Seite 21</strong><span>🔍 Vergrößern</span></span>
-              </button>
-            </figure>
-            <figure class="comic-page">
-              <button class="comic-open zoomable-media" type="button" data-full-src="comics/9Cloud.us_0021-022%20C01P022.jpg" data-title="Comic · Seite 22" aria-label="Comic Seite 22 groß anzeigen">
-                <img src="comics/9Cloud.us_0021-022%20C01P022.jpg" alt="Comic Seite 22" loading="lazy">
-                <span class="comic-caption"><strong>Seite 22</strong><span>🔍 Vergrößern</span></span>
-              </button>
-            </figure>
-            <figure class="comic-page">
-              <button class="comic-open zoomable-media" type="button" data-full-src="comics/9Cloud.us_0022-023%20C01P023.jpg" data-title="Comic · Seite 23" aria-label="Comic Seite 23 groß anzeigen">
-                <img src="comics/9Cloud.us_0022-023%20C01P023.jpg" alt="Comic Seite 23" loading="lazy">
-                <span class="comic-caption"><strong>Seite 23</strong><span>🔍 Vergrößern</span></span>
-              </button>
-            </figure>
-            <figure class="comic-page">
-              <button class="comic-open zoomable-media" type="button" data-full-src="comics/9Cloud.us_0023-024%20C01P024.jpg" data-title="Comic · Seite 24" aria-label="Comic Seite 24 groß anzeigen">
-                <img src="comics/9Cloud.us_0023-024%20C01P024.jpg" alt="Comic Seite 24" loading="lazy">
-                <span class="comic-caption"><strong>Seite 24</strong><span>🔍 Vergrößern</span></span>
-              </button>
-            </figure>
-            <figure class="comic-page">
-              <button class="comic-open zoomable-media" type="button" data-full-src="comics/9Cloud.us_0024-025%20C01P025.jpg" data-title="Comic · Seite 25" aria-label="Comic Seite 25 groß anzeigen">
-                <img src="comics/9Cloud.us_0024-025%20C01P025.jpg" alt="Comic Seite 25" loading="lazy">
-                <span class="comic-caption"><strong>Seite 25</strong><span>🔍 Vergrößern</span></span>
-              </button>
-            </figure>
-            <figure class="comic-page">
-              <button class="comic-open zoomable-media" type="button" data-full-src="comics/9Cloud.us_0025-026%20C01P026.jpg" data-title="Comic · Seite 26" aria-label="Comic Seite 26 groß anzeigen">
-                <img src="comics/9Cloud.us_0025-026%20C01P026.jpg" alt="Comic Seite 26" loading="lazy">
-                <span class="comic-caption"><strong>Seite 26</strong><span>🔍 Vergrößern</span></span>
-              </button>
-            </figure>
-            <figure class="comic-page">
-              <button class="comic-open zoomable-media" type="button" data-full-src="comics/9Cloud.us_0026-027%20C01P027.jpg" data-title="Comic · Seite 27" aria-label="Comic Seite 27 groß anzeigen">
-                <img src="comics/9Cloud.us_0026-027%20C01P027.jpg" alt="Comic Seite 27" loading="lazy">
-                <span class="comic-caption"><strong>Seite 27</strong><span>🔍 Vergrößern</span></span>
-              </button>
-            </figure>
+
+          <div class="comic-cover-wrap">
+            <button class="comic-cover-open" id="comicCoverOpen" type="button" aria-label="Comic öffnen">
+              <img src="comics/9Cloud.us_0000-001%20C01P001.jpg" alt="Comic Titelbild" loading="lazy">
+              <span class="comic-cover-caption"><strong>Comic öffnen</strong><span>📖</span></span>
+            </button>
           </div>
         </article>
       </div>
-
-      <div class="media-tip"><strong>Comics:</strong> Die 27 Seiten werden direkt aus dem GitHub-Ordner <code>comics/</code> geladen. Ein Klick auf eine Seite öffnet die Großansicht; mit <strong>＋</strong>, <strong>−</strong> oder Doppelklick kannst du zoomen.</div>
     </section>
 
     <!-- EINSTELLUNGEN -->
@@ -1953,6 +1785,8 @@
     <div class="media-lightbox-toolbar">
       <div id="mediaLightboxTitle" class="media-lightbox-title">Bild</div>
       <div class="media-lightbox-controls">
+        <button type="button" id="mediaPrevPage" title="Vorherige Seite" aria-label="Vorherige Comic-Seite">‹</button>
+        <button type="button" id="mediaNextPage" title="Nächste Seite" aria-label="Nächste Comic-Seite">›</button>
         <button type="button" id="mediaZoomOut" title="Herauszoomen" aria-label="Herauszoomen">−</button>
         <button type="button" id="mediaZoomReset" title="Zoom zurücksetzen" aria-label="Zoom zurücksetzen">100%</button>
         <button type="button" id="mediaZoomIn" title="Hineinzoomen" aria-label="Hineinzoomen">＋</button>
@@ -4142,9 +3976,46 @@
       const btnOut = document.getElementById('mediaZoomOut');
       const btnReset = document.getElementById('mediaZoomReset');
       const btnClose = document.getElementById('mediaLightboxClose');
+      const btnPrev = document.getElementById('mediaPrevPage');
+      const btnNext = document.getElementById('mediaNextPage');
+      const comicCover = document.getElementById('comicCoverOpen');
       if (!box || !img) return;
 
+      const comicPages = [
+        'comics/9Cloud.us_0000-001%20C01P001.jpg',
+        'comics/9Cloud.us_0001-002%20C01P002.jpg',
+        'comics/9Cloud.us_0002-003%20C01P003.jpg',
+        'comics/9Cloud.us_0003-004%20C01P004.jpg',
+        'comics/9Cloud.us_0004-005%20C01P005.jpg',
+        'comics/9Cloud.us_0005-006%20C01P006.jpg',
+        'comics/9Cloud.us_0006-007%20C01P007.jpg',
+        'comics/9Cloud.us_0007-008%20C01P008.jpg',
+        'comics/9Cloud.us_0008-009%20C01P009.jpg',
+        'comics/9Cloud.us_0009-010%20C01P010.jpg',
+        'comics/9Cloud.us_0010-011%20C01P011.jpg',
+        'comics/9Cloud.us_0011-012%20C01P012.jpg',
+        'comics/9Cloud.us_0012-013%20C01P013.jpg',
+        'comics/9Cloud.us_0013-014%20C01P014.jpg',
+        'comics/9Cloud.us_0014-015%20C01P015.jpg',
+        'comics/9Cloud.us_0015-016%20C01P016.jpg',
+        'comics/9Cloud.us_0016-017%20C01P017.jpg',
+        'comics/9Cloud.us_0017-018%20C01P018.jpg',
+        'comics/9Cloud.us_0018-019%20C01P019.jpg',
+        'comics/9Cloud.us_0019-020%20C01P020.jpg',
+        'comics/9Cloud.us_0020-021%20C01P021.jpg',
+        'comics/9Cloud.us_0021-022%20C01P022.jpg',
+        'comics/9Cloud.us_0022-023%20C01P023.jpg',
+        'comics/9Cloud.us_0023-024%20C01P024.jpg',
+        'comics/9Cloud.us_0024-025%20C01P025.jpg',
+        'comics/9Cloud.us_0025-026%20C01P026.jpg',
+        'comics/9Cloud.us_0026-027%20C01P027.jpg'
+      ];
+
       let scale = 1;
+      let comicIndex = -1;
+      let isComic = false;
+      let touchStartX = null;
+
       const clamp = value => Math.min(4, Math.max(1, value));
       const applyZoom = () => {
         scale = clamp(scale);
@@ -4152,12 +4023,41 @@
         img.classList.toggle('zoomed', scale > 1.001);
         btnReset.textContent = `${Math.round(scale * 100)}%`;
       };
-      const resetZoom = () => { scale = 1; applyZoom(); stage.scrollTop = 0; stage.scrollLeft = 0; };
-      const open = trigger => {
+      const resetZoom = () => {
+        scale = 1;
+        applyZoom();
+        stage.scrollTop = 0;
+        stage.scrollLeft = 0;
+      };
+      const updateComicNav = () => {
+        btnPrev.style.display = isComic ? '' : 'none';
+        btnNext.style.display = isComic ? '' : 'none';
+        btnPrev.disabled = !isComic || comicIndex <= 0;
+        btnNext.disabled = !isComic || comicIndex >= comicPages.length - 1;
+      };
+      const showComicPage = index => {
+        comicIndex = Math.max(0, Math.min(comicPages.length - 1, index));
+        isComic = true;
+        img.src = comicPages[comicIndex];
+        img.alt = `Comic Seite ${comicIndex + 1}`;
+        title.textContent = `Comic · Seite ${String(comicIndex + 1).padStart(2, '0')} / ${comicPages.length}`;
+        resetZoom();
+        updateComicNav();
+      };
+      const openComic = (index = 0) => {
+        showComicPage(index);
+        box.classList.add('active');
+        document.body.style.overflow = 'hidden';
+        btnClose.focus();
+      };
+      const openImage = trigger => {
+        isComic = false;
+        comicIndex = -1;
         img.src = trigger.dataset.fullSrc || trigger.querySelector('img')?.src || '';
         img.alt = trigger.querySelector('img')?.alt || 'Großansicht';
         title.textContent = trigger.dataset.title || img.alt || 'Bild';
         resetZoom();
+        updateComicNav();
         box.classList.add('active');
         document.body.style.overflow = 'hidden';
         btnClose.focus();
@@ -4166,13 +4066,19 @@
         box.classList.remove('active');
         document.body.style.overflow = '';
         img.removeAttribute('src');
+        isComic = false;
+        comicIndex = -1;
         resetZoom();
+        updateComicNav();
       };
 
+      comicCover?.addEventListener('click', () => openComic(0));
       document.addEventListener('click', event => {
         const trigger = event.target.closest('.zoomable-media');
-        if (trigger) { event.preventDefault(); open(trigger); }
+        if (trigger) { event.preventDefault(); openImage(trigger); }
       });
+      btnPrev.addEventListener('click', () => { if (isComic && comicIndex > 0) showComicPage(comicIndex - 1); });
+      btnNext.addEventListener('click', () => { if (isComic && comicIndex < comicPages.length - 1) showComicPage(comicIndex + 1); });
       btnIn.addEventListener('click', () => { scale += .35; applyZoom(); });
       btnOut.addEventListener('click', () => { scale -= .35; applyZoom(); });
       btnReset.addEventListener('click', resetZoom);
@@ -4186,13 +4092,29 @@
           applyZoom();
         }
       }, { passive:false });
+      stage.addEventListener('touchstart', event => {
+        if (!isComic || event.touches.length !== 1) return;
+        touchStartX = event.touches[0].clientX;
+      }, { passive:true });
+      stage.addEventListener('touchend', event => {
+        if (!isComic || touchStartX === null || scale > 1 || !event.changedTouches.length) return;
+        const dx = event.changedTouches[0].clientX - touchStartX;
+        touchStartX = null;
+        if (Math.abs(dx) < 55) return;
+        if (dx < 0 && comicIndex < comicPages.length - 1) showComicPage(comicIndex + 1);
+        if (dx > 0 && comicIndex > 0) showComicPage(comicIndex - 1);
+      }, { passive:true });
       box.addEventListener('click', event => { if (event.target === box || event.target === stage) close(); });
       document.addEventListener('keydown', event => {
         if (!box.classList.contains('active')) return;
         if (event.key === 'Escape') close();
         if (event.key === '+') { scale += .35; applyZoom(); }
         if (event.key === '-') { scale -= .35; applyZoom(); }
+        if (isComic && event.key === 'ArrowLeft' && comicIndex > 0) showComicPage(comicIndex - 1);
+        if (isComic && event.key === 'ArrowRight' && comicIndex < comicPages.length - 1) showComicPage(comicIndex + 1);
       });
+
+      updateComicNav();
     })();
   </script>
 
