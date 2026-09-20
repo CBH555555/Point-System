@@ -1292,6 +1292,25 @@
 
 
     /* ===== MEDIEN-ARCHIV ===== */
+    /* ===== EINHEITLICHE MEHRFACH-KOMMENTARE ===== */
+    .comment-thread {
+      margin:12px 12px 0;
+      padding:10px 11px;
+      border:1px solid color-mix(in srgb,var(--text-muted) 18%,var(--card-border));
+      border-radius:12px;
+      background:var(--surface-soft);
+    }
+    .story-chapter > .comment-thread { margin:15px 0 0; }
+    .entry-body > .comment-thread, .tagebuch-body > .comment-thread { margin:12px 0 0; }
+    .comment-thread-head { display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:6px; color:var(--text-muted); font-size:.66rem; font-weight:850; }
+    .comment-thread-list { display:grid; gap:6px; }
+    .comment-row { display:grid; grid-template-columns:auto minmax(0,1fr) auto; gap:8px; align-items:start; padding:7px 8px; border:1px solid var(--card-border); border-radius:10px; background:var(--surface-solid); }
+    .comment-time { color:var(--text-muted); font-size:.59rem; line-height:1.5; white-space:nowrap; opacity:.78; }
+    .comment-text { min-width:0; color:var(--text); font-size:.74rem; line-height:1.5; white-space:pre-wrap; overflow-wrap:anywhere; }
+    .comment-delete { width:27px; height:27px; padding:0 !important; min-height:0 !important; border:1px solid var(--card-border) !important; border-radius:8px !important; background:var(--surface-soft) !important; color:var(--text-muted) !important; cursor:pointer; font-size:.68rem !important; line-height:1 !important; }
+    .comment-delete:hover { border-color:color-mix(in srgb,var(--danger) 38%,var(--card-border)) !important; background:color-mix(in srgb,var(--danger) 9%,var(--surface-solid)) !important; color:var(--danger) !important; }
+    @media (max-width:480px) { .comment-row { grid-template-columns:1fr auto; } .comment-time { grid-column:1 / -1; } }
+
     .media-category-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px; }
     .media-category {
       min-width:0;
@@ -1879,7 +1898,6 @@
           <h3>Deine Mediensammlung</h3>
           <p>Wähle einen Medientyp, lade Dateien hoch oder hinterlege eine Web-Adresse. Alles wird mit deinen übrigen Daten gespeichert.</p>
         </div>
-        <button type="button" id="mediaNewBtn">＋ Medium hinzufügen</button>
       </div>
 
       <div id="mediaEditor" class="media-editor hidden">
@@ -2338,6 +2356,17 @@
 
 
 
+      function ensureKommentare(item) {
+        if (!item || typeof item !== 'object') return [];
+        if (!Array.isArray(item.kommentare)) item.kommentare = [];
+        item.kommentare = item.kommentare.map(k => {
+          if (typeof k === 'string') return { text: k, zeit: '' };
+          if (!k || typeof k !== 'object') return null;
+          return { text: String(k.text || '').trim(), zeit: String(k.zeit || '') };
+        }).filter(k => k && k.text);
+        return item.kommentare;
+      }
+
       function ensureGeschichtenData(daten) {
         if (!daten || typeof daten !== 'object') return [];
         if (!Array.isArray(daten.geschichten)) daten.geschichten = [];
@@ -2356,6 +2385,7 @@
             if (typeof link === 'string') return { label: link, url: link };
             return { label: String(link?.label || link?.url || ''), url: String(link?.url || '') };
           }).filter(link => link.url);
+          ensureKommentare(item);
           if (!item.createdAt) item.createdAt = new Date().toISOString();
           return item;
         });
@@ -2375,6 +2405,7 @@
           item.url = String(item.url || '');
           if (!Array.isArray(item.files)) item.files = item.file ? [item.file] : (item.image ? [item.image] : []);
           item.files = item.files.filter(x => typeof x === 'string' && x);
+          ensureKommentare(item);
           if (!item.createdAt) item.createdAt = new Date().toISOString();
           return item;
         });
@@ -2489,7 +2520,7 @@
               ['aufgaben', 'einloesungen', 'tagebuch'].forEach(key => {
                 (this.lokaleDaten[key] || []).forEach(e => {
                   if (!e.image) e.image = '';
-                  if (!e.kommentare) e.kommentare = [];
+                  ensureKommentare(e);
                 });
               });
               const savedPin = localStorage.getItem('pin');
@@ -2637,6 +2668,7 @@
             kapitel: Math.max(1, parseInt(kapitel, 10) || 1),
             bilder: Array.isArray(bilder) ? bilder : [],
             links: Array.isArray(links) ? links : [],
+            kommentare: [],
             createdAt: new Date().toISOString()
           };
           this.lokaleDaten.geschichten.push(neu);
@@ -2652,7 +2684,7 @@
         },
         addMedium({ typ, titel, beschreibung = '', url = '', files = [] }) {
           ensureMedienData(this.lokaleDaten);
-          const neu = { id: genId(), typ, titel, beschreibung, url, files: Array.isArray(files) ? files : [], createdAt: new Date().toISOString() };
+          const neu = { id: genId(), typ, titel, beschreibung, url, files: Array.isArray(files) ? files : [], kommentare: [], createdAt: new Date().toISOString() };
           this.lokaleDaten.medien.push(neu);
           return neu;
         },
@@ -2895,17 +2927,8 @@
             body.appendChild(img);
           }
 
-          if (item.kommentare && item.kommentare.length > 0) {
-            const commentContainer = document.createElement('div');
-            commentContainer.className = 'entry-comments';
-            item.kommentare.forEach(k => {
-              const cDiv = document.createElement('div');
-              cDiv.className = 'entry-comment';
-              cDiv.innerHTML = `<span class="zeit">${esc(k.zeit)}</span><span>${esc(k.text)}</span>`;
-              commentContainer.appendChild(cDiv);
-            });
-            body.appendChild(commentContainer);
-          }
+          const commentThread = createKommentarThread(item, typ, item.id);
+          if (commentThread) body.appendChild(commentThread);
 
           const actions = document.createElement('div');
           actions.className = 'entry-actions';
@@ -2955,7 +2978,7 @@
           }
 
           const kommentarBtn = document.createElement('button');
-          kommentarBtn.textContent = '💬 Kommentar';
+          kommentarBtn.textContent = `💬 Kommentar${ensureKommentare(item).length ? ` (${item.kommentare.length})` : ''}`;
           kommentarBtn.className = 'entry-kommentar-hinzufuegen';
           kommentarBtn.dataset.id = item.id;
           actions.appendChild(kommentarBtn);
@@ -3135,17 +3158,8 @@
               bodyDiv.appendChild(img);
             }
 
-            if (e.kommentare && e.kommentare.length > 0) {
-              const commentContainer = document.createElement('div');
-              commentContainer.className = 'tagebuch-kommentare';
-              e.kommentare.forEach(k => {
-                const cDiv = document.createElement('div');
-                cDiv.className = 'tagebuch-kommentar';
-                cDiv.innerHTML = `<span class="zeit">${esc(k.zeit)}</span><span>${esc(k.text)}</span>`;
-                commentContainer.appendChild(cDiv);
-              });
-              bodyDiv.appendChild(commentContainer);
-            }
+            const commentThread = createKommentarThread(e, 'tagebuch', e.id);
+            if (commentThread) bodyDiv.appendChild(commentThread);
 
             const actionsDiv = document.createElement('div');
             actionsDiv.className = 'tagebuch-actions';
@@ -3177,7 +3191,7 @@
             }
 
             const kommentarBtn = document.createElement('button');
-            kommentarBtn.textContent = '💬 Kommentar';
+            kommentarBtn.textContent = `💬 Kommentar${ensureKommentare(e).length ? ` (${e.kommentare.length})` : ''}`;
             kommentarBtn.className = 'tagebuch-kommentar-hinzufuegen';
             kommentarBtn.dataset.id = e.id;
             actionsDiv.appendChild(kommentarBtn);
@@ -3334,6 +3348,81 @@
 
 
 
+      // ===== EINHEITLICHE KOMMENTARE =====
+      function createKommentarThread(item, kind, ownerId) {
+        const kommentare = ensureKommentare(item);
+        if (!kommentare.length) return null;
+        const thread = document.createElement('div');
+        thread.className = 'comment-thread';
+        const head = document.createElement('div');
+        head.className = 'comment-thread-head';
+        const label = document.createElement('span');
+        label.textContent = `💬 Kommentare (${kommentare.length})`;
+        head.appendChild(label);
+        const list = document.createElement('div');
+        list.className = 'comment-thread-list';
+        kommentare.forEach((k, index) => {
+          const row = document.createElement('div');
+          row.className = 'comment-row';
+          const time = document.createElement('span');
+          time.className = 'comment-time';
+          time.textContent = k.zeit || '';
+          const text = document.createElement('span');
+          text.className = 'comment-text';
+          text.textContent = k.text;
+          const del = document.createElement('button');
+          del.type = 'button';
+          del.className = 'comment-delete';
+          del.dataset.commentDelete = '1';
+          del.dataset.commentKind = kind;
+          del.dataset.id = ownerId;
+          del.dataset.commentIndex = String(index);
+          del.title = 'Kommentar löschen';
+          del.setAttribute('aria-label', 'Kommentar löschen');
+          del.textContent = '✕';
+          row.append(time, text, del);
+          list.appendChild(row);
+        });
+        thread.append(head, list);
+        return thread;
+      }
+
+      const CommentsApp = {
+        initialized: false,
+        init() {
+          if (this.initialized) return;
+          this.initialized = true;
+          document.addEventListener('click', async e => {
+            const btn = e.target.closest('[data-comment-delete]');
+            if (!btn) return;
+            e.preventDefault();
+            e.stopPropagation();
+            const kind = btn.dataset.commentKind;
+            const id = btn.dataset.id;
+            const index = Number(btn.dataset.commentIndex);
+            const item = this.find(kind, id);
+            if (!item || !Number.isInteger(index) || index < 0 || index >= ensureKommentare(item).length) return;
+            if (!confirm('Diesen Kommentar wirklich löschen?')) return;
+            item.kommentare.splice(index, 1);
+            DataManager.addLog(`Kommentar aus ${this.label(kind)} gelöscht.`);
+            await DataManager.save();
+            UIRenderer.renderAlles(DataManager.lokaleDaten);
+            showToast('Kommentar gelöscht.', 'success');
+          });
+        },
+        find(kind, id) {
+          if (kind === 'aufgabe') return DataManager.findAufgabe(id);
+          if (kind === 'einloesung') return DataManager.findEinloesung(id);
+          if (kind === 'tagebuch') return DataManager.findTagebuch(id);
+          if (kind === 'medium') return DataManager.findMedium(id);
+          if (kind === 'geschichte') return DataManager.findGeschichte(id);
+          return null;
+        },
+        label(kind) {
+          return ({ aufgabe:'Aufgabe', einloesung:'Einlösung', tagebuch:'Tagebuch', medium:'Medium', geschichte:'Geschichte' })[kind] || 'Eintrag';
+        }
+      };
+
       // ===== MEDIEN-VERWALTUNG =====
       const MediaApp = {
         initialized: false,
@@ -3342,7 +3431,6 @@
         init() {
           if (this.initialized) return;
           this.initialized = true;
-          document.getElementById('mediaNewBtn')?.addEventListener('click', () => App.openNeuModal('bild'));
           document.querySelectorAll('[data-media-view]').forEach(btn => btn.addEventListener('click', () => this.setView(btn.dataset.mediaView)));
           document.getElementById('mediaCancelBtn')?.addEventListener('click', () => this.closeEditor());
           document.getElementById('mediaSaveBtn')?.addEventListener('click', () => this.saveEditor());
@@ -3361,6 +3449,15 @@
             const item = DataManager.findMedium(action.dataset.id);
             if (!item) return;
             if (action.dataset.mediaAction === 'edit') this.openEditor(item);
+            if (action.dataset.mediaAction === 'comment') {
+              const kommentarText = prompt('Dein Kommentar:');
+              if (kommentarText && kommentarText.trim()) {
+                ensureKommentare(item).push({ text: kommentarText.trim(), zeit: now() });
+                DataManager.addLog(`Kommentar zu Medium „${item.titel}“ hinzugefügt.`);
+                DataManager.save().then(() => UIRenderer.renderAlles(DataManager.lokaleDaten));
+              }
+              return;
+            }
             if (action.dataset.mediaAction === 'delete') {
               if (!confirm(`Medium „${item.titel}“ wirklich löschen?`)) return;
               DataManager.deleteMedium(item.id);
@@ -3562,8 +3659,9 @@
         createActions(item) {
           const actions = document.createElement('div'); actions.className='media-item-actions';
           const edit = document.createElement('button'); edit.type='button'; edit.dataset.mediaAction='edit'; edit.dataset.id=item.id; edit.textContent='✏️ Bearbeiten';
+          const comment = document.createElement('button'); comment.type='button'; comment.dataset.mediaAction='comment'; comment.dataset.id=item.id; comment.textContent=`💬 Kommentar${ensureKommentare(item).length ? ` (${item.kommentare.length})` : ''}`;
           const del = document.createElement('button'); del.type='button'; del.dataset.mediaAction='delete'; del.dataset.id=item.id; del.className='danger'; del.textContent='🗑️ Löschen';
-          actions.append(edit, del); return actions;
+          actions.append(edit, comment, del); return actions;
         },
 
         renderItem(item) {
@@ -3599,7 +3697,10 @@
           const title=document.createElement('h4'); title.className='media-item-title'; title.textContent=item.titel; body.appendChild(title);
           if (item.beschreibung) { const d=document.createElement('p'); d.className='media-item-desc'; d.textContent=item.beschreibung; body.appendChild(d); }
           if (safeUrl && item.typ !== 'link') { const a=document.createElement('a'); a.className='media-item-link'; a.href=safeUrl; a.target='_blank'; a.rel='noopener noreferrer'; a.textContent='🔗 Zugehörigen Link öffnen'; body.appendChild(a); }
-          card.appendChild(body, this.createActions(item));
+          card.appendChild(body);
+          const commentThread = createKommentarThread(item, 'medium', item.id);
+          if (commentThread) card.appendChild(commentThread);
+          card.appendChild(this.createActions(item));
           return card;
         },
 
@@ -3645,6 +3746,17 @@
             if (action.dataset.storyAction === 'edit') {
               const item = DataManager.findGeschichte(id);
               if (item) this.openEditor(item);
+            }
+            if (action.dataset.storyAction === 'comment') {
+              const item = DataManager.findGeschichte(id);
+              if (!item) return;
+              const kommentarText = prompt('Dein Kommentar zu diesem Kapitel:');
+              if (kommentarText && kommentarText.trim()) {
+                ensureKommentare(item).push({ text: kommentarText.trim(), zeit: now() });
+                DataManager.addLog(`Kommentar zu Geschichten-Kapitel „${item.titel}“ hinzugefügt.`);
+                DataManager.save().then(() => UIRenderer.renderAlles(DataManager.lokaleDaten));
+              }
+              return;
             }
             if (action.dataset.storyAction === 'delete') {
               const item = DataManager.findGeschichte(id);
@@ -3869,6 +3981,9 @@
               article.appendChild(links);
             }
 
+            const commentThread = createKommentarThread(item, 'geschichte', item.id);
+            if (commentThread) article.appendChild(commentThread);
+
             const actions = document.createElement('div');
             actions.className = 'story-actions';
             const edit = document.createElement('button');
@@ -3876,13 +3991,18 @@
             edit.dataset.storyAction = 'edit';
             edit.dataset.id = item.id;
             edit.textContent = '✏️ Bearbeiten';
+            const comment = document.createElement('button');
+            comment.type = 'button';
+            comment.dataset.storyAction = 'comment';
+            comment.dataset.id = item.id;
+            comment.textContent = `💬 Kommentar${ensureKommentare(item).length ? ` (${item.kommentare.length})` : ''}`;
             const del = document.createElement('button');
             del.type = 'button';
             del.dataset.storyAction = 'delete';
             del.dataset.id = item.id;
             del.className = 'danger';
             del.textContent = '🗑️ Löschen';
-            actions.append(edit, del);
+            actions.append(edit, comment, del);
             article.appendChild(actions);
             container.appendChild(article);
           });
@@ -4593,6 +4713,7 @@
 
           PuzzleGame.init();
           CompassApp.init();
+          CommentsApp.init();
           StoryApp.init();
           MediaApp.init();
 
