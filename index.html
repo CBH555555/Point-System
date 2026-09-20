@@ -1357,6 +1357,23 @@
     }
     .comic-cover-caption strong { color:var(--text); }
 
+    /* Medien-Unterbereiche */
+    .media-subnav {
+      display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:7px; margin:0 0 16px; padding:7px;
+      border:1px solid var(--card-border); border-radius:16px; background:var(--surface-soft);
+    }
+    .media-subnav-btn {
+      min-height:44px; padding:9px 12px; border:1px solid transparent; border-radius:11px;
+      background:transparent; color:var(--text-muted); cursor:pointer; font-weight:820; transition:all var(--transition);
+    }
+    .media-subnav-btn:hover { background:var(--surface-solid); color:var(--text); }
+    .media-subnav-btn.active {
+      background:linear-gradient(135deg,var(--accent),var(--accent-strong)); color:#fff; box-shadow:0 6px 16px var(--accent-glow);
+    }
+    .media-pane > h2 { margin-top:2px; }
+    #mediaPane-geschichte .story-intro { margin-top:12px; }
+    @media (max-width:480px) { .media-subnav { grid-template-columns:1fr; } }
+
     /* Medien-Verwaltung */
     .media-toolbar {
       display:grid; grid-template-columns:minmax(0,1fr) auto; gap:14px; align-items:center;
@@ -1621,7 +1638,6 @@
     <button class="tab-btn active" data-tab="aufgaben" id="tabBtn-aufgaben" role="tab" aria-selected="true" aria-controls="tab-aufgaben">📋 Aufgaben</button>
     <button class="tab-btn" data-tab="einloesungen" id="tabBtn-einloesungen" role="tab" aria-selected="false" aria-controls="tab-einloesungen">🎁 Einlösungen</button>
     <button class="tab-btn" data-tab="tagebuch" id="tabBtn-tagebuch" role="tab" aria-selected="false" aria-controls="tab-tagebuch">📓 Tagebuch</button>
-    <button class="tab-btn" data-tab="geschichten" id="tabBtn-geschichten" role="tab" aria-selected="false" aria-controls="tab-geschichten">📖 Geschichte</button>
     <button class="tab-btn" data-tab="kompass" id="tabBtn-kompass" role="tab" aria-selected="false" aria-controls="tab-kompass">🧭 Kompass</button>
     <button class="tab-btn" data-tab="puzzle" id="tabBtn-puzzle" role="tab" aria-selected="false" aria-controls="tab-puzzle">🎮 Spiele</button>
     <button class="tab-btn" data-tab="medien" id="tabBtn-medien" role="tab" aria-selected="false" aria-controls="tab-medien">🖼️ Medien</button>
@@ -1652,64 +1668,6 @@
       <p class="sub">Gedanken, Erlebnisse, geheime Wünsche … (Klick auf Eintrag zeigt Text)</p>
       <div id="tagebuchContainer"></div>
     </section>
-
-
-    <!-- HELDENGESCHICHTE -->
-    <section id="tab-geschichten" class="tab-content card" style="display:none;" role="tabpanel" aria-labelledby="tabBtn-geschichten">
-      <h2><span>📖 Die Reise des Helden</span><span class="tag">Kapitel</span></h2>
-      <p class="sub">Eine fortlaufende Geschichte: Kapitel schreiben, Bilder hochladen und Links ergänzen – ohne den Code zu bearbeiten.</p>
-
-      <div class="story-intro">
-        <div>
-          <h3>Deine Geschichte wächst Kapitel für Kapitel</h3>
-          <p>Die Kapitelnummer bestimmt die Reihenfolge. Bilder werden komprimiert und zusammen mit Text und Links in deinem bestehenden Supabase-Datensatz gespeichert.</p>
-        </div>
-        <button type="button" id="storyNewBtn">＋ Neues Kapitel</button>
-      </div>
-
-      <div id="storyEditor" class="story-editor hidden">
-        <div class="story-editor-head">
-          <h3 id="storyEditorTitle">Neues Kapitel</h3>
-        </div>
-        <input type="hidden" id="storyEditId">
-        <div class="story-form-grid">
-          <div class="form-group">
-            <label for="storyChapter">Kapitel</label>
-            <input type="number" id="storyChapter" min="1" step="1" value="1" inputmode="numeric">
-          </div>
-          <div class="form-group">
-            <label for="storyDate">Datum</label>
-            <input type="date" id="storyDate">
-          </div>
-          <div class="form-group story-title-field">
-            <label for="storyTitle">Titel *</label>
-            <input type="text" id="storyTitle" placeholder="z. B. Der Ruf zum Abenteuer">
-          </div>
-          <div class="form-group story-form-wide">
-            <label for="storyText">Geschichte / Kapiteltext *</label>
-            <textarea id="storyText" placeholder="Hier schreibst du die Geschichte deines Helden …"></textarea>
-          </div>
-          <div class="form-group story-form-wide">
-            <label for="storyImages">Bilder hochladen (optional, mehrere möglich)</label>
-            <input type="file" id="storyImages" accept="image/*" multiple>
-            <p class="story-help">Bis zu 6 Bilder pro Kapitel. Bereits gespeicherte Bilder bleiben beim Bearbeiten erhalten, bis du sie entfernst.</p>
-            <div id="storyExistingImages" class="story-editor-images"></div>
-          </div>
-          <div class="form-group story-form-wide">
-            <label for="storyLinks">Links (optional)</label>
-            <textarea id="storyLinks" placeholder="Wikipedia | https://de.wikipedia.org/…&#10;https://beispiel.de"></textarea>
-            <p class="story-help">Ein Link pro Zeile. Optional: <strong>Linktext | https://adresse.de</strong>. Ohne Linktext wird die Adresse angezeigt.</p>
-          </div>
-        </div>
-        <div class="story-editor-actions">
-          <button type="button" id="storyCancelBtn">Abbrechen</button>
-          <button type="button" id="storySaveBtn" class="primary">💾 Kapitel speichern</button>
-        </div>
-      </div>
-
-      <div id="geschichtenContainer" class="story-sequence"></div>
-    </section>
-
     <!-- PAAR-KOMPASS -->
     <section id="tab-kompass" class="tab-content card" style="display:none;" role="tabpanel" aria-labelledby="tabBtn-kompass">
       <h2><span>🧭 Paar-Kompass</span><span class="tag">Cloud · Supabase</span></h2>
@@ -1907,7 +1865,14 @@
     <!-- MEDIEN-ARCHIV -->
     <section id="tab-medien" class="tab-content card" style="display:none;" role="tabpanel" aria-labelledby="tabBtn-medien">
       <h2><span>🖼️ Medien-Archiv</span><span class="tag">Selbst verwalten</span></h2>
-      <p class="sub">Bilder, Videos, Links, GIFs und Comics direkt über die Oberfläche hinzufügen, bearbeiten und löschen – ohne den Code zu ändern.</p>
+      <p class="sub">Bilder, Videos, Links, GIFs, Comics und deine Heldengeschichte an einem Ort verwalten – ohne den Code zu ändern.</p>
+
+      <div class="media-subnav" role="tablist" aria-label="Medien-Bereiche">
+        <button type="button" class="media-subnav-btn active" data-media-view="sammlung" aria-selected="true">🗂️ Mediensammlung</button>
+        <button type="button" class="media-subnav-btn" data-media-view="geschichte" aria-selected="false">📖 Heldengeschichte</button>
+      </div>
+
+      <div id="mediaPane-sammlung" class="media-pane">
 
       <div class="media-toolbar">
         <div>
@@ -1992,6 +1957,63 @@
       </div>
 
       <p class="media-storage-note">ℹ️ Kleine und mittlere Dateien können direkt gespeichert werden. Für größere Videos ist ein Web-Link sinnvoller, damit dein gemeinsamer Supabase-Datensatz nicht unnötig groß wird.</p>
+      </div>
+
+      <div id="mediaPane-geschichte" class="media-pane hidden">
+        <h2><span>📖 Die Reise des Helden</span><span class="tag">Medien · Geschichte</span></h2>
+              <p class="sub">Eine fortlaufende Geschichte: Kapitel schreiben, Bilder hochladen und Links ergänzen – ohne den Code zu bearbeiten.</p>
+        
+              <div class="story-intro">
+                <div>
+                  <h3>Deine Geschichte wächst Kapitel für Kapitel</h3>
+                  <p>Die Kapitelnummer bestimmt die Reihenfolge. Bilder werden komprimiert und zusammen mit Text und Links in deinem bestehenden Supabase-Datensatz gespeichert.</p>
+                </div>
+                <button type="button" id="storyNewBtn">＋ Neues Kapitel</button>
+              </div>
+        
+              <div id="storyEditor" class="story-editor hidden">
+                <div class="story-editor-head">
+                  <h3 id="storyEditorTitle">Neues Kapitel</h3>
+                </div>
+                <input type="hidden" id="storyEditId">
+                <div class="story-form-grid">
+                  <div class="form-group">
+                    <label for="storyChapter">Kapitel</label>
+                    <input type="number" id="storyChapter" min="1" step="1" value="1" inputmode="numeric">
+                  </div>
+                  <div class="form-group">
+                    <label for="storyDate">Datum</label>
+                    <input type="date" id="storyDate">
+                  </div>
+                  <div class="form-group story-title-field">
+                    <label for="storyTitle">Titel *</label>
+                    <input type="text" id="storyTitle" placeholder="z. B. Der Ruf zum Abenteuer">
+                  </div>
+                  <div class="form-group story-form-wide">
+                    <label for="storyText">Geschichte / Kapiteltext *</label>
+                    <textarea id="storyText" placeholder="Hier schreibst du die Geschichte deines Helden …"></textarea>
+                  </div>
+                  <div class="form-group story-form-wide">
+                    <label for="storyImages">Bilder hochladen (optional, mehrere möglich)</label>
+                    <input type="file" id="storyImages" accept="image/*" multiple>
+                    <p class="story-help">Bis zu 6 Bilder pro Kapitel. Bereits gespeicherte Bilder bleiben beim Bearbeiten erhalten, bis du sie entfernst.</p>
+                    <div id="storyExistingImages" class="story-editor-images"></div>
+                  </div>
+                  <div class="form-group story-form-wide">
+                    <label for="storyLinks">Links (optional)</label>
+                    <textarea id="storyLinks" placeholder="Wikipedia | https://de.wikipedia.org/…&#10;https://beispiel.de"></textarea>
+                    <p class="story-help">Ein Link pro Zeile. Optional: <strong>Linktext | https://adresse.de</strong>. Ohne Linktext wird die Adresse angezeigt.</p>
+                  </div>
+                </div>
+                <div class="story-editor-actions">
+                  <button type="button" id="storyCancelBtn">Abbrechen</button>
+                  <button type="button" id="storySaveBtn" class="primary">💾 Kapitel speichern</button>
+                </div>
+              </div>
+        
+              <div id="geschichtenContainer" class="story-sequence"></div>
+      </div>
+
     </section>
 
     <!-- EINSTELLUNGEN -->
@@ -2085,7 +2107,7 @@
     </div>
   </div>
 
-  <!-- MODAL: Neu (für Aufgaben, Einlösungen und Tagebuch; Geschichten haben einen eigenen Editor) -->
+  <!-- MODAL: Neu – zentraler Einstieg für Aufgaben, Tagebuch, Medien und Geschichte -->
   <div id="neuModal" class="modal">
     <div class="modal-content">
       <h3>➕ Neuen Eintrag</h3>
@@ -2095,10 +2117,18 @@
           <option value="aufgabe">Aufgabe (Ehemann sammelt)</option>
           <option value="einloesung">Einlösung (Ehemann gibt aus)</option>
           <option value="tagebuch">Tagebuch (Privat)</option>
+          <optgroup label="Medien">
+            <option value="bild">🖼️ Bild</option>
+            <option value="video">🎬 Video</option>
+            <option value="link">🔗 Link</option>
+            <option value="gif">✨ GIF</option>
+            <option value="comic">💬 Comic</option>
+            <option value="geschichte">📖 Heldengeschichte / Kapitel</option>
+          </optgroup>
         </select>
       </div>
-      <div class="form-group">
-        <label for="neuText">Beschreibung / Text *</label>
+      <div class="form-group" id="neuTextGroup">
+        <label for="neuText" id="neuTextLabel">Beschreibung / Text *</label>
         <input type="text" id="neuText" placeholder="z. B. Frühstück ans Bett bringen">
       </div>
       <!-- Felder für Aufgabe/Einlösung -->
@@ -2123,6 +2153,7 @@
           <input type="file" id="neuTagebuchBild" accept="image/*">
         </div>
       </div>
+      <p id="neuWeiterHint" class="text-muted hidden" style="font-size:.72rem; line-height:1.5; margin:4px 0 12px;">Nach „Weiter“ öffnet sich der passende Editor im Medienbereich.</p>
       <div class="modal-buttons">
         <button class="btn-secondary" id="neuAbbrechen">Abbrechen</button>
         <button class="btn-primary" id="neuSpeichern">💾 Speichern</button>
@@ -3311,7 +3342,8 @@
         init() {
           if (this.initialized) return;
           this.initialized = true;
-          document.getElementById('mediaNewBtn')?.addEventListener('click', () => this.openEditor());
+          document.getElementById('mediaNewBtn')?.addEventListener('click', () => App.openNeuModal('bild'));
+          document.querySelectorAll('[data-media-view]').forEach(btn => btn.addEventListener('click', () => this.setView(btn.dataset.mediaView)));
           document.getElementById('mediaCancelBtn')?.addEventListener('click', () => this.closeEditor());
           document.getElementById('mediaSaveBtn')?.addEventListener('click', () => this.saveEditor());
           document.getElementById('mediaType')?.addEventListener('change', () => this.updateEditorFields());
@@ -3342,6 +3374,17 @@
           });
         },
 
+        setView(view = 'sammlung') {
+          const target = view === 'geschichte' ? 'geschichte' : 'sammlung';
+          document.querySelectorAll('[data-media-view]').forEach(btn => {
+            const active = btn.dataset.mediaView === target;
+            btn.classList.toggle('active', active);
+            btn.setAttribute('aria-selected', active ? 'true' : 'false');
+          });
+          document.getElementById('mediaPane-sammlung')?.classList.toggle('hidden', target !== 'sammlung');
+          document.getElementById('mediaPane-geschichte')?.classList.toggle('hidden', target !== 'geschichte');
+        },
+
         normalizeUrl(value) {
           const raw = String(value || '').trim();
           if (!raw) return '';
@@ -3354,13 +3397,14 @@
         isSafeImage(src) { return /^(?:data:image\/(?:jpeg|jpg|png|webp|gif);base64,|https?:\/\/)/i.test(String(src || '')); },
         isSafeVideo(src) { return /^(?:data:video\/[a-z0-9.+-]+;base64,|https?:\/\/)/i.test(String(src || '')); },
 
-        openEditor(item = null) {
+        openEditor(item = null, presetType = 'bild') {
+          this.setView('sammlung');
           const editor = document.getElementById('mediaEditor');
           if (!editor) return;
           const editing = !!item;
           document.getElementById('mediaEditorTitle').textContent = editing ? 'Medium bearbeiten' : 'Neues Medium';
           document.getElementById('mediaEditId').value = editing ? item.id : '';
-          document.getElementById('mediaType').value = editing ? item.typ : 'bild';
+          document.getElementById('mediaType').value = editing ? item.typ : (['bild','video','link','gif','comic'].includes(presetType) ? presetType : 'bild');
           document.getElementById('mediaTitle').value = editing ? item.titel : '';
           document.getElementById('mediaDescription').value = editing ? item.beschreibung : '';
           document.getElementById('mediaUrl').value = editing ? item.url : '';
@@ -3583,7 +3627,7 @@
         init() {
           if (this.initialized) return;
           this.initialized = true;
-          document.getElementById('storyNewBtn')?.addEventListener('click', () => this.openEditor());
+          document.getElementById('storyNewBtn')?.addEventListener('click', () => App.openNeuModal('geschichte'));
           document.getElementById('storyCancelBtn')?.addEventListener('click', () => this.closeEditor());
           document.getElementById('storySaveBtn')?.addEventListener('click', () => this.saveEditor());
           document.getElementById('storyExistingImages')?.addEventListener('click', e => {
@@ -3620,6 +3664,7 @@
         },
 
         openEditor(item = null) {
+          MediaApp.setView('geschichte');
           const editor = document.getElementById('storyEditor');
           if (!editor) return;
           const editing = !!item;
@@ -4539,7 +4584,7 @@
               btn.classList.add('active');
               btn.setAttribute('aria-selected', 'true');
               const floatBtn = document.getElementById('floatNeuBtn');
-              if (floatBtn) floatBtn.style.display = (tabName === 'puzzle' || tabName === 'kompass' || tabName === 'medien') ? 'none' : 'flex';
+              if (floatBtn) floatBtn.style.display = (tabName === 'puzzle' || tabName === 'kompass') ? 'none' : 'flex';
               if (tabName !== 'puzzle' && PuzzleGame.running && !PuzzleGame.paused) PuzzleGame.pause(false);
               if (tabName === 'puzzle') PuzzleGame.render();
               if (tabName === 'kompass') CompassApp.refreshFromCloud();
@@ -4554,15 +4599,8 @@
           // Float-Button -> Modal Neu
           document.getElementById('floatNeuBtn').addEventListener('click', () => {
             const activeTab = document.querySelector('.tab-btn.active')?.dataset.tab;
-            if (activeTab === 'geschichten') {
-              StoryApp.openEditor();
-              return;
-            }
-            document.getElementById('neuModal').classList.add('active');
-            // Typ-Auswahl initialisieren
-            const typSelect = document.getElementById('neuTyp');
-            this.onNeuTypChange(typSelect.value);
-            document.getElementById('neuText').focus();
+            const preferred = { aufgaben:'aufgabe', einloesungen:'einloesung', tagebuch:'tagebuch', medien:'bild' }[activeTab] || 'aufgabe';
+            this.openNeuModal(preferred);
           });
 
           // Neu-Modal: Typ-Wechsel
@@ -4573,8 +4611,16 @@
           // Neu-Modal speichern
           document.getElementById('neuSpeichern').addEventListener('click', async () => {
             const typ = document.getElementById('neuTyp').value;
-            const text = document.getElementById('neuText').value.trim();
+            const mediaTypes = ['bild', 'video', 'link', 'gif', 'comic'];
+            if (mediaTypes.includes(typ) || typ === 'geschichte') {
+              document.getElementById('neuModal').classList.remove('active');
+              document.getElementById('tabBtn-medien')?.click();
+              if (typ === 'geschichte') StoryApp.openEditor();
+              else MediaApp.openEditor(null, typ);
+              return;
+            }
 
+            const text = document.getElementById('neuText').value.trim();
             if (!text) { showToast('Bitte Beschreibung / Text eingeben.', 'error'); return; }
 
             if (typ === 'aufgabe') {
@@ -4730,13 +4776,38 @@
           });
         },
 
+        openNeuModal(preselected = null) {
+          const modal = document.getElementById('neuModal');
+          const typSelect = document.getElementById('neuTyp');
+          if (!modal || !typSelect) return;
+          if (preselected && [...typSelect.options].some(opt => opt.value === preselected)) typSelect.value = preselected;
+          this.onNeuTypChange(typSelect.value);
+          modal.classList.add('active');
+          requestAnimationFrame(() => {
+            const routed = ['bild','video','link','gif','comic','geschichte'].includes(typSelect.value);
+            (routed ? typSelect : document.getElementById('neuText'))?.focus();
+          });
+        },
+
         // ===== HILFE: Neu-Modal Felder je nach Typ =====
         onNeuTypChange(typ) {
           const punkteGroup = document.getElementById('neuPunkteGroup');
           const datumGroup = document.getElementById('neuDatumGroup');
+          const textGroup = document.getElementById('neuTextGroup');
+          const hint = document.getElementById('neuWeiterHint');
+          const saveBtn = document.getElementById('neuSpeichern');
+          const routed = ['bild','video','link','gif','comic','geschichte'].includes(typ);
+
+          textGroup.style.display = routed ? 'none' : 'block';
+          hint?.classList.toggle('hidden', !routed);
+          if (saveBtn) saveBtn.textContent = routed ? 'Weiter →' : '💾 Speichern';
+
           if (typ === 'tagebuch') {
             punkteGroup.style.display = 'none';
             datumGroup.style.display = 'block';
+          } else if (routed) {
+            punkteGroup.style.display = 'none';
+            datumGroup.style.display = 'none';
           } else {
             punkteGroup.style.display = 'block';
             datumGroup.style.display = 'none';
