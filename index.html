@@ -1357,6 +1357,73 @@
     }
     .comic-cover-caption strong { color:var(--text); }
 
+    /* Medien-Verwaltung */
+    .media-toolbar {
+      display:grid; grid-template-columns:minmax(0,1fr) auto; gap:14px; align-items:center;
+      margin-bottom:14px; padding:15px 16px; border:1px solid var(--card-border); border-radius:17px;
+      background:linear-gradient(135deg,var(--accent-light),var(--surface-soft));
+    }
+    .media-toolbar h3 { margin:0 0 4px; color:var(--text); font-size:1rem; }
+    .media-toolbar p { margin:0; color:var(--text-muted); font-size:.75rem; line-height:1.45; }
+    .media-toolbar button, .media-editor-actions button, .media-item-actions button {
+      min-height:40px; padding:8px 12px; border:1px solid var(--card-border); border-radius:11px;
+      background:var(--surface-solid); color:var(--text); cursor:pointer; font-weight:800; font-size:.76rem;
+    }
+    .media-toolbar button, .media-editor-actions .primary {
+      border-color:transparent; background:linear-gradient(135deg,var(--accent),var(--accent-strong)); color:#fff; box-shadow:0 7px 18px var(--accent-glow);
+    }
+    .media-editor {
+      margin-bottom:16px; padding:17px; border:1px solid color-mix(in srgb,var(--accent) 24%,var(--card-border));
+      border-radius:18px; background:var(--surface-soft); box-shadow:var(--shadow-sm);
+    }
+    .media-editor-head { display:flex; justify-content:space-between; gap:10px; align-items:center; margin-bottom:13px; }
+    .media-editor-head h3 { margin:0; color:var(--text); font-size:1rem; }
+    .media-form-grid { display:grid; grid-template-columns:180px minmax(0,1fr); gap:11px; }
+    .media-form-grid .form-group { margin:0; }
+    .media-form-wide { grid-column:1 / -1; }
+    #mediaDescription { min-height:88px; }
+    .media-help { margin:6px 0 0; color:var(--text-muted); font-size:.66rem; line-height:1.45; }
+    .media-editor-actions { display:flex; justify-content:flex-end; gap:8px; margin-top:14px; }
+    .media-existing-files { display:grid; grid-template-columns:repeat(auto-fill,minmax(110px,1fr)); gap:9px; margin-top:10px; }
+    .media-existing-file { position:relative; overflow:hidden; min-height:86px; border:1px solid var(--card-border); border-radius:12px; background:var(--surface-solid); }
+    .media-existing-file img, .media-existing-file video { display:block; width:100%; height:100px; object-fit:cover; }
+    .media-existing-file .file-label { display:grid; place-items:center; min-height:86px; padding:8px; color:var(--text-muted); font-size:.65rem; text-align:center; overflow-wrap:anywhere; }
+    .media-existing-file button { position:absolute; right:5px; top:5px; width:28px; height:28px; padding:0; border:0; border-radius:9px; background:rgba(20,13,15,.72); color:#fff; cursor:pointer; }
+    .media-category { min-height:130px; }
+    .media-category-count { min-width:28px; padding:3px 7px; border-radius:999px; background:var(--accent-light); color:var(--accent-strong); font-size:.64rem; font-weight:900; text-align:center; }
+    .media-list { display:grid; gap:10px; margin-top:12px; }
+    .media-empty { padding:16px 10px; border:1px dashed var(--card-border); border-radius:12px; color:var(--text-muted); font-size:.7rem; text-align:center; }
+    .media-item { overflow:hidden; border:1px solid var(--card-border); border-radius:14px; background:var(--surface-solid); box-shadow:var(--shadow-sm); }
+    .media-item-preview { display:block; width:100%; border:0; padding:0; background:var(--bg); color:inherit; cursor:pointer; text-align:left; }
+    .media-item-preview img { display:block; width:100%; height:180px; object-fit:cover; background:var(--bg); }
+    .media-item-preview video { display:block; width:100%; max-height:240px; background:#000; }
+    .media-video-embed { position:relative; width:100%; aspect-ratio:16/9; background:#000; }
+    .media-video-embed iframe { position:absolute; inset:0; width:100%; height:100%; border:0; }
+    .media-item-body { padding:11px 12px; }
+    .media-item-title { margin:0; color:var(--text); font-size:.82rem; font-weight:850; overflow-wrap:anywhere; }
+    .media-item-desc { margin:5px 0 0; color:var(--text-muted); font-size:.69rem; line-height:1.48; white-space:pre-wrap; overflow-wrap:anywhere; }
+    .media-item-link { display:inline-flex; margin-top:8px; max-width:100%; color:var(--accent-strong); font-size:.68rem; font-weight:800; text-decoration:none; overflow-wrap:anywhere; }
+    .media-item-actions { display:flex; gap:6px; flex-wrap:wrap; padding:0 12px 11px; }
+    .media-item-actions button { min-height:34px; padding:6px 9px; font-size:.67rem; }
+    .media-item-actions .danger:hover { color:var(--danger); border-color:color-mix(in srgb,var(--danger) 35%,var(--card-border)); background:color-mix(in srgb,var(--danger) 8%,var(--surface-solid)); }
+    .media-link-card { display:block; padding:14px; color:inherit; text-decoration:none; }
+    .media-link-card strong { display:block; color:var(--text); font-size:.82rem; margin-bottom:5px; }
+    .media-link-card span { display:block; color:var(--accent-strong); font-size:.67rem; overflow-wrap:anywhere; }
+    .media-comic-badge { position:absolute; left:8px; bottom:8px; padding:5px 8px; border-radius:999px; background:rgba(20,13,15,.76); color:#fff; font-size:.63rem; font-weight:850; }
+    .media-item-preview.comic { position:relative; }
+    .media-storage-note { margin:12px 0 0; padding:10px 12px; border:1px solid var(--card-border); border-radius:12px; background:var(--surface-soft); color:var(--text-muted); font-size:.67rem; line-height:1.5; }
+    @media (max-width:760px) {
+      .media-toolbar { grid-template-columns:1fr; }
+      .media-toolbar button { width:100%; }
+      .media-form-grid { grid-template-columns:1fr; }
+      .media-form-wide { grid-column:auto; }
+    }
+    @media (max-width:480px) {
+      .media-editor-actions { flex-direction:column-reverse; }
+      .media-editor-actions button { width:100%; }
+      .media-item-preview img { height:auto; max-height:360px; object-fit:contain; }
+    }
+
     /* Vollbild-Comic / Bild-Zoom */
     .media-lightbox {
       position:fixed;
@@ -1438,6 +1505,80 @@
       .media-lightbox-title { padding-top:8px; font-size:.7rem; }
     }
 
+
+
+    /* ===== HELDENGESCHICHTE / KAPITEL-SEQUENZ ===== */
+    .story-intro {
+      display:grid; grid-template-columns:minmax(0,1fr) auto; gap:16px; align-items:center;
+      margin:0 0 18px; padding:18px; border:1px solid color-mix(in srgb,var(--gold) 32%,var(--card-border));
+      border-radius:20px; background:linear-gradient(135deg,var(--gold-light),var(--surface-soft));
+    }
+    .story-intro h3 { margin:0 0 5px; color:var(--text); font-size:1.08rem; }
+    .story-intro p { margin:0; color:var(--text-muted); font-size:.8rem; line-height:1.55; }
+    .story-intro button, .story-editor-actions button, .story-actions button {
+      min-height:40px; padding:9px 13px; border:1px solid var(--card-border); border-radius:11px;
+      background:var(--surface-solid); color:var(--text); cursor:pointer; font-size:.76rem; font-weight:820;
+    }
+    .story-intro button, .story-editor-actions .primary {
+      border-color:transparent; background:linear-gradient(135deg,var(--accent),var(--accent-strong)); color:#fff;
+      box-shadow:0 8px 20px var(--accent-glow);
+    }
+    .story-editor {
+      margin:0 0 22px; padding:18px; border:1px solid color-mix(in srgb,var(--accent) 28%,var(--card-border));
+      border-radius:20px; background:var(--surface-soft); box-shadow:var(--shadow-sm);
+    }
+    .story-editor-head { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:14px; }
+    .story-editor-head h3 { margin:0; font-size:1rem; color:var(--text); }
+    .story-form-grid { display:grid; grid-template-columns:110px minmax(160px,1fr) minmax(180px,1.4fr); gap:11px; }
+    .story-form-grid .form-group { margin-bottom:0; }
+    .story-form-wide { grid-column:1 / -1; }
+    #storyText { min-height:180px; line-height:1.6; }
+    #storyLinks { min-height:92px; font-family:var(--mono); font-size:.78rem; }
+    .story-help { margin:6px 0 0; color:var(--text-muted); font-size:.66rem; line-height:1.45; }
+    .story-editor-images { display:grid; grid-template-columns:repeat(auto-fill,minmax(105px,1fr)); gap:9px; margin-top:10px; }
+    .story-editor-image { position:relative; overflow:hidden; min-height:92px; border:1px solid var(--card-border); border-radius:12px; background:var(--surface-solid); }
+    .story-editor-image img { width:100%; height:100px; display:block; object-fit:cover; }
+    .story-editor-image button { position:absolute; top:6px; right:6px; width:28px; height:28px; padding:0; border:0; border-radius:9px; background:rgba(20,13,15,.72); color:#fff; cursor:pointer; }
+    .story-editor-actions { display:flex; justify-content:flex-end; gap:8px; margin-top:15px; }
+
+    .story-sequence { position:relative; display:grid; gap:18px; padding-left:34px; }
+    .story-sequence::before { content:""; position:absolute; left:13px; top:18px; bottom:18px; width:2px; border-radius:99px; background:linear-gradient(var(--accent),var(--gold)); opacity:.38; }
+    .story-chapter { position:relative; overflow:visible; padding:20px; border:1px solid var(--card-border); border-radius:20px; background:var(--surface-soft); box-shadow:var(--shadow-sm); }
+    .story-chapter::before { content:""; position:absolute; left:-29px; top:24px; width:14px; height:14px; border:4px solid var(--surface-solid); border-radius:50%; background:var(--accent); box-shadow:0 0 0 2px color-mix(in srgb,var(--accent) 35%,transparent); }
+    .story-meta { display:flex; align-items:center; flex-wrap:wrap; gap:7px; margin-bottom:7px; color:var(--text-muted); font-size:.67rem; font-weight:800; }
+    .story-kapitel { padding:4px 8px; border-radius:999px; background:var(--accent-light); color:var(--accent-strong); letter-spacing:.04em; text-transform:uppercase; }
+    .story-chapter h3 { margin:0 0 10px; color:var(--text); font-size:1.18rem; letter-spacing:-.02em; }
+    .story-text { color:var(--text); font-size:.92rem; line-height:1.72; white-space:pre-wrap; overflow-wrap:anywhere; }
+    .story-gallery { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:10px; margin-top:15px; }
+    .story-gallery img { width:100%; height:min(260px,42vw); min-height:150px; object-fit:cover; border:1px solid var(--card-border); border-radius:14px; background:var(--surface-solid); box-shadow:var(--shadow-sm); }
+    .story-links { display:flex; flex-wrap:wrap; gap:7px; margin-top:14px; }
+    .story-links a { display:inline-flex; align-items:center; gap:5px; max-width:100%; padding:7px 10px; border:1px solid color-mix(in srgb,var(--accent) 24%,var(--card-border)); border-radius:999px; background:var(--accent-light); color:var(--accent-strong); font-size:.72rem; font-weight:780; text-decoration:none; overflow-wrap:anywhere; }
+    .story-actions { display:flex; flex-wrap:wrap; gap:7px; margin-top:15px; padding-top:12px; border-top:1px dashed color-mix(in srgb,var(--text-muted) 22%,transparent); }
+    .story-actions button:hover { background:var(--accent-light); color:var(--accent-strong); }
+    .story-actions .danger:hover { background:color-mix(in srgb,var(--danger) 10%,var(--surface-solid)); color:var(--danger); border-color:color-mix(in srgb,var(--danger) 35%,var(--card-border)); }
+    .story-empty { padding:30px 18px; border:1px dashed var(--card-border); border-radius:18px; text-align:center; color:var(--text-muted); font-size:.82rem; line-height:1.6; }
+
+    @media (max-width:760px) {
+      .tab-bar { grid-template-columns:repeat(4,minmax(0,1fr)); }
+      .tab-btn:nth-child(n) { grid-column:auto !important; }
+      .story-intro { grid-template-columns:1fr; }
+      .story-intro button { width:100%; }
+      .story-form-grid { grid-template-columns:1fr 1fr; }
+      .story-form-grid .story-title-field, .story-form-wide { grid-column:1 / -1; }
+      .story-sequence { padding-left:27px; }
+      .story-sequence::before { left:9px; }
+      .story-chapter::before { left:-25px; }
+      .story-chapter { padding:16px 14px; }
+      .story-gallery { grid-template-columns:1fr; }
+      .story-gallery img { height:auto; max-height:420px; object-fit:contain; }
+    }
+    @media (max-width:430px) {
+      .story-form-grid { grid-template-columns:1fr; }
+      .story-form-grid > * { grid-column:1 / -1; }
+      .story-editor-actions { flex-direction:column-reverse; }
+      .story-editor-actions button { width:100%; }
+    }
+
   </style>
 </head>
 <body>
@@ -1480,6 +1621,7 @@
     <button class="tab-btn active" data-tab="aufgaben" id="tabBtn-aufgaben" role="tab" aria-selected="true" aria-controls="tab-aufgaben">📋 Aufgaben</button>
     <button class="tab-btn" data-tab="einloesungen" id="tabBtn-einloesungen" role="tab" aria-selected="false" aria-controls="tab-einloesungen">🎁 Einlösungen</button>
     <button class="tab-btn" data-tab="tagebuch" id="tabBtn-tagebuch" role="tab" aria-selected="false" aria-controls="tab-tagebuch">📓 Tagebuch</button>
+    <button class="tab-btn" data-tab="geschichten" id="tabBtn-geschichten" role="tab" aria-selected="false" aria-controls="tab-geschichten">📖 Geschichte</button>
     <button class="tab-btn" data-tab="kompass" id="tabBtn-kompass" role="tab" aria-selected="false" aria-controls="tab-kompass">🧭 Kompass</button>
     <button class="tab-btn" data-tab="puzzle" id="tabBtn-puzzle" role="tab" aria-selected="false" aria-controls="tab-puzzle">🎮 Spiele</button>
     <button class="tab-btn" data-tab="medien" id="tabBtn-medien" role="tab" aria-selected="false" aria-controls="tab-medien">🖼️ Medien</button>
@@ -1509,6 +1651,63 @@
       <h2><span>📓 Mein Tagebuch</span><span class="tag">Privat</span></h2>
       <p class="sub">Gedanken, Erlebnisse, geheime Wünsche … (Klick auf Eintrag zeigt Text)</p>
       <div id="tagebuchContainer"></div>
+    </section>
+
+
+    <!-- HELDENGESCHICHTE -->
+    <section id="tab-geschichten" class="tab-content card" style="display:none;" role="tabpanel" aria-labelledby="tabBtn-geschichten">
+      <h2><span>📖 Die Reise des Helden</span><span class="tag">Kapitel</span></h2>
+      <p class="sub">Eine fortlaufende Geschichte: Kapitel schreiben, Bilder hochladen und Links ergänzen – ohne den Code zu bearbeiten.</p>
+
+      <div class="story-intro">
+        <div>
+          <h3>Deine Geschichte wächst Kapitel für Kapitel</h3>
+          <p>Die Kapitelnummer bestimmt die Reihenfolge. Bilder werden komprimiert und zusammen mit Text und Links in deinem bestehenden Supabase-Datensatz gespeichert.</p>
+        </div>
+        <button type="button" id="storyNewBtn">＋ Neues Kapitel</button>
+      </div>
+
+      <div id="storyEditor" class="story-editor hidden">
+        <div class="story-editor-head">
+          <h3 id="storyEditorTitle">Neues Kapitel</h3>
+        </div>
+        <input type="hidden" id="storyEditId">
+        <div class="story-form-grid">
+          <div class="form-group">
+            <label for="storyChapter">Kapitel</label>
+            <input type="number" id="storyChapter" min="1" step="1" value="1" inputmode="numeric">
+          </div>
+          <div class="form-group">
+            <label for="storyDate">Datum</label>
+            <input type="date" id="storyDate">
+          </div>
+          <div class="form-group story-title-field">
+            <label for="storyTitle">Titel *</label>
+            <input type="text" id="storyTitle" placeholder="z. B. Der Ruf zum Abenteuer">
+          </div>
+          <div class="form-group story-form-wide">
+            <label for="storyText">Geschichte / Kapiteltext *</label>
+            <textarea id="storyText" placeholder="Hier schreibst du die Geschichte deines Helden …"></textarea>
+          </div>
+          <div class="form-group story-form-wide">
+            <label for="storyImages">Bilder hochladen (optional, mehrere möglich)</label>
+            <input type="file" id="storyImages" accept="image/*" multiple>
+            <p class="story-help">Bis zu 6 Bilder pro Kapitel. Bereits gespeicherte Bilder bleiben beim Bearbeiten erhalten, bis du sie entfernst.</p>
+            <div id="storyExistingImages" class="story-editor-images"></div>
+          </div>
+          <div class="form-group story-form-wide">
+            <label for="storyLinks">Links (optional)</label>
+            <textarea id="storyLinks" placeholder="Wikipedia | https://de.wikipedia.org/…&#10;https://beispiel.de"></textarea>
+            <p class="story-help">Ein Link pro Zeile. Optional: <strong>Linktext | https://adresse.de</strong>. Ohne Linktext wird die Adresse angezeigt.</p>
+          </div>
+        </div>
+        <div class="story-editor-actions">
+          <button type="button" id="storyCancelBtn">Abbrechen</button>
+          <button type="button" id="storySaveBtn" class="primary">💾 Kapitel speichern</button>
+        </div>
+      </div>
+
+      <div id="geschichtenContainer" class="story-sequence"></div>
     </section>
 
     <!-- PAAR-KOMPASS -->
@@ -1707,51 +1906,92 @@
         <!-- EINSTELLUNGEN (mit integriertem Verlauf) -->
     <!-- MEDIEN-ARCHIV -->
     <section id="tab-medien" class="tab-content card" style="display:none;" role="tabpanel" aria-labelledby="tabBtn-medien">
-      <h2><span>🖼️ Medien-Archiv</span><span class="tag">Sammlung</span></h2>
+      <h2><span>🖼️ Medien-Archiv</span><span class="tag">Selbst verwalten</span></h2>
+      <p class="sub">Bilder, Videos, Links, GIFs und Comics direkt über die Oberfläche hinzufügen, bearbeiten und löschen – ohne den Code zu ändern.</p>
+
+      <div class="media-toolbar">
+        <div>
+          <h3>Deine Mediensammlung</h3>
+          <p>Wähle einen Medientyp, lade Dateien hoch oder hinterlege eine Web-Adresse. Alles wird mit deinen übrigen Daten gespeichert.</p>
+        </div>
+        <button type="button" id="mediaNewBtn">＋ Medium hinzufügen</button>
+      </div>
+
+      <div id="mediaEditor" class="media-editor hidden">
+        <div class="media-editor-head"><h3 id="mediaEditorTitle">Neues Medium</h3></div>
+        <input type="hidden" id="mediaEditId">
+        <div class="media-form-grid">
+          <div class="form-group">
+            <label for="mediaType">Typ *</label>
+            <select id="mediaType">
+              <option value="bild">🖼️ Bild</option>
+              <option value="video">🎬 Video</option>
+              <option value="link">🔗 Link</option>
+              <option value="gif">✨ GIF</option>
+              <option value="comic">💬 Comic</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="mediaTitle">Titel *</label>
+            <input type="text" id="mediaTitle" placeholder="z. B. Unser Lieblingsbild">
+          </div>
+          <div class="form-group media-form-wide">
+            <label for="mediaDescription">Beschreibung (optional)</label>
+            <textarea id="mediaDescription" placeholder="Notiz, Beschreibung oder Kontext …"></textarea>
+          </div>
+          <div class="form-group media-form-wide" id="mediaUrlGroup">
+            <label for="mediaUrl">Web-Adresse / Link (optional)</label>
+            <input type="url" id="mediaUrl" placeholder="https://…">
+            <p class="media-help" id="mediaUrlHelp">Bei Bildern, GIFs und Videos kannst du alternativ zur Datei auch eine Web-Adresse verwenden.</p>
+          </div>
+          <div class="form-group media-form-wide" id="mediaFileGroup">
+            <label for="mediaFiles" id="mediaFileLabel">Datei hochladen</label>
+            <input type="file" id="mediaFiles" accept="image/*">
+            <p class="media-help" id="mediaFileHelp">Bilder werden vor dem Speichern automatisch verkleinert.</p>
+            <div id="mediaExistingFiles" class="media-existing-files"></div>
+          </div>
+        </div>
+        <div class="media-editor-actions">
+          <button type="button" id="mediaCancelBtn">Abbrechen</button>
+          <button type="button" id="mediaSaveBtn" class="primary">💾 Medium speichern</button>
+        </div>
+      </div>
 
       <div class="media-category-grid">
         <article class="media-category">
-          <div class="media-category-head">
-            <h3>🖼️ Bilder</h3>
-            <div class="media-category-icon" aria-hidden="true">📷</div>
-          </div>
+          <div class="media-category-head"><h3>🖼️ Bilder</h3><span class="media-category-count" id="mediaCount-bild">0</span></div>
+          <div class="media-list" id="mediaList-bild"></div>
         </article>
 
         <article class="media-category">
-          <div class="media-category-head">
-            <h3>🎬 Videos</h3>
-            <div class="media-category-icon" aria-hidden="true">▶️</div>
-          </div>
+          <div class="media-category-head"><h3>🎬 Videos</h3><span class="media-category-count" id="mediaCount-video">0</span></div>
+          <div class="media-list" id="mediaList-video"></div>
         </article>
 
         <article class="media-category">
-          <div class="media-category-head">
-            <h3>🔗 Links</h3>
-            <div class="media-category-icon" aria-hidden="true">🌐</div>
-          </div>
+          <div class="media-category-head"><h3>🔗 Links</h3><span class="media-category-count" id="mediaCount-link">0</span></div>
+          <div class="media-list" id="mediaList-link"></div>
         </article>
 
         <article class="media-category">
-          <div class="media-category-head">
-            <h3>✨ GIFs</h3>
-            <div class="media-category-icon" aria-hidden="true">💫</div>
-          </div>
+          <div class="media-category-head"><h3>✨ GIFs</h3><span class="media-category-count" id="mediaCount-gif">0</span></div>
+          <div class="media-list" id="mediaList-gif"></div>
         </article>
 
         <article class="media-category media-comics">
-          <div class="media-category-head">
-            <h3>💬 Comics</h3>
-            <div class="media-category-icon" aria-hidden="true">📚</div>
-          </div>
+          <div class="media-category-head"><h3>💬 Comics</h3><span class="media-category-count" id="mediaCount-comic">0</span></div>
+          <div class="media-list" id="mediaList-comic"></div>
 
           <div class="comic-cover-wrap">
-            <button class="comic-cover-open" id="comicCoverOpen" type="button" aria-label="Comic öffnen">
-              <img src="comics/9Cloud.us_0000-001%20C01P001.jpg" alt="Comic Titelbild" loading="lazy">
-              <span class="comic-cover-caption"><strong>Comic öffnen</strong><span>📖</span></span>
+            <button class="comic-cover-open" id="comicCoverOpen" type="button" aria-label="Mitgelieferten Comic öffnen">
+              <img src="comics/9Cloud.us_0000-001%20C01P001.jpg" alt="Mitgelieferter Comic – Titelbild" loading="lazy">
+              <span class="comic-cover-caption"><strong>Mitgelieferten Comic öffnen</strong><span>📖</span></span>
             </button>
           </div>
         </article>
       </div>
+
+      <p class="media-storage-note">ℹ️ Kleine und mittlere Dateien können direkt gespeichert werden. Für größere Videos ist ein Web-Link sinnvoller, damit dein gemeinsamer Supabase-Datensatz nicht unnötig groß wird.</p>
     </section>
 
     <!-- EINSTELLUNGEN -->
@@ -1845,7 +2085,7 @@
     </div>
   </div>
 
-  <!-- MODAL: Neu (für Float-Button – jetzt mit Typ-Auswahl für Aufgaben, Einlösungen, Tagebuch) -->
+  <!-- MODAL: Neu (für Aufgaben, Einlösungen und Tagebuch; Geschichten haben einen eigenen Editor) -->
   <div id="neuModal" class="modal">
     <div class="modal-content">
       <h3>➕ Neuen Eintrag</h3>
@@ -1962,9 +2202,11 @@
             img.onload = function() {
               const canvas = document.createElement('canvas');
               let w = img.width, h = img.height;
-              if (w > maxWidth) {
-                h = h * maxWidth / w;
-                w = maxWidth;
+              const largestSide = Math.max(w, h);
+              if (largestSide > maxWidth) {
+                const scale = maxWidth / largestSide;
+                w = Math.round(w * scale);
+                h = Math.round(h * scale);
               }
               canvas.width = w;
               canvas.height = h;
@@ -1976,6 +2218,17 @@
             img.src = e.target.result;
           };
           reader.onerror = reject;
+          reader.readAsDataURL(file);
+        });
+      }
+
+      function readFileAsDataURL(file, maxBytes = 10 * 1024 * 1024) {
+        return new Promise((resolve, reject) => {
+          if (!file) return reject(new Error('Keine Datei ausgewählt.'));
+          if (file.size > maxBytes) return reject(new Error(`Datei ist zu groß (${(file.size / 1024 / 1024).toFixed(1)} MB). Maximal ${(maxBytes / 1024 / 1024).toFixed(0)} MB.`));
+          const reader = new FileReader();
+          reader.onload = () => resolve(String(reader.result || ''));
+          reader.onerror = () => reject(reader.error || new Error('Datei konnte nicht gelesen werden.'));
           reader.readAsDataURL(file);
         });
       }
@@ -2052,9 +2305,54 @@
       }
 
 
+
+
+      function ensureGeschichtenData(daten) {
+        if (!daten || typeof daten !== 'object') return [];
+        if (!Array.isArray(daten.geschichten)) daten.geschichten = [];
+        daten.geschichten = daten.geschichten.map((g, index) => {
+          const item = (g && typeof g === 'object') ? g : {};
+          if (!item.id) item.id = genId();
+          if (typeof item.titel !== 'string') item.titel = item.title || `Kapitel ${index + 1}`;
+          if (typeof item.text !== 'string') item.text = '';
+          if (typeof item.datum !== 'string') item.datum = '';
+          const kapitel = Number(item.kapitel);
+          item.kapitel = Number.isFinite(kapitel) && kapitel > 0 ? Math.round(kapitel) : index + 1;
+          if (!Array.isArray(item.bilder)) item.bilder = item.image ? [item.image] : [];
+          item.bilder = item.bilder.filter(x => typeof x === 'string' && x);
+          if (!Array.isArray(item.links)) item.links = [];
+          item.links = item.links.map(link => {
+            if (typeof link === 'string') return { label: link, url: link };
+            return { label: String(link?.label || link?.url || ''), url: String(link?.url || '') };
+          }).filter(link => link.url);
+          if (!item.createdAt) item.createdAt = new Date().toISOString();
+          return item;
+        });
+        return daten.geschichten;
+      }
+
+      function ensureMedienData(daten) {
+        if (!daten || typeof daten !== 'object') return [];
+        if (!Array.isArray(daten.medien)) daten.medien = [];
+        const allowed = new Set(['bild','video','link','gif','comic']);
+        daten.medien = daten.medien.map((entry, index) => {
+          const item = (entry && typeof entry === 'object') ? entry : {};
+          if (!item.id) item.id = genId();
+          if (!allowed.has(item.typ)) item.typ = 'bild';
+          item.titel = String(item.titel || item.title || `Medium ${index + 1}`);
+          item.beschreibung = String(item.beschreibung || item.description || '');
+          item.url = String(item.url || '');
+          if (!Array.isArray(item.files)) item.files = item.file ? [item.file] : (item.image ? [item.image] : []);
+          item.files = item.files.filter(x => typeof x === 'string' && x);
+          if (!item.createdAt) item.createdAt = new Date().toISOString();
+          return item;
+        });
+        return daten.medien;
+      }
+
       // ===== DATA MANAGER (Supabase) =====
       const DataManager = {
-        lokaleDaten: { aufgaben: [], einloesungen: [], tagebuch: [], konto: 0, gesamtVerdient: 0, log: [], puzzle: { level: 1, levels: {}, matches: 0, wordsSolved: 0, moves: 0, roundId: '', wordCategory: 'liebe' }, kompass: { profiles: { er: { answers: {}, history: [], updatedAt: null }, sie: { answers: {}, history: [], updatedAt: null } }, pairHistory: [], activeRole: 'er', activeView: 'er', updatedAt: null, schemaVersion: 3 } },
+        lokaleDaten: { aufgaben: [], einloesungen: [], tagebuch: [], geschichten: [], medien: [], konto: 0, gesamtVerdient: 0, log: [], puzzle: { level: 1, levels: {}, matches: 0, wordsSolved: 0, moves: 0, roundId: '', wordCategory: 'liebe' }, kompass: { profiles: { er: { answers: {}, history: [], updatedAt: null }, sie: { answers: {}, history: [], updatedAt: null } }, pairHistory: [], activeRole: 'er', activeView: 'er', updatedAt: null, schemaVersion: 3 } },
         aktuelleVersion: null,
 
         getHeaders(extra = {}) {
@@ -2119,6 +2417,8 @@
               { id: genId(), datum: '2026-07-11', text: 'Sie hat mir ihre neuen Bikinis vorgeführt. Unglaublich heiße Teile …', image: '', kommentare: [] },
               { id: genId(), datum: '2026-07-12', text: 'Sie scherzte heute, ich solle bloß keinen Zentimeter dazulügen …', image: '', kommentare: [] }
             ],
+            geschichten: [],
+            medien: [],
             konto: 0,
             gesamtVerdient: 0,
             log: [],
@@ -2153,6 +2453,8 @@
               ensureLifetimePoints(this.lokaleDaten);
               ensurePuzzleData(this.lokaleDaten);
               ensureCompassData(this.lokaleDaten);
+              ensureGeschichtenData(this.lokaleDaten);
+              ensureMedienData(this.lokaleDaten);
               ['aufgaben', 'einloesungen', 'tagebuch'].forEach(key => {
                 (this.lokaleDaten[key] || []).forEach(e => {
                   if (!e.image) e.image = '';
@@ -2233,6 +2535,8 @@
                 ensureLifetimePoints(this.lokaleDaten);
                 ensurePuzzleData(this.lokaleDaten);
                 ensureCompassData(this.lokaleDaten);
+                ensureGeschichtenData(this.lokaleDaten);
+                ensureMedienData(this.lokaleDaten);
                 this.aktuelleVersion = serverVersion;
                 showToast('Server-Daten geladen.', 'info');
                 UIRenderer.renderAlles(this.lokaleDaten);
@@ -2295,6 +2599,40 @@
           this.lokaleDaten.tagebuch.push(neu);
           return neu;
         },
+        addGeschichte({ titel, text, datum, kapitel, bilder = [], links = [] }) {
+          ensureGeschichtenData(this.lokaleDaten);
+          const neu = {
+            id: genId(), titel, text, datum,
+            kapitel: Math.max(1, parseInt(kapitel, 10) || 1),
+            bilder: Array.isArray(bilder) ? bilder : [],
+            links: Array.isArray(links) ? links : [],
+            createdAt: new Date().toISOString()
+          };
+          this.lokaleDaten.geschichten.push(neu);
+          return neu;
+        },
+        findGeschichte(id) {
+          ensureGeschichtenData(this.lokaleDaten);
+          return this.lokaleDaten.geschichten.find(x => x.id === id);
+        },
+        deleteGeschichte(id) {
+          ensureGeschichtenData(this.lokaleDaten);
+          this.lokaleDaten.geschichten = this.lokaleDaten.geschichten.filter(x => x.id !== id);
+        },
+        addMedium({ typ, titel, beschreibung = '', url = '', files = [] }) {
+          ensureMedienData(this.lokaleDaten);
+          const neu = { id: genId(), typ, titel, beschreibung, url, files: Array.isArray(files) ? files : [], createdAt: new Date().toISOString() };
+          this.lokaleDaten.medien.push(neu);
+          return neu;
+        },
+        findMedium(id) {
+          ensureMedienData(this.lokaleDaten);
+          return this.lokaleDaten.medien.find(x => x.id === id);
+        },
+        deleteMedium(id) {
+          ensureMedienData(this.lokaleDaten);
+          this.lokaleDaten.medien = this.lokaleDaten.medien.filter(x => x.id !== id);
+        },
         deleteEintrag(id, typ) {
           if (typ === 'aufgabe') {
             this.lokaleDaten.aufgaben = this.lokaleDaten.aufgaben.filter(x => x.id !== id);
@@ -2329,6 +2667,10 @@
           this.renderAufgaben(daten.aufgaben);
           this.renderEinloesungen(daten.einloesungen);
           this.renderTagebuch(daten.tagebuch);
+          ensureGeschichtenData(daten);
+          StoryApp.render(daten.geschichten);
+          ensureMedienData(daten);
+          MediaApp.render(daten.medien);
           this.renderLog(daten.log);
           this.updateProgress(daten.konto);
           if (typeof PuzzleGame !== 'undefined') PuzzleGame.render();
@@ -2958,6 +3300,549 @@
       };
 
 
+
+
+
+      // ===== MEDIEN-VERWALTUNG =====
+      const MediaApp = {
+        initialized: false,
+        existingFiles: [],
+
+        init() {
+          if (this.initialized) return;
+          this.initialized = true;
+          document.getElementById('mediaNewBtn')?.addEventListener('click', () => this.openEditor());
+          document.getElementById('mediaCancelBtn')?.addEventListener('click', () => this.closeEditor());
+          document.getElementById('mediaSaveBtn')?.addEventListener('click', () => this.saveEditor());
+          document.getElementById('mediaType')?.addEventListener('change', () => this.updateEditorFields());
+          document.getElementById('mediaExistingFiles')?.addEventListener('click', e => {
+            const btn = e.target.closest('[data-remove-media-file]');
+            if (!btn) return;
+            const index = Number(btn.dataset.removeMediaFile);
+            if (!Number.isInteger(index)) return;
+            this.existingFiles.splice(index, 1);
+            this.renderExistingFiles();
+          });
+          document.getElementById('tab-medien')?.addEventListener('click', e => {
+            const action = e.target.closest('[data-media-action]');
+            if (!action) return;
+            const item = DataManager.findMedium(action.dataset.id);
+            if (!item) return;
+            if (action.dataset.mediaAction === 'edit') this.openEditor(item);
+            if (action.dataset.mediaAction === 'delete') {
+              if (!confirm(`Medium „${item.titel}“ wirklich löschen?`)) return;
+              DataManager.deleteMedium(item.id);
+              DataManager.addLog(`Medium gelöscht: „${item.titel}“`);
+              DataManager.save().then(() => UIRenderer.renderAlles(DataManager.lokaleDaten));
+            }
+            if (action.dataset.mediaAction === 'comic') {
+              const pages = (item.files || []).filter(src => this.isSafeImage(src));
+              if (pages.length && typeof window.openMediaComic === 'function') window.openMediaComic(pages, item.titel || 'Comic');
+            }
+          });
+        },
+
+        normalizeUrl(value) {
+          const raw = String(value || '').trim();
+          if (!raw) return '';
+          try {
+            const u = new URL(raw);
+            return ['http:', 'https:'].includes(u.protocol) ? u.href : '';
+          } catch (_) { return ''; }
+        },
+
+        isSafeImage(src) { return /^(?:data:image\/(?:jpeg|jpg|png|webp|gif);base64,|https?:\/\/)/i.test(String(src || '')); },
+        isSafeVideo(src) { return /^(?:data:video\/[a-z0-9.+-]+;base64,|https?:\/\/)/i.test(String(src || '')); },
+
+        openEditor(item = null) {
+          const editor = document.getElementById('mediaEditor');
+          if (!editor) return;
+          const editing = !!item;
+          document.getElementById('mediaEditorTitle').textContent = editing ? 'Medium bearbeiten' : 'Neues Medium';
+          document.getElementById('mediaEditId').value = editing ? item.id : '';
+          document.getElementById('mediaType').value = editing ? item.typ : 'bild';
+          document.getElementById('mediaTitle').value = editing ? item.titel : '';
+          document.getElementById('mediaDescription').value = editing ? item.beschreibung : '';
+          document.getElementById('mediaUrl').value = editing ? item.url : '';
+          document.getElementById('mediaFiles').value = '';
+          this.existingFiles = editing ? [...(item.files || [])] : [];
+          this.updateEditorFields();
+          this.renderExistingFiles();
+          editor.classList.remove('hidden');
+          requestAnimationFrame(() => {
+            editor.scrollIntoView({ behavior:'smooth', block:'start' });
+            document.getElementById('mediaTitle')?.focus({ preventScroll:true });
+          });
+        },
+
+        closeEditor() {
+          document.getElementById('mediaEditor')?.classList.add('hidden');
+          document.getElementById('mediaEditId').value = '';
+          document.getElementById('mediaFiles').value = '';
+          this.existingFiles = [];
+          this.renderExistingFiles();
+        },
+
+        updateEditorFields() {
+          const type = document.getElementById('mediaType')?.value || 'bild';
+          const input = document.getElementById('mediaFiles');
+          const label = document.getElementById('mediaFileLabel');
+          const help = document.getElementById('mediaFileHelp');
+          const fileGroup = document.getElementById('mediaFileGroup');
+          const urlGroup = document.getElementById('mediaUrlGroup');
+          if (!input || !label || !help || !fileGroup || !urlGroup) return;
+          fileGroup.style.display = type === 'link' ? 'none' : 'block';
+          urlGroup.style.display = 'block';
+          input.multiple = type === 'comic';
+          if (type === 'bild') {
+            input.accept = 'image/jpeg,image/png,image/webp'; label.textContent = 'Bild hochladen';
+            help.textContent = 'Ein Bild. Es wird automatisch verkleinert und komprimiert.';
+          } else if (type === 'gif') {
+            input.accept = 'image/gif'; label.textContent = 'GIF hochladen';
+            help.textContent = 'GIF bis 5 MB. Animationen bleiben erhalten.';
+          } else if (type === 'video') {
+            input.accept = 'video/mp4,video/webm,video/ogg'; label.textContent = 'Video hochladen';
+            help.textContent = 'Video bis 10 MB. Für größere Videos bitte eine Web-Adresse verwenden.';
+          } else if (type === 'comic') {
+            input.accept = 'image/jpeg,image/png,image/webp'; label.textContent = 'Comic-Seiten hochladen';
+            help.textContent = 'Mehrere Bilder auswählen. Die Dateireihenfolge wird als Seitenreihenfolge übernommen (max. 20 Seiten).';
+          } else {
+            input.accept = ''; input.multiple = false;
+          }
+          this.renderExistingFiles();
+        },
+
+        renderExistingFiles() {
+          const wrap = document.getElementById('mediaExistingFiles');
+          if (!wrap) return;
+          wrap.innerHTML = '';
+          const type = document.getElementById('mediaType')?.value || 'bild';
+          this.existingFiles.forEach((src, index) => {
+            const box = document.createElement('div');
+            box.className = 'media-existing-file';
+            if ((type === 'bild' || type === 'gif' || type === 'comic') && this.isSafeImage(src)) {
+              const img = document.createElement('img'); img.src = src; img.alt = `Datei ${index + 1}`; box.appendChild(img);
+            } else if (type === 'video' && this.isSafeVideo(src)) {
+              const v = document.createElement('video'); v.src = src; v.muted = true; v.preload = 'metadata'; box.appendChild(v);
+            } else {
+              const label = document.createElement('div'); label.className = 'file-label'; label.textContent = `Gespeicherte Datei ${index + 1}`; box.appendChild(label);
+            }
+            const btn = document.createElement('button'); btn.type='button'; btn.dataset.removeMediaFile=String(index); btn.title='Datei entfernen'; btn.textContent='✕';
+            box.appendChild(btn); wrap.appendChild(box);
+          });
+        },
+
+        async processFiles(type, files) {
+          const result = [];
+          if (type === 'bild') {
+            if (files[0]) result.push(await compressImage(files[0], 1400, 0.78));
+          } else if (type === 'comic') {
+            if (files.length > 20) throw new Error('Maximal 20 Comic-Seiten pro Eintrag.');
+            for (const file of files) {
+              if (!file.type.startsWith('image/')) continue;
+              result.push(await compressImage(file, 1500, 0.76));
+            }
+          } else if (type === 'gif') {
+            if (files[0]) {
+              if (files[0].type !== 'image/gif') throw new Error('Bitte eine GIF-Datei auswählen.');
+              result.push(await readFileAsDataURL(files[0], 5 * 1024 * 1024));
+            }
+          } else if (type === 'video') {
+            if (files[0]) {
+              if (!files[0].type.startsWith('video/')) throw new Error('Bitte eine Videodatei auswählen.');
+              result.push(await readFileAsDataURL(files[0], 10 * 1024 * 1024));
+            }
+          }
+          return result;
+        },
+
+        async saveEditor() {
+          const id = document.getElementById('mediaEditId').value;
+          const typ = document.getElementById('mediaType').value;
+          const titel = document.getElementById('mediaTitle').value.trim();
+          const beschreibung = document.getElementById('mediaDescription').value.trim();
+          const rawUrl = document.getElementById('mediaUrl').value.trim();
+          const url = rawUrl ? this.normalizeUrl(rawUrl) : '';
+          if (!titel) { showToast('Bitte einen Titel eingeben.', 'error'); return; }
+          if (rawUrl && !url) { showToast('Bitte eine vollständige http:// oder https:// Adresse eingeben.', 'error'); return; }
+          const selected = [...document.getElementById('mediaFiles').files];
+          if (typ === 'link' && !url) { showToast('Für einen Link bitte eine Web-Adresse eingeben.', 'error'); return; }
+          if (typ === 'comic' && this.existingFiles.length + selected.length > 20) { showToast('Maximal 20 Comic-Seiten pro Eintrag.', 'error'); return; }
+          if (['bild','gif','video'].includes(typ) && this.existingFiles.length + selected.length > 1) { showToast('Bitte nur eine Datei pro Eintrag verwenden.', 'error'); return; }
+          if (typ !== 'link' && !url && !this.existingFiles.length && !selected.length) { showToast('Bitte eine Datei hochladen oder eine Web-Adresse angeben.', 'error'); return; }
+
+          const btn = document.getElementById('mediaSaveBtn');
+          const oldText = btn.textContent;
+          btn.disabled = true;
+          btn.textContent = selected.length ? 'Datei wird verarbeitet …' : 'Speichert …';
+          try {
+            const newFiles = await this.processFiles(typ, selected);
+            let files = [...this.existingFiles, ...newFiles];
+            if (['bild','gif','video'].includes(typ)) files = files.slice(-1);
+            if (id) {
+              const item = DataManager.findMedium(id);
+              if (!item) throw new Error('Medium wurde nicht gefunden.');
+              Object.assign(item, { typ, titel, beschreibung, url, files });
+              DataManager.addLog(`Medium bearbeitet: „${titel}“`);
+            } else {
+              DataManager.addMedium({ typ, titel, beschreibung, url, files });
+              DataManager.addLog(`Neues Medium: „${titel}“`);
+            }
+            await DataManager.save();
+            this.closeEditor();
+            UIRenderer.renderAlles(DataManager.lokaleDaten);
+            showToast(id ? 'Medium aktualisiert.' : 'Medium gespeichert.', 'success');
+          } catch (err) {
+            console.error(err);
+            showToast('Medium konnte nicht gespeichert werden: ' + err.message, 'error');
+          } finally {
+            btn.disabled = false; btn.textContent = oldText;
+          }
+        },
+
+        youtubeEmbed(url) {
+          const safe = this.normalizeUrl(url);
+          if (!safe) return '';
+          try {
+            const u = new URL(safe);
+            let id = '';
+            if (u.hostname === 'youtu.be') id = u.pathname.slice(1).split('/')[0];
+            if (/youtube\.com$/i.test(u.hostname) || /www\.youtube\.com$/i.test(u.hostname)) {
+              if (u.pathname === '/watch') id = u.searchParams.get('v') || '';
+              const m = u.pathname.match(/^\/(?:embed|shorts)\/([^/?]+)/); if (m) id = m[1];
+            }
+            return id && /^[\w-]{6,}$/.test(id) ? `https://www.youtube-nocookie.com/embed/${id}` : '';
+          } catch (_) { return ''; }
+        },
+
+        createActions(item) {
+          const actions = document.createElement('div'); actions.className='media-item-actions';
+          const edit = document.createElement('button'); edit.type='button'; edit.dataset.mediaAction='edit'; edit.dataset.id=item.id; edit.textContent='✏️ Bearbeiten';
+          const del = document.createElement('button'); del.type='button'; del.dataset.mediaAction='delete'; del.dataset.id=item.id; del.className='danger'; del.textContent='🗑️ Löschen';
+          actions.append(edit, del); return actions;
+        },
+
+        renderItem(item) {
+          const card = document.createElement('div'); card.className='media-item';
+          const file = (item.files || [])[0] || '';
+          const safeUrl = this.normalizeUrl(item.url);
+          if (item.typ === 'bild' || item.typ === 'gif') {
+            const src = file && this.isSafeImage(file) ? file : safeUrl;
+            if (src) {
+              const preview = document.createElement('a'); preview.href=src; preview.className='media-item-preview zoomable-media'; preview.dataset.fullSrc=src; preview.dataset.title=item.titel;
+              const img=document.createElement('img'); img.src=src; img.alt=item.titel; img.loading='lazy'; preview.appendChild(img); card.appendChild(preview);
+            }
+          } else if (item.typ === 'video') {
+            const src = file && this.isSafeVideo(file) ? file : safeUrl;
+            const yt = !file ? this.youtubeEmbed(safeUrl) : '';
+            if (yt) {
+              const wrap=document.createElement('div'); wrap.className='media-video-embed'; const frame=document.createElement('iframe'); frame.src=yt; frame.title=item.titel; frame.loading='lazy'; frame.allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share'; frame.allowFullscreen=true; wrap.appendChild(frame); card.appendChild(wrap);
+            } else if (src && (file || /\.(?:mp4|webm|ogg)(?:$|\?)/i.test(src))) {
+              const v=document.createElement('video'); v.className='media-item-preview'; v.src=src; v.controls=true; v.preload='metadata'; card.appendChild(v);
+            }
+          } else if (item.typ === 'link' && safeUrl) {
+            const a=document.createElement('a'); a.className='media-link-card'; a.href=safeUrl; a.target='_blank'; a.rel='noopener noreferrer';
+            const strong=document.createElement('strong'); strong.textContent=`🔗 ${item.titel}`; const span=document.createElement('span'); span.textContent=safeUrl; a.append(strong,span); card.appendChild(a);
+          } else if (item.typ === 'comic') {
+            const pages=(item.files||[]).filter(src=>this.isSafeImage(src));
+            if (pages.length) {
+              const preview=document.createElement('button'); preview.type='button'; preview.className='media-item-preview comic'; preview.dataset.mediaAction='comic'; preview.dataset.id=item.id;
+              const img=document.createElement('img'); img.src=pages[0]; img.alt=`${item.titel} – Titelbild`; img.loading='lazy';
+              const badge=document.createElement('span'); badge.className='media-comic-badge'; badge.textContent=`📖 ${pages.length} Seite${pages.length===1?'':'n'}`; preview.append(img,badge); card.appendChild(preview);
+            }
+          }
+          const body=document.createElement('div'); body.className='media-item-body';
+          const title=document.createElement('h4'); title.className='media-item-title'; title.textContent=item.titel; body.appendChild(title);
+          if (item.beschreibung) { const d=document.createElement('p'); d.className='media-item-desc'; d.textContent=item.beschreibung; body.appendChild(d); }
+          if (safeUrl && item.typ !== 'link') { const a=document.createElement('a'); a.className='media-item-link'; a.href=safeUrl; a.target='_blank'; a.rel='noopener noreferrer'; a.textContent='🔗 Zugehörigen Link öffnen'; body.appendChild(a); }
+          card.appendChild(body, this.createActions(item));
+          return card;
+        },
+
+        render(medien) {
+          const types=['bild','video','link','gif','comic'];
+          const list=Array.isArray(medien)?medien:[];
+          types.forEach(type => {
+            const container=document.getElementById(`mediaList-${type}`); const count=document.getElementById(`mediaCount-${type}`);
+            if (!container) return;
+            const items=list.filter(x=>x.typ===type).slice().sort((a,b)=>String(b.createdAt||'').localeCompare(String(a.createdAt||'')));
+            if (count) count.textContent=String(items.length);
+            container.innerHTML='';
+            if (!items.length) { const empty=document.createElement('div'); empty.className='media-empty'; empty.textContent='Noch nichts hinzugefügt.'; container.appendChild(empty); return; }
+            items.forEach(item=>container.appendChild(this.renderItem(item)));
+          });
+        }
+      };
+
+
+      // ===== HELDENGESCHICHTE =====
+      const StoryApp = {
+        initialized: false,
+        existingImages: [],
+
+        init() {
+          if (this.initialized) return;
+          this.initialized = true;
+          document.getElementById('storyNewBtn')?.addEventListener('click', () => this.openEditor());
+          document.getElementById('storyCancelBtn')?.addEventListener('click', () => this.closeEditor());
+          document.getElementById('storySaveBtn')?.addEventListener('click', () => this.saveEditor());
+          document.getElementById('storyExistingImages')?.addEventListener('click', e => {
+            const btn = e.target.closest('[data-remove-story-image]');
+            if (!btn) return;
+            const index = Number(btn.dataset.removeStoryImage);
+            if (!Number.isInteger(index)) return;
+            this.existingImages.splice(index, 1);
+            this.renderExistingImages();
+          });
+          document.getElementById('geschichtenContainer')?.addEventListener('click', e => {
+            const action = e.target.closest('[data-story-action]');
+            if (!action) return;
+            const id = action.dataset.id;
+            if (action.dataset.storyAction === 'edit') {
+              const item = DataManager.findGeschichte(id);
+              if (item) this.openEditor(item);
+            }
+            if (action.dataset.storyAction === 'delete') {
+              const item = DataManager.findGeschichte(id);
+              if (!item) return;
+              if (!confirm(`Kapitel „${item.titel}“ wirklich löschen?`)) return;
+              DataManager.deleteGeschichte(id);
+              DataManager.addLog(`Geschichten-Kapitel gelöscht: „${item.titel}“`);
+              DataManager.save().then(() => UIRenderer.renderAlles(DataManager.lokaleDaten));
+            }
+          });
+        },
+
+        nextChapter() {
+          ensureGeschichtenData(DataManager.lokaleDaten);
+          const max = DataManager.lokaleDaten.geschichten.reduce((m, g) => Math.max(m, Number(g.kapitel) || 0), 0);
+          return max + 1;
+        },
+
+        openEditor(item = null) {
+          const editor = document.getElementById('storyEditor');
+          if (!editor) return;
+          const editing = !!item;
+          document.getElementById('storyEditorTitle').textContent = editing ? 'Kapitel bearbeiten' : 'Neues Kapitel';
+          document.getElementById('storyEditId').value = editing ? item.id : '';
+          document.getElementById('storyChapter').value = editing ? (item.kapitel || 1) : this.nextChapter();
+          document.getElementById('storyDate').value = editing ? (item.datum || '') : new Date().toISOString().slice(0, 10);
+          document.getElementById('storyTitle').value = editing ? (item.titel || '') : '';
+          document.getElementById('storyText').value = editing ? (item.text || '') : '';
+          document.getElementById('storyLinks').value = editing ? (item.links || []).map(link => `${link.label || link.url} | ${link.url}`).join('\n') : '';
+          document.getElementById('storyImages').value = '';
+          this.existingImages = editing ? [...(item.bilder || [])] : [];
+          this.renderExistingImages();
+          editor.classList.remove('hidden');
+          requestAnimationFrame(() => {
+            editor.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            document.getElementById('storyTitle').focus({ preventScroll: true });
+          });
+        },
+
+        closeEditor() {
+          document.getElementById('storyEditor')?.classList.add('hidden');
+          document.getElementById('storyEditId').value = '';
+          document.getElementById('storyImages').value = '';
+          this.existingImages = [];
+          this.renderExistingImages();
+        },
+
+        renderExistingImages() {
+          const wrap = document.getElementById('storyExistingImages');
+          if (!wrap) return;
+          wrap.innerHTML = '';
+          this.existingImages.forEach((src, index) => {
+            if (!this.isSafeImage(src)) return;
+            const item = document.createElement('div');
+            item.className = 'story-editor-image';
+            const img = document.createElement('img');
+            img.src = src;
+            img.alt = `Gespeichertes Bild ${index + 1}`;
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.dataset.removeStoryImage = String(index);
+            btn.title = 'Bild entfernen';
+            btn.textContent = '✕';
+            item.append(img, btn);
+            wrap.appendChild(item);
+          });
+        },
+
+        isSafeImage(src) {
+          return /^data:image\/(?:jpeg|jpg|png|webp|gif);base64,/i.test(String(src || ''));
+        },
+
+        normalizeUrl(value) {
+          const raw = String(value || '').trim();
+          if (!raw) return null;
+          try {
+            const u = new URL(raw);
+            if (!['http:', 'https:'].includes(u.protocol)) return null;
+            return u.href;
+          } catch (_) {
+            return null;
+          }
+        },
+
+        parseLinks(raw) {
+          const result = [];
+          const invalid = [];
+          String(raw || '').split(/\r?\n/).map(x => x.trim()).filter(Boolean).forEach(line => {
+            let label = line;
+            let urlText = line;
+            if (line.includes('|')) {
+              const parts = line.split('|');
+              label = parts.shift().trim();
+              urlText = parts.join('|').trim();
+            }
+            const url = this.normalizeUrl(urlText);
+            if (!url) invalid.push(line);
+            else result.push({ label: label || url, url });
+          });
+          return { result, invalid };
+        },
+
+        async saveEditor() {
+          const saveBtn = document.getElementById('storySaveBtn');
+          const id = document.getElementById('storyEditId').value;
+          const kapitel = Math.max(1, parseInt(document.getElementById('storyChapter').value, 10) || 1);
+          const datum = document.getElementById('storyDate').value;
+          const titel = document.getElementById('storyTitle').value.trim();
+          const text = document.getElementById('storyText').value.trim();
+          if (!titel) { showToast('Bitte einen Kapiteltitel eingeben.', 'error'); return; }
+          if (!text) { showToast('Bitte den Kapiteltext eingeben.', 'error'); return; }
+          if (!datum) { showToast('Bitte ein Datum auswählen.', 'error'); return; }
+
+          const parsed = this.parseLinks(document.getElementById('storyLinks').value);
+          if (parsed.invalid.length) {
+            showToast('Mindestens ein Link ist ungültig. Bitte vollständige http:// oder https:// Adresse verwenden.', 'error');
+            return;
+          }
+
+          const selected = [...document.getElementById('storyImages').files];
+          if (this.existingImages.length + selected.length > 6) {
+            showToast('Maximal 6 Bilder pro Kapitel.', 'error');
+            return;
+          }
+
+          const previousText = saveBtn.textContent;
+          saveBtn.disabled = true;
+          saveBtn.textContent = selected.length ? 'Bilder werden verarbeitet …' : 'Speichert …';
+          try {
+            const newImages = [];
+            for (const file of selected) {
+              if (!file.type.startsWith('image/')) continue;
+              newImages.push(await compressImage(file, 1200, 0.72));
+            }
+            const bilder = [...this.existingImages, ...newImages];
+            if (id) {
+              const item = DataManager.findGeschichte(id);
+              if (!item) throw new Error('Kapitel wurde nicht gefunden.');
+              Object.assign(item, { titel, text, datum, kapitel, bilder, links: parsed.result });
+              DataManager.addLog(`Geschichten-Kapitel bearbeitet: „${titel}“`);
+            } else {
+              DataManager.addGeschichte({ titel, text, datum, kapitel, bilder, links: parsed.result });
+              DataManager.addLog(`Neues Geschichten-Kapitel: „${titel}“`);
+            }
+            await DataManager.save();
+            this.closeEditor();
+            UIRenderer.renderAlles(DataManager.lokaleDaten);
+            showToast(id ? 'Kapitel aktualisiert.' : 'Kapitel veröffentlicht.', 'success');
+          } catch (err) {
+            console.error(err);
+            showToast('Kapitel konnte nicht gespeichert werden: ' + err.message, 'error');
+          } finally {
+            saveBtn.disabled = false;
+            saveBtn.textContent = previousText;
+          }
+        },
+
+        render(geschichten) {
+          const container = document.getElementById('geschichtenContainer');
+          if (!container) return;
+          const list = (Array.isArray(geschichten) ? geschichten : []).slice().sort((a, b) => {
+            const chapterDiff = (Number(a.kapitel) || 0) - (Number(b.kapitel) || 0);
+            if (chapterDiff) return chapterDiff;
+            return String(a.datum || '').localeCompare(String(b.datum || ''));
+          });
+          container.innerHTML = '';
+          if (!list.length) {
+            const empty = document.createElement('div');
+            empty.className = 'story-empty';
+            empty.innerHTML = '<strong>Noch kein Kapitel.</strong><br>Mit „Neues Kapitel“ beginnst du die Reise deines Helden.';
+            container.appendChild(empty);
+            return;
+          }
+
+          list.forEach((item, index) => {
+            const article = document.createElement('article');
+            article.className = 'story-chapter';
+
+            const meta = document.createElement('div');
+            meta.className = 'story-meta';
+            const chapter = document.createElement('span');
+            chapter.className = 'story-kapitel';
+            chapter.textContent = `Kapitel ${item.kapitel || index + 1}`;
+            const date = document.createElement('span');
+            date.textContent = item.datum ? new Date(item.datum + 'T12:00:00').toLocaleDateString('de-DE', { day:'2-digit', month:'long', year:'numeric' }) : '';
+            meta.append(chapter, date);
+
+            const title = document.createElement('h3');
+            title.textContent = item.titel || `Kapitel ${index + 1}`;
+            const body = document.createElement('div');
+            body.className = 'story-text';
+            body.textContent = item.text || '';
+            article.append(meta, title, body);
+
+            const safeImages = (item.bilder || []).filter(src => this.isSafeImage(src));
+            if (safeImages.length) {
+              const gallery = document.createElement('div');
+              gallery.className = 'story-gallery';
+              safeImages.forEach((src, imageIndex) => {
+                const img = document.createElement('img');
+                img.src = src;
+                img.alt = `${item.titel || 'Kapitel'} – Bild ${imageIndex + 1}`;
+                img.loading = 'lazy';
+                gallery.appendChild(img);
+              });
+              article.appendChild(gallery);
+            }
+
+            const validLinks = (item.links || []).map(link => ({ ...link, safe: this.normalizeUrl(link.url) })).filter(link => link.safe);
+            if (validLinks.length) {
+              const links = document.createElement('div');
+              links.className = 'story-links';
+              validLinks.forEach(link => {
+                const a = document.createElement('a');
+                a.href = link.safe;
+                a.target = '_blank';
+                a.rel = 'noopener noreferrer';
+                a.textContent = `🔗 ${link.label || link.safe}`;
+                links.appendChild(a);
+              });
+              article.appendChild(links);
+            }
+
+            const actions = document.createElement('div');
+            actions.className = 'story-actions';
+            const edit = document.createElement('button');
+            edit.type = 'button';
+            edit.dataset.storyAction = 'edit';
+            edit.dataset.id = item.id;
+            edit.textContent = '✏️ Bearbeiten';
+            const del = document.createElement('button');
+            del.type = 'button';
+            del.dataset.storyAction = 'delete';
+            del.dataset.id = item.id;
+            del.className = 'danger';
+            del.textContent = '🗑️ Löschen';
+            actions.append(edit, del);
+            article.appendChild(actions);
+            container.appendChild(article);
+          });
+        }
+      };
 
       // ===== PAAR-KOMPASS V3 (Supabase-synchronisiert) =====
       const CompassApp = {
@@ -3663,9 +4548,16 @@
 
           PuzzleGame.init();
           CompassApp.init();
+          StoryApp.init();
+          MediaApp.init();
 
           // Float-Button -> Modal Neu
           document.getElementById('floatNeuBtn').addEventListener('click', () => {
+            const activeTab = document.querySelector('.tab-btn.active')?.dataset.tab;
+            if (activeTab === 'geschichten') {
+              StoryApp.openEditor();
+              return;
+            }
             document.getElementById('neuModal').classList.add('active');
             // Typ-Auswahl initialisieren
             const typSelect = document.getElementById('neuTyp');
@@ -3815,6 +4707,9 @@
                   DataManager.lokaleDaten = imported;
                   ensureLifetimePoints(DataManager.lokaleDaten);
                   ensurePuzzleData(DataManager.lokaleDaten);
+                  ensureCompassData(DataManager.lokaleDaten);
+                  ensureGeschichtenData(DataManager.lokaleDaten);
+                  ensureMedienData(DataManager.lokaleDaten);
                   ['aufgaben', 'einloesungen', 'tagebuch'].forEach(key => {
                     (DataManager.lokaleDaten[key] || []).forEach(e => {
                       if (!e.image) e.image = '';
@@ -3981,7 +4876,7 @@
       const comicCover = document.getElementById('comicCoverOpen');
       if (!box || !img) return;
 
-      const comicPages = [
+      const defaultComicPages = [
         'comics/9Cloud.us_0000-001%20C01P001.jpg',
         'comics/9Cloud.us_0001-002%20C01P002.jpg',
         'comics/9Cloud.us_0002-003%20C01P003.jpg',
@@ -4011,6 +4906,8 @@
         'comics/9Cloud.us_0026-027%20C01P027.jpg'
       ];
 
+      let comicPages = defaultComicPages;
+      let comicLabel = 'Comic';
       let scale = 1;
       let comicIndex = -1;
       let isComic = false;
@@ -4040,7 +4937,7 @@
         isComic = true;
         img.src = comicPages[comicIndex];
         img.alt = `Comic Seite ${comicIndex + 1}`;
-        title.textContent = `Comic · Seite ${String(comicIndex + 1).padStart(2, '0')} / ${comicPages.length}`;
+        title.textContent = `${comicLabel} · Seite ${String(comicIndex + 1).padStart(2, '0')} / ${comicPages.length}`;
         resetZoom();
         updateComicNav();
       };
@@ -4072,7 +4969,14 @@
         updateComicNav();
       };
 
-      comicCover?.addEventListener('click', () => openComic(0));
+      comicCover?.addEventListener('click', () => { comicPages = defaultComicPages; comicLabel = 'Mitgelieferter Comic'; openComic(0); });
+      window.openMediaComic = (pages, label = 'Comic') => {
+        const safePages = (Array.isArray(pages) ? pages : []).filter(src => /^data:image\/(?:jpeg|jpg|png|webp|gif);base64,/i.test(String(src || '')) || /^https?:\/\//i.test(String(src || '')));
+        if (!safePages.length) return;
+        comicPages = safePages;
+        comicLabel = String(label || 'Comic');
+        openComic(0);
+      };
       document.addEventListener('click', event => {
         const trigger = event.target.closest('.zoomable-media');
         if (trigger) { event.preventDefault(); openImage(trigger); }
