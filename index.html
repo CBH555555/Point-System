@@ -1905,7 +1905,7 @@
       <div class="media-toolbar">
         <div>
           <h3>Deine Mediensammlung</h3>
-          <p>Wähle einen Medientyp, lade Dateien hoch oder hinterlege eine Web-Adresse. Alles wird mit deinen übrigen Daten gespeichert.</p>
+          <p>Wähle einen Medientyp, lade Dateien hoch oder hinterlege eine Web-Adresse. Dateien werden im Supabase Storage gespeichert; im Datensatz bleibt nur der Link.</p>
         </div>
       </div>
 
@@ -1983,7 +1983,7 @@
         </article>
       </div>
 
-      <p class="media-storage-note">ℹ️ Kleine und mittlere Dateien können direkt gespeichert werden. Für größere Videos ist ein Web-Link sinnvoller, damit dein gemeinsamer Supabase-Datensatz nicht unnötig groß wird.</p>
+      <p class="media-storage-note">ℹ️ Dateien werden in Supabase Storage gespeichert. Im Hauptdatensatz wird nur noch die URL abgelegt.</p>
       </div>
 
       <div id="mediaPane-geschichte" class="media-pane hidden">
@@ -1993,7 +1993,7 @@
               <div class="story-intro">
                 <div>
                   <h3>Deine Geschichte wächst Kapitel für Kapitel</h3>
-                  <p>Die Kapitelnummer bestimmt die Reihenfolge. Bilder werden komprimiert und zusammen mit Text und Links in deinem bestehenden Supabase-Datensatz gespeichert.</p>
+                  <p>Die Kapitelnummer bestimmt die Reihenfolge. Bilder werden komprimiert in Supabase Storage gespeichert; Text und Links bleiben im Datensatz.</p>
                 </div>
                 <button type="button" id="storyNewBtn">＋ Neues Kapitel</button>
               </div>
@@ -2198,6 +2198,7 @@
         SUPABASE_KEY: 'sb_publishable_S9NZCm46akp3HEHhl72Q0A_6kWnON7B',
         SUPABASE_TABLE: 'punkte_system',
         SUPABASE_ID: 'hauptkonto',
+        SUPABASE_BUCKET: 'media',
         PIN: localStorage.getItem('pin') || '0000'
       };
 
@@ -2290,6 +2291,112 @@
           reader.readAsDataURL(file);
         });
       }
+
+      // ===== SUPABASE STORAGE =====
+      // Große Dateien liegen im Bucket "media". Im Hauptdatensatz wird nur noch die URL gespeichert.
+      const StorageManager = {
+        isInlineAsset(value) {
+          return /^data:(?:image|video)\/[a-z0-9.+-]+;base64,/i.test(String(value || ''));
+        },
+
+        extensionForMime(mime = '') {
+          const map = {
+            'image/jpeg': 'jpg', 'image/jpg': 'jpg', 'image/png': 'png', 'image/webp': 'webp', 'image/gif': 'gif',
+            'video/mp4': 'mp4', 'video/webm': 'webm', 'video/ogg': 'ogv'
+          };
+          return map[String(mime).toLowerCase()] || (String(mime).startsWith('video/') ? 'bin' : 'jpg');
+        },
+
+        cleanName(name = 'datei') {
+          return String(name || 'datei')
+            .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+            .replace(/[^a-zA-Z0-9._-]+/g, '-')
+            .replace(/-+/g, '-')
+            .replace(/^-|-$/g, '') || 'datei';
+        },
+
+        encodePath(path) {
+          return String(path).split('/').map(encodeURIComponent).join('/');
+        },
+
+        publicUrl(path) {
+          return `${CONFIG.SUPABASE_URL}/storage/v1/object/public/${encodeURIComponent(CONFIG.SUPABASE_BUCKET)}/${this.encodePath(path)}`;
+        },
+
+        async uploadBlob(blob, originalName = '', folder = 'uploads') {
+          if (!(blob instanceof Blob)) throw new Error('Ungültige Datei.');
+          const ext = this.extensionForMime(blob.type);
+          const rawName = this.cleanName(originalName || `datei.${ext}`);
+          const base = rawName.replace(/\.[^.]+$/, '') || 'datei';
+          const path = `${folder}/${new Date().toISOString().slice(0,10)}/${Date.now()}-${genId()}-${base}.${ext}`;
+          const url = `${CONFIG.SUPABASE_URL}/storage/v1/object/${encodeURIComponent(CONFIG.SUPABASE_BUCKET)}/${this.encodePath(path)}`;
+          const res = await fetch(url, {
+            method: 'POST',
+            headers: {
+              'apikey': CONFIG.SUPABASE_KEY,
+              'Authorization': `Bearer ${CONFIG.SUPABASE_KEY}`,
+              'Content-Type': blob.type || 'application/octet-stream',
+              'x-upsert': 'false'
+            },
+            body: blob
+          });
+          if (!res.ok) {
+            const msg = await res.text().catch(() => '');
+            throw new Error(`Storage-Upload fehlgeschlagen (${res.status})${msg ? ': ' + msg : ''}`);
+          }
+          return this.publicUrl(path);
+        },
+
+        async uploadFile(file, folder = 'uploads', maxBytes = 10 * 1024 * 1024) {
+          if (!file) throw new Error('Keine Datei ausgewählt.');
+          if (file.size > maxBytes) throw new Error(`Datei ist zu groß (${(file.size / 1024 / 1024).toFixed(1)} MB).`);
+          return this.uploadBlob(file, file.name, folder);
+        },
+
+        async uploadCompressedImage(file, folder = 'bilder', maxWidth = 1400, quality = 0.78) {
+          if (!file || !String(file.type).startsWith('image/')) throw new Error('Bitte eine Bilddatei auswählen.');
+          const dataUrl = await compressImage(file, maxWidth, quality);
+          const blob = await (await fetch(dataUrl)).blob();
+          const stem = this.cleanName(file.name || 'bild').replace(/\.[^.]+$/, '');
+          return this.uploadBlob(blob, `${stem}.jpg`, folder);
+        },
+
+        async uploadInlineDataUrl(dataUrl, folder = 'migration') {
+          if (!this.isInlineAsset(dataUrl)) return dataUrl;
+          const mime = String(dataUrl).slice(5, String(dataUrl).indexOf(';')) || 'application/octet-stream';
+          const blob = await (await fetch(dataUrl)).blob();
+          const ext = this.extensionForMime(mime);
+          return this.uploadBlob(blob, `migriert.${ext}`, folder);
+        },
+
+        async migrateInlineAssets(root) {
+          let changed = 0;
+          const walk = async (value, path = []) => {
+            if (typeof value === 'string') {
+              if (!this.isInlineAsset(value)) return value;
+              try {
+                const folder = `migration/${this.cleanName(path.slice(0, 3).join('-') || 'daten')}`;
+                const url = await this.uploadInlineDataUrl(value, folder);
+                changed++;
+                return url;
+              } catch (err) {
+                console.error('Migration eines Mediums fehlgeschlagen:', err);
+                return value; // Original behalten, damit keine Daten verloren gehen.
+              }
+            }
+            if (Array.isArray(value)) {
+              for (let i = 0; i < value.length; i++) value[i] = await walk(value[i], [...path, String(i)]);
+              return value;
+            }
+            if (value && typeof value === 'object') {
+              for (const key of Object.keys(value)) value[key] = await walk(value[key], [...path, key]);
+            }
+            return value;
+          };
+          await walk(root, []);
+          return changed;
+        }
+      };
 
 
       function ensureLifetimePoints(daten) {
@@ -3129,10 +3236,10 @@
                 const file = ev.target.files[0];
                 if (!file) return;
                 try {
-                  const compressed = await compressImage(file);
+                  const imageUrl = await StorageManager.uploadCompressedImage(file, `${typ}/${id}`, 1200, 0.75);
                   const item = DataManager[`find${typ.charAt(0).toUpperCase() + typ.slice(1)}`](id);
                   if (item) {
-                    item.image = compressed;
+                    item.image = imageUrl;
                     DataManager.addLog(`Bild zu ${typ} hinzugefügt.`);
                     await DataManager.save();
                     UIRenderer.renderAlles(DataManager.lokaleDaten);
@@ -3330,10 +3437,10 @@
                 const file = ev.target.files[0];
                 if (!file) return;
                 try {
-                  const compressed = await compressImage(file);
+                  const imageUrl = await StorageManager.uploadCompressedImage(file, `tagebuch/${id}`, 1200, 0.75);
                   const eintrag = DataManager.findTagebuch(id);
                   if (eintrag) {
-                    eintrag.image = compressed;
+                    eintrag.image = imageUrl;
                     DataManager.addLog(`Bild zu Tagebucheintrag hinzugefügt.`);
                     await DataManager.save();
                     UIRenderer.renderAlles(DataManager.lokaleDaten);
@@ -3643,22 +3750,22 @@
         async processFiles(type, files) {
           const result = [];
           if (type === 'bild') {
-            if (files[0]) result.push(await compressImage(files[0], 1400, 0.78));
+            if (files[0]) result.push(await StorageManager.uploadCompressedImage(files[0], 'medien/bilder', 1400, 0.78));
           } else if (type === 'comic') {
             if (files.length > 20) throw new Error('Maximal 20 Comic-Seiten pro Eintrag.');
             for (const file of files) {
               if (!file.type.startsWith('image/')) continue;
-              result.push(await compressImage(file, 1500, 0.76));
+              result.push(await StorageManager.uploadCompressedImage(file, 'medien/comics', 1500, 0.76));
             }
           } else if (type === 'gif') {
             if (files[0]) {
               if (files[0].type !== 'image/gif') throw new Error('Bitte eine GIF-Datei auswählen.');
-              result.push(await readFileAsDataURL(files[0], 5 * 1024 * 1024));
+              result.push(await StorageManager.uploadFile(files[0], 'medien/gifs', 5 * 1024 * 1024));
             }
           } else if (type === 'video') {
             if (files[0]) {
               if (!files[0].type.startsWith('video/')) throw new Error('Bitte eine Videodatei auswählen.');
-              result.push(await readFileAsDataURL(files[0], 10 * 1024 * 1024));
+              result.push(await StorageManager.uploadFile(files[0], 'medien/videos', 10 * 1024 * 1024));
             }
           }
           return result;
@@ -3909,7 +4016,7 @@
         },
 
         isSafeImage(src) {
-          return /^data:image\/(?:jpeg|jpg|png|webp|gif);base64,/i.test(String(src || ''));
+          return /^(?:data:image\/(?:jpeg|jpg|png|webp|gif);base64,|https?:\/\/)/i.test(String(src || ''));
         },
 
         normalizeUrl(value) {
@@ -3972,7 +4079,7 @@
             const newImages = [];
             for (const file of selected) {
               if (!file.type.startsWith('image/')) continue;
-              newImages.push(await compressImage(file, 1200, 0.72));
+              newImages.push(await StorageManager.uploadCompressedImage(file, `geschichten/${id || 'neu'}`, 1200, 0.72));
             }
             const bilder = [...this.existingImages, ...newImages];
             if (id) {
@@ -4786,6 +4893,20 @@
           DataManager.load().then(() => {
             UIRenderer.renderAlles(DataManager.lokaleDaten);
             this.bindEvents();
+
+            // Einmalige automatische Bereinigung alter Base64-Bilder/-Videos:
+            // hochladen -> URL einsetzen -> den nun kleineren Hauptdatensatz einmal speichern.
+            StorageManager.migrateInlineAssets(DataManager.lokaleDaten).then(async migrated => {
+              if (!migrated) return;
+              try {
+                document.getElementById('syncStatus').textContent = ' (Medien werden ausgelagert…)';
+                await DataManager.save(false, true);
+                UIRenderer.renderAlles(DataManager.lokaleDaten);
+                showToast(`${migrated} alte Mediendatei${migrated === 1 ? '' : 'en'} in Storage verschoben.`, 'success');
+              } catch (err) {
+                console.error('Automatische Medien-Migration:', err);
+              }
+            });
           });
 
           document.getElementById('syncBtn').addEventListener('click', async () => {
@@ -4887,7 +5008,7 @@
               let imageData = '';
               if (bildInput.files[0]) {
                 try {
-                  imageData = await compressImage(bildInput.files[0]);
+                  imageData = await StorageManager.uploadCompressedImage(bildInput.files[0], 'tagebuch/neu', 1200, 0.75);
                 } catch (err) {
                   showToast('Bild konnte nicht verarbeitet werden.', 'error');
                   console.error(err);
