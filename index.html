@@ -1976,7 +1976,7 @@
 
           <div class="comic-cover-wrap">
             <button class="comic-cover-open" id="comicCoverOpen" type="button" aria-label="Mitgelieferten Comic öffnen">
-              <img src="comics/9Cloud.us_0000-001%20C01P001.jpg" alt="Mitgelieferter Comic – Titelbild" loading="lazy">
+              <img src="comics/9Cloud.us_0000-001%20C01P001.jpg" alt="Mitgelieferter Comic – Titelbild" loading="lazy" decoding="async">
               <span class="comic-cover-caption"><strong>Mitgelieferten Comic öffnen</strong><span>📖</span></span>
             </button>
           </div>
@@ -2421,10 +2421,52 @@
         return daten.medien;
       }
 
+      // ===== PERFORMANCE-OPTIMIERT: weniger Cloud-Transfers + Lazy Rendering =====
       // ===== DATA MANAGER (Supabase) =====
       const DataManager = {
         lokaleDaten: { aufgaben: [], einloesungen: [], tagebuch: [], geschichten: [], medien: [], konto: 0, gesamtVerdient: 0, log: [], puzzle: { level: 1, levels: {}, matches: 0, wordsSolved: 0, moves: 0, roundId: '', wordCategory: 'liebe' }, kompass: { profiles: { er: { answers: {}, history: [], updatedAt: null }, sie: { answers: {}, history: [], updatedAt: null } }, pairHistory: [], activeRole: 'er', activeView: 'er', updatedAt: null, schemaVersion: 3 } },
         aktuelleVersion: null,
+        FAST_CACHE_KEY: 'punkte_system_fast_cache_v1',
+
+        loadFastCache() {
+          try {
+            const raw = localStorage.getItem(this.FAST_CACHE_KEY);
+            if (!raw) return false;
+            const cached = JSON.parse(raw);
+            if (!cached || typeof cached !== 'object') return false;
+            if (!Array.isArray(cached.aufgaben) || !Array.isArray(cached.einloesungen)) return false;
+            this.lokaleDaten = {
+              ...this.lokaleDaten,
+              konto: Math.max(0, Number(cached.konto) || 0),
+              gesamtVerdient: Math.max(0, Number(cached.gesamtVerdient) || 0),
+              aufgaben: cached.aufgaben,
+              einloesungen: cached.einloesungen
+            };
+            ensureLifetimePoints(this.lokaleDaten);
+            return true;
+          } catch (_) {
+            return false;
+          }
+        },
+
+        saveFastCache() {
+          try {
+            const compactEntries = list => (Array.isArray(list) ? list : []).map(item => ({
+              ...item,
+              image: ''
+            }));
+            const cache = {
+              konto: Math.max(0, Number(this.lokaleDaten.konto) || 0),
+              gesamtVerdient: Math.max(0, Number(this.lokaleDaten.gesamtVerdient) || 0),
+              aufgaben: compactEntries(this.lokaleDaten.aufgaben),
+              einloesungen: compactEntries(this.lokaleDaten.einloesungen),
+              cachedAt: Date.now()
+            };
+            localStorage.setItem(this.FAST_CACHE_KEY, JSON.stringify(cache));
+          } catch (_) {
+            // Cache ist nur eine Beschleunigung. Fehler (z. B. Speicherlimit) dürfen die App nie blockieren.
+          }
+        },
 
         getHeaders(extra = {}) {
           return {
@@ -2501,7 +2543,7 @@
         async load() {
           try {
             document.getElementById('syncStatus').textContent = ' (lade…)';
-            const url = `${CONFIG.SUPABASE_URL}/rest/v1/${CONFIG.SUPABASE_TABLE}?id=eq.${CONFIG.SUPABASE_ID}&select=*`;
+            const url = `${CONFIG.SUPABASE_URL}/rest/v1/${CONFIG.SUPABASE_TABLE}?id=eq.${CONFIG.SUPABASE_ID}&select=daten,version`;
             const res = await fetch(url, { headers: this.getHeaders() });
             if (!res.ok) {
               if (res.status === 404) {
@@ -2536,6 +2578,7 @@
               if (savedPin) CONFIG.PIN = savedPin;
               document.getElementById('aktuellePinAnzeige').textContent = CONFIG.PIN;
             }
+            this.saveFastCache();
             document.getElementById('syncStatus').textContent = ' ✅';
             return true;
           } catch (e) {
@@ -2575,13 +2618,14 @@
               } else {
                 this.aktuelleVersion = 1;
               }
+              this.saveFastCache();
               document.getElementById('syncStatus').textContent = ' ✅';
               showToast('Erstinstallation gespeichert.', 'success');
               return;
             }
 
             // Nicht-initiales Speichern: erst aktuellen Stand holen
-            const getUrl = `${baseUrl}?id=eq.${CONFIG.SUPABASE_ID}&select=*`;
+            const getUrl = `${baseUrl}?id=eq.${CONFIG.SUPABASE_ID}&select=version`;
             const getRes = await fetch(getUrl, { headers: this.getHeaders() });
             if (!getRes.ok) {
               throw new Error(`Server-Abfrage fehlgeschlagen (${getRes.status})`);
@@ -2601,15 +2645,9 @@
                 '(OK = Server laden, Abbrechen = Server überschreiben)'
               );
               if (choice) {
-                // Server-Daten übernehmen
-                this.lokaleDaten = current[0].daten;
-                ensureLifetimePoints(this.lokaleDaten);
-                ensurePuzzleData(this.lokaleDaten);
-                ensureCompassData(this.lokaleDaten);
-                ensureGeschichtenData(this.lokaleDaten);
-                ensureMedienData(this.lokaleDaten);
-                this.aktuelleVersion = serverVersion;
-                showToast('Server-Daten geladen.', 'info');
+                // Den vollständigen Server-Datensatz nur dann laden, wenn er wirklich gebraucht wird.
+                showToast('Server-Daten werden geladen.', 'info');
+                await this.load();
                 UIRenderer.renderAlles(this.lokaleDaten);
                 return;
               } else {
@@ -2645,6 +2683,7 @@
               // Fallback: Version selbst erhöhen (sollte nicht passieren, da Trigger)
               this.aktuelleVersion = serverVersion + 1;
             }
+            this.saveFastCache();
             document.getElementById('syncStatus').textContent = ' ✅';
             if (!silent) showToast('Gespeichert.', 'success');
           } catch (e) {
@@ -2736,16 +2775,31 @@
         renderAlles(daten) {
           ensureLifetimePoints(daten);
           this.renderKonto(daten.konto);
-          this.renderAufgaben(daten.aufgaben);
-          this.renderEinloesungen(daten.einloesungen);
-          this.renderTagebuch(daten.tagebuch);
-          ensureGeschichtenData(daten);
-          StoryApp.render(daten.geschichten);
-          ensureMedienData(daten);
-          MediaApp.render(daten.medien);
-          this.renderLog(daten.log);
           this.updateProgress(daten.konto);
-          if (typeof PuzzleGame !== 'undefined') PuzzleGame.render();
+          const activeTab = document.querySelector('.tab-btn.active')?.dataset.tab || 'aufgaben';
+          this.renderTab(daten, activeTab);
+        },
+
+        renderTab(daten, tabName) {
+          if (!daten) return;
+          if (tabName === 'aufgaben') {
+            this.renderAufgaben(daten.aufgaben);
+          } else if (tabName === 'einloesungen') {
+            this.renderEinloesungen(daten.einloesungen);
+          } else if (tabName === 'tagebuch') {
+            this.renderTagebuch(daten.tagebuch);
+          } else if (tabName === 'medien') {
+            ensureGeschichtenData(daten);
+            ensureMedienData(daten);
+            if (typeof StoryApp !== 'undefined') StoryApp.render(daten.geschichten);
+            if (typeof MediaApp !== 'undefined') MediaApp.render(daten.medien);
+          } else if (tabName === 'einstellungen') {
+            this.renderLog(daten.log);
+          } else if (tabName === 'puzzle') {
+            if (typeof PuzzleGame !== 'undefined' && PuzzleGame.initialized) PuzzleGame.render();
+          } else if (tabName === 'kompass') {
+            if (typeof CompassApp !== 'undefined' && CompassApp.initialized) CompassApp.refreshFromCloud();
+          }
         },
 
         renderKonto(konto) {
@@ -2933,6 +2987,8 @@
             img.src = item.image;
             img.className = 'entry-image';
             img.alt = 'Bild';
+            img.loading = 'lazy';
+            img.decoding = 'async';
             body.appendChild(img);
           }
 
@@ -3164,6 +3220,8 @@
               img.src = e.image;
               img.className = 'tagebuch-bild';
               img.alt = 'Bild';
+              img.loading = 'lazy';
+              img.decoding = 'async';
               bodyDiv.appendChild(img);
             }
 
@@ -3571,7 +3629,7 @@
             const box = document.createElement('div');
             box.className = 'media-existing-file';
             if ((type === 'bild' || type === 'gif' || type === 'comic') && this.isSafeImage(src)) {
-              const img = document.createElement('img'); img.src = src; img.alt = `Datei ${index + 1}`; box.appendChild(img);
+              const img = document.createElement('img'); img.src = src; img.alt = `Datei ${index + 1}`; img.loading = 'lazy'; img.decoding = 'async'; box.appendChild(img);
             } else if (type === 'video' && this.isSafeVideo(src)) {
               const v = document.createElement('video'); v.src = src; v.muted = true; v.preload = 'metadata'; box.appendChild(v);
             } else {
@@ -3681,7 +3739,7 @@
             const src = file && this.isSafeImage(file) ? file : safeUrl;
             if (src) {
               const preview = document.createElement('a'); preview.href=src; preview.className='media-item-preview zoomable-media'; preview.dataset.fullSrc=src; preview.dataset.title=item.titel;
-              const img=document.createElement('img'); img.src=src; img.alt=item.titel; img.loading='lazy'; preview.appendChild(img); card.appendChild(preview);
+              const img=document.createElement('img'); img.src=src; img.alt=item.titel; img.loading='lazy'; img.decoding='async'; preview.appendChild(img); card.appendChild(preview);
             }
           } else if (item.typ === 'video') {
             const src = file && this.isSafeVideo(file) ? file : safeUrl;
@@ -3698,7 +3756,7 @@
             const pages=(item.files||[]).filter(src=>this.isSafeImage(src));
             if (pages.length) {
               const preview=document.createElement('button'); preview.type='button'; preview.className='media-item-preview comic'; preview.dataset.mediaAction='comic'; preview.dataset.id=item.id;
-              const img=document.createElement('img'); img.src=pages[0]; img.alt=`${item.titel} – Titelbild`; img.loading='lazy';
+              const img=document.createElement('img'); img.src=pages[0]; img.alt=`${item.titel} – Titelbild`; img.loading='lazy'; img.decoding='async';
               const badge=document.createElement('span'); badge.className='media-comic-badge'; badge.textContent=`📖 ${pages.length} Seite${pages.length===1?'':'n'}`; preview.append(img,badge); card.appendChild(preview);
             }
           }
@@ -3838,6 +3896,8 @@
             const img = document.createElement('img');
             img.src = src;
             img.alt = `Gespeichertes Bild ${index + 1}`;
+            img.loading = 'lazy';
+            img.decoding = 'async';
             const btn = document.createElement('button');
             btn.type = 'button';
             btn.dataset.removeStoryImage = String(index);
@@ -4008,6 +4068,7 @@
                 img.src = src;
                 img.alt = `${item.titel || 'Kapitel'} – Bild ${imageIndex + 1}`;
                 img.loading = 'lazy';
+                img.decoding = 'async';
                 gallery.appendChild(img);
               });
               content.appendChild(gallery);
@@ -4612,7 +4673,7 @@
               const file=this.imagePath(level,variant);
               if(mayReveal){
                 card.className='level-image chosen';
-                card.innerHTML=`<img src="${file}" alt="Freigeschaltetes Bild aus Level ${level}"><div class="variant-name">Freigeschaltet</div><div class="pick-badge">✓ geschafft</div>`;
+                card.innerHTML=`<img src="${file}" alt="Freigeschaltetes Bild aus Level ${level}" loading="lazy" decoding="async"><div class="variant-name">Freigeschaltet</div><div class="pick-badge">✓ geschafft</div>`;
                 const img=card.querySelector('img');
                 img.addEventListener('error',()=>{img.style.display='none';card.classList.add('secret');const label=card.querySelector('.variant-name');if(label)label.textContent=`Bilddatei fehlt`;});
               }else{
@@ -4715,6 +4776,13 @@
             }
           }
 
+          // Sofort etwas anzeigen, wenn bereits ein kleiner Cache vorhanden ist.
+          // Der aktuelle Cloud-Stand wird direkt danach normal nachgeladen.
+          if (DataManager.loadFastCache()) {
+            UIRenderer.renderAlles(DataManager.lokaleDaten);
+            document.getElementById('syncStatus').textContent = ' (aktualisiert…)';
+          }
+
           DataManager.load().then(() => {
             UIRenderer.renderAlles(DataManager.lokaleDaten);
             this.bindEvents();
@@ -4738,6 +4806,17 @@
           document.getElementById('themeBtn').addEventListener('click', toggleTheme);
         },
 
+        ensureTabReady(tabName) {
+          if (tabName === 'puzzle') {
+            PuzzleGame.init();
+          } else if (tabName === 'kompass') {
+            CompassApp.init();
+          } else if (tabName === 'medien') {
+            MediaApp.init();
+            StoryApp.init();
+          }
+        },
+
         bindEvents() {
           // Tabs
           document.querySelectorAll('.tab-btn').forEach(btn => {
@@ -4754,16 +4833,14 @@
               const floatBtn = document.getElementById('floatNeuBtn');
               if (floatBtn) floatBtn.style.display = (tabName === 'puzzle' || tabName === 'kompass') ? 'none' : 'flex';
               if (tabName !== 'puzzle' && PuzzleGame.running && !PuzzleGame.paused) PuzzleGame.pause(false);
-              if (tabName === 'puzzle') PuzzleGame.render();
-              if (tabName === 'kompass') CompassApp.refreshFromCloud();
+              this.ensureTabReady(tabName);
+              UIRenderer.renderTab(DataManager.lokaleDaten, tabName);
             });
           });
 
-          PuzzleGame.init();
-          CompassApp.init();
+          // Globale Kommentare sind leichtgewichtig. Die schweren Bereiche
+          // (Kompass, Spiele, Medien/Geschichte) werden erst beim Öffnen initialisiert.
           CommentsApp.init();
-          StoryApp.init();
-          MediaApp.init();
 
           // Float-Button -> Modal Neu
           document.getElementById('floatNeuBtn').addEventListener('click', () => {
