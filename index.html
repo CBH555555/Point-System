@@ -67,7 +67,14 @@
     }
 
     * { box-sizing: border-box; }
-    html { scroll-behavior: smooth; }
+    html {
+      scroll-behavior: smooth;
+      background:
+        radial-gradient(circle at 8% -8%, rgba(200,77,94,0.13), transparent 34rem),
+        radial-gradient(circle at 96% 10%, rgba(211,154,84,0.10), transparent 30rem),
+        linear-gradient(160deg, var(--bg), var(--bg-deep));
+      background-attachment: fixed;
+    }
     body {
       position: relative;
       isolation: isolate;
@@ -77,18 +84,14 @@
       padding: 18px 18px calc(108px + env(safe-area-inset-bottom));
       font-family: var(--font);
       color: var(--text);
-      background:
-        radial-gradient(circle at 8% -8%, rgba(200,77,94,0.18), transparent 34rem),
-        radial-gradient(circle at 96% 10%, rgba(211,154,84,0.14), transparent 30rem),
-        linear-gradient(160deg, var(--bg), var(--bg-deep));
-      background-attachment: fixed;
+      background: transparent;
       -webkit-font-smoothing: antialiased;
       text-rendering: optimizeLegibility;
       -webkit-tap-highlight-color: transparent;
-      transition: background-color var(--transition), color var(--transition);
+      transition: color var(--transition);
     }
 
-    /* Eigenes Hintergrundbild:
+    /* Eigenes Hintergrundbild – sichtbarere adaptive Version:
        Lege im selben GitHub-Ordner wie index.html eine Datei namens background.jpeg ab.
        Zwei Ebenen sorgen dafür, dass das Motiv auf Hoch- und Querformat gut sichtbar bleibt:
        1) eine bildschirmfüllende, weichere COVER-Ebene
@@ -107,45 +110,46 @@
 
     body::before {
       z-index: -2;
-      opacity: .22;
+      opacity: .46;
       background-size: cover;
-      filter: saturate(.92) contrast(1.02) brightness(.98) blur(1.5px);
-      transform: scale(1.015) translateZ(0);
+      filter: saturate(1.04) contrast(1.04) brightness(.98) blur(.6px);
+      transform: scale(1.008) translateZ(0);
     }
 
     body::after {
       z-index: -1;
-      opacity: .28;
+      opacity: .34;
       background-size: contain;
-      filter: saturate(1.03) contrast(1.03) brightness(1.01);
+      filter: saturate(1.08) contrast(1.04) brightness(1.02);
     }
 
     html[data-theme="dark"] body::before {
-      opacity: .16;
-      filter: saturate(.78) contrast(1.02) brightness(.62) blur(1.5px);
+      opacity: .34;
+      filter: saturate(.92) contrast(1.04) brightness(.68) blur(.6px);
     }
 
     html[data-theme="dark"] body::after {
-      opacity: .20;
-      filter: saturate(.82) contrast(1.02) brightness(.72);
+      opacity: .25;
+      filter: saturate(.94) contrast(1.03) brightness(.75);
     }
 
     @media (max-width: 760px) and (orientation: portrait) {
       body::before {
-        opacity: .24;
-        background-position: center 36%;
+        opacity: .50;
+        background-position: center 34%;
+        background-size: cover;
       }
       body::after {
-        opacity: .30;
+        opacity: .38;
         background-size: 100% auto;
-        background-position: center 24%;
+        background-position: center 22%;
       }
     }
 
     @media (max-width: 920px) and (orientation: landscape) {
       body::before { background-position: center center; }
       body::after {
-        opacity: .25;
+        opacity: .32;
         background-size: auto 96vh;
         background-position: center center;
       }
@@ -176,7 +180,7 @@
       padding: 24px 26px;
       border: 1px solid var(--card-border);
       border-radius: var(--radius-lg);
-      background: linear-gradient(135deg, var(--surface), color-mix(in srgb, var(--surface-solid) 88%, transparent));
+      background: linear-gradient(135deg, color-mix(in srgb,var(--surface) 78%,transparent), color-mix(in srgb,var(--surface-solid) 74%,transparent));
       box-shadow: var(--shadow);
       backdrop-filter: blur(18px) saturate(1.15);
       -webkit-backdrop-filter: blur(18px) saturate(1.15);
@@ -2196,9 +2200,11 @@
 
     .card {
       padding:27px 26px;
-      border:0;
-      background:color-mix(in srgb,var(--surface-solid) 82%,transparent);
+      border:1px solid color-mix(in srgb,var(--card-border) 75%,transparent);
+      background:color-mix(in srgb,var(--surface-solid) 72%,transparent);
       box-shadow:0 16px 42px rgba(68,42,49,.055);
+      backdrop-filter:blur(9px);
+      -webkit-backdrop-filter:blur(9px);
     }
     .card::before { display:none; }
     .card h2 {
@@ -2895,7 +2901,7 @@
         <div class="questionnaire-card-grid">
           <button type="button" class="questionnaire-card" data-questionnaire-open="flr">
             <span class="questionnaire-icon">👑</span>
-            <span class="questionnaire-copy"><strong>FLR · weibliche Führung im Alltag</strong><small>48 Fragen · Sie / Er / gemeinsam</small><span>Führung, Service, Eigeninitiative, Belohnung, Demütigung, Rituale, Sexualität, Freiheit und Entwicklung.</span><em id="flrLibraryProgress">Noch nicht begonnen</em></span>
+            <span class="questionnaire-copy"><strong>FLR · weibliche Führung & Erotik</strong><small>48 Fragen · Sie / Er / gemeinsam</small><span>Führung, Dienen, Disziplin, Privilegien, Demütigung, Rituale, sexuelle Kontrolle, Freiheit und Fantasien.</span><em id="flrLibraryProgress">Noch nicht begonnen</em></span>
           </button>
           <button type="button" class="questionnaire-card" data-questionnaire-open="cuckold">
             <span class="questionnaire-icon">♟️</span>
@@ -3007,10 +3013,10 @@
       </div>
 
       <div id="flrCompassModule" class="questionnaire-module hidden">
-        <div class="questionnaire-module-head"><button type="button" class="questionnaire-back" data-questionnaire-back>← Fragebögen</button><div><span>FLR</span><strong>Weibliche Führung im Alltag</strong></div></div>
+        <div class="questionnaire-module-head"><button type="button" class="questionnaire-back" data-questionnaire-back>← Fragebögen</button><div><span>FLR</span><strong>Weibliche Führung & erotische Dynamik</strong></div></div>
         <div class="flr-intro-card">
           <strong>Wie erlebt ihr weibliche Führung wirklich?</strong>
-          <p>Dieser Fragebogen betrachtet dieselben Themen getrennt aus ihrer und seiner Perspektive. Es geht nicht darum, möglichst „streng“ oder „fortgeschritten“ zu sein, sondern darum, wo ihr dieselbe Dynamik wollt, wo ihr unterschiedliche Erwartungen habt und welche Bereiche euch besonders wichtig sind.</p>
+          <p>Dieser Fragebogen betrachtet weibliche Führung bewusst aus zwei unterschiedlichen Perspektiven. Ihre Fragen erfassen, welche Form von Führung, Lust und Macht sie möchte. Seine Fragen gehen stärker darauf ein, was ihn an Unterordnung, Dienen, sexueller Kontrolle, Privilegien und Intensität tatsächlich reizt. Die gemeinsame Auswertung soll deshalb nicht nur Übereinstimmung zeigen, sondern auch Dinge sichtbar machen, die der jeweils andere bisher vielleicht nicht wusste.</p>
         </div>
 
         <div class="pair-view-tabs flr-view-tabs" role="tablist" aria-label="FLR Fragebogen Ansicht">
@@ -3049,6 +3055,7 @@
             <div class="pair-summary-grid">
               <div class="compass-result-card"><h3>❤️ Gemeinsame Schwerpunkte</h3><div id="flrShared"></div></div>
               <div class="compass-result-card"><h3>↔️ Größte Unterschiede</h3><div id="flrDifferences"></div></div>
+              <div class="compass-result-card"><h3>💡 Was sie über ihn erfährt</h3><div id="flrHerInsights"></div></div>
               <div class="compass-result-card"><h3>🔎 Konkrete Fragen zum Besprechen</h3><div id="flrQuestionGaps"></div></div>
             </div>
           </div>
@@ -3904,6 +3911,14 @@
         if (!['er','sie'].includes(c.activeRole)) c.activeRole = 'er';
         if (!['er','sie','paar','entwicklung'].includes(c.activeView)) c.activeView = c.activeRole;
         if (!c.flr || typeof c.flr !== 'object' || Array.isArray(c.flr)) c.flr = {};
+        const previousFlrSchemaVersion = Number(c.flr.schemaVersion) || 1;
+        if (previousFlrSchemaVersion < 2) {
+          c.flr.profiles = {
+            er: { answers: {}, history: [], updatedAt: null },
+            sie: { answers: {}, history: [], updatedAt: null }
+          };
+          c.flr.pairHistory = [];
+        }
         if (!c.flr.profiles || typeof c.flr.profiles !== 'object' || Array.isArray(c.flr.profiles)) c.flr.profiles = {};
         ['er','sie'].forEach(role => {
           if (!c.flr.profiles[role] || typeof c.flr.profiles[role] !== 'object') c.flr.profiles[role] = {};
@@ -3916,7 +3931,7 @@
         if (!['er','sie','paar'].includes(c.flr.activeView)) c.flr.activeView = 'sie';
         if (!Array.isArray(c.flr.pairHistory)) c.flr.pairHistory = [];
         c.flr.pairHistory = c.flr.pairHistory.slice(0,24);
-        c.flr.schemaVersion = 1;
+        c.flr.schemaVersion = 2;
         c.schemaVersion = 4;
         if (!('updatedAt' in c)) c.updatedAt = null;
         return c;
@@ -6163,69 +6178,69 @@
         initialized:false, saveTimer:null,
         roleLabels:{sie:'Sie',er:'Er'},
         sections:[
-          {key:'A',title:'Führung & Entscheidungen',short:'Führung',min:'eher gleichrangig',max:'klare weibliche Führung',questions:[
-            {id:'A1',sie:'Ich möchte, dass meine Wünsche und Präferenzen in unserem Alltag häufiger zuerst berücksichtigt werden.',er:'Ich finde es stimmig, wenn ihre Wünsche und Präferenzen in unserem Alltag häufiger zuerst berücksichtigt werden.'},
-            {id:'A2',sie:'Bei ausgewählten Alltagsentscheidungen möchte ich bewusst das letzte Wort haben.',er:'Bei ausgewählten Alltagsentscheidungen gefällt mir die Vorstellung, dass sie bewusst das letzte Wort hat.'},
-            {id:'A3',sie:'Ich möchte Entscheidungen treffen können, ohne jeden Wunsch bis zu einem exakt gleichen Kompromiss auszuhandeln.',er:'Ich kann gut damit leben, wenn sie bestimmte Entscheidungen trifft, ohne dass wir jedes Mal einen exakt gleichen Kompromiss suchen.'},
-            {id:'A4',sie:'Ich möchte Standards für Bereiche festlegen können, die meinen Komfort oder unseren Alltag betreffen.',er:'Ich akzeptiere gern klare Standards von ihr für Bereiche, die ihren Komfort oder unseren Alltag betreffen.'},
-            {id:'A5',sie:'Es reizt mich, wenn er eine von mir getroffene Entscheidung zuverlässig umsetzt.',er:'Es reizt mich, eine von ihr getroffene Entscheidung zuverlässig umzusetzen.'},
-            {id:'A6',sie:'Eine dauerhaft leicht asymmetrische Verteilung von Entscheidungsmacht kann für mich Teil einer guten Beziehung sein.',er:'Eine dauerhaft leicht asymmetrische Verteilung von Entscheidungsmacht zugunsten meiner Frau kann für mich Teil einer guten Beziehung sein.'}
+          {key:'A',title:'Weibliche Führung & erotische Hierarchie',short:'Führung',min:'eher gleichrangig',max:'klare weibliche Führung',questions:[
+            {id:'A1',sie:'Ich möchte, dass meine Wünsche und Präferenzen in unserer Beziehung spürbar häufiger Vorrang haben.',er:'Mich reizt es, wenn ihre Wünsche spürbar häufiger Vorrang haben und ich mich daran orientiere.',insight:'Er empfindet weibliche Priorität nicht nur als fair, sondern als reizvollen Teil seiner Rolle.'},
+            {id:'A2',sie:'Bei ausgewählten Entscheidungen möchte ich bewusst das letzte Wort haben – auch wenn er selbst anders wählen würde.',er:'Es kann mich reizen, eine Entscheidung von ihr zu akzeptieren und umzusetzen, obwohl ich selbst anders gewählt hätte.',insight:'Er kann gerade die spürbare Abgabe eigener Entscheidungsmacht erotisch oder emotional reizvoll finden.'},
+            {id:'A3',sie:'Ich möchte meine Autorität nicht nur organisieren, sondern gelegentlich auch bewusst genießen dürfen.',er:'Ich wünsche mir, dass sie ihre Autorität über mich nicht nur praktisch nutzt, sondern sichtbar genießt.',insight:'Er möchte möglicherweise erleben, dass seine Unterordnung ihr persönlich Freude und Selbstbewusstsein gibt.'},
+            {id:'A4',sie:'Klare Standards, Erwartungen und Vorgaben von mir dürfen sich für ihn wie echte Führung anfühlen.',er:'Klare Standards und Vorgaben von ihr geben mir ein gutes Gefühl von Führung und Unterordnung.',insight:'Klare Regeln sind für ihn womöglich nicht bloß Organisation, sondern Teil des erotischen Machtgefühls.'},
+            {id:'A5',sie:'Es reizt mich, wenn er eine von mir getroffene Entscheidung ohne Diskussion zuverlässig umsetzt.',er:'Mich erregt oder erfüllt es, eine klare Entscheidung von ihr ohne Nachverhandlung umzusetzen.',insight:'Unmittelbares Gehorchen kann für ihn selbst ein starker Reiz sein.'},
+            {id:'A6',sie:'Eine dauerhaft erkennbare weibliche Vorrangstellung kann für mich Teil unserer Beziehungsidentität sein.',er:'Ich wünsche mir, dass ihre Vorrangstellung nicht nur ein Spiel im Schlafzimmer ist, sondern unsere Beziehung dauerhaft prägt.',insight:'Er könnte eine dauerhaft weiblich geführte Beziehung stärker wünschen als nur gelegentliche erotische Rollenspiele.'}
           ]},
-          {key:'B',title:'Service & Entlastung',short:'Service',min:'wenig wichtig',max:'zentral',questions:[
-            {id:'B1',sie:'Ich möchte, dass er ganze Verantwortungsbereiche übernimmt, statt nur einzelne Anweisungen abzuarbeiten.',er:'Ich möchte ganze Verantwortungsbereiche übernehmen, statt nur einzelne Anweisungen abzuarbeiten.'},
-            {id:'B2',sie:'Für mich ist gute Führung dann gelungen, wenn mein Mental Load tatsächlich kleiner wird.',er:'Für mich ist guter Service dann gelungen, wenn ihr Mental Load tatsächlich kleiner wird.'},
-            {id:'B3',sie:'Ich wünsche mir, dass er Bedürfnisse und anstehende Aufgaben häufiger selbst erkennt.',er:'Ich möchte ihre Bedürfnisse und anstehende Aufgaben häufiger selbst erkennen, ohne erst gefragt zu werden.'},
-            {id:'B4',sie:'Sein Service soll mir sichtbar mehr freie Zeit für Ruhe, Pflege, Freundinnen, Hobbys oder eigene Pläne verschaffen.',er:'Mein Service darf ihr sichtbar mehr freie Zeit für Ruhe, Pflege, Freundinnen, Hobbys oder eigene Pläne verschaffen.'},
-            {id:'B5',sie:'Ich möchte Aufgaben nach meinem gewünschten Ergebnis bewerten dürfen, ohne jeden Arbeitsschritt zu kontrollieren.',er:'Ich finde es fair, wenn sie Aufgaben nach ihrem gewünschten Ergebnis bewertet, ohne jeden Arbeitsschritt kontrollieren zu müssen.'},
-            {id:'B6',sie:'Eine dienende Rolle meines Mannes kann für mich ein positiver und selbstverständlicher Teil unserer Beziehung sein.',er:'Eine dienende Rolle kann für mich ein positiver und selbstverständlicher Teil meiner Rolle in unserer Beziehung sein.'}
+          {key:'B',title:'Service, Dienen & Hingabe',short:'Service',min:'wenig wichtig',max:'zentral',questions:[
+            {id:'B1',sie:'Ich möchte, dass er ganze Verantwortungsbereiche übernimmt und mir dadurch tatsächlich Arbeit abnimmt.',er:'Ich möchte ihr ganze Verantwortungsbereiche abnehmen und daran merken, dass mein Dienen für sie einen echten Wert hat.',insight:'Für ihn kann nützlicher Service ein wichtiger Ausdruck von Hingabe sein.'},
+            {id:'B2',sie:'Es gefällt mir, wenn er meinen Komfort aktiv erhöht, ohne dass ich jedes Detail anfordern muss.',er:'Mich reizt es, ihren Komfort vorauszuahnen und ihr Dinge abzunehmen, bevor sie darum bitten muss.',insight:'Er möchte womöglich von sich aus dienen und dafür aufmerksam auf ihre Bedürfnisse achten.'},
+            {id:'B3',sie:'Ich möchte mich von ihm bedienen und verwöhnen lassen können, ohne daraus sofort einen gleichwertigen Gegendienst machen zu müssen.',er:'Es gefällt mir, sie zu bedienen oder zu verwöhnen, auch wenn daraus nicht automatisch etwas Gleichwertiges für mich folgt.',insight:'Er kann einseitigen Service genießen, ohne sofortige Gegenseitigkeit zu erwarten.'},
+            {id:'B4',sie:'Sein Service darf mir sichtbar mehr freie Zeit für Pflege, Genuss, Freundinnen, Hobbys und eigene Pläne verschaffen.',er:'Es gefällt mir, wenn mein Einsatz ihr mehr Zeit für sich selbst, Genuss und Dinge gibt, die nur ihr Freude machen.',insight:'Er kann Befriedigung daraus ziehen, ihre Freiheit und ihren Genuss aktiv zu ermöglichen.'},
+            {id:'B5',sie:'Ich möchte guten Service nach meinem Ergebnis und meinem Komfort beurteilen dürfen.',er:'Es ist für mich reizvoll, wenn sie beurteilt, ob mein Service ihren Ansprüchen genügt.',insight:'Bewertung durch sie kann für ihn Teil der gewünschten Hierarchie sein.'},
+            {id:'B6',sie:'Eine dienende Rolle meines Mannes darf für mich sowohl praktisch als auch erotisch attraktiv sein.',er:'Die Vorstellung, ihr Mann und zugleich bewusst ihr Dienender zu sein, spricht mich stark an.',insight:'Er könnte die dienende Rolle als Teil seiner Identität in der Ehe erleben, nicht nur als Aufgabenverteilung.'}
           ]},
-          {key:'C',title:'Eigeninitiative & Zuverlässigkeit',short:'Initiative',min:'wenig wichtig',max:'sehr wichtig',questions:[
-            {id:'C1',sie:'Ich möchte nicht mehrfach erinnern müssen, wenn eine Verantwortung einmal klar übertragen wurde.',er:'Wenn mir eine Verantwortung klar übertragen wurde, möchte ich sie ohne mehrfaches Erinnern erfüllen.'},
-            {id:'C2',sie:'„Erledigt“ bedeutet für mich, dass auch die letzten Schritte vollständig abgeschlossen sind.',er:'Wenn ich etwas erledige, sollen auch die letzten Schritte vollständig abgeschlossen sein.'},
-            {id:'C3',sie:'Wenn etwas nicht meinem Standard entspricht, soll er den Fehler möglichst selbst erkennen und korrigieren.',er:'Wenn etwas nicht ihrem Standard entspricht, möchte ich den Fehler möglichst selbst erkennen und korrigieren.'},
-            {id:'C4',sie:'Ich wünsche mir, dass er vorausplant und Probleme löst, bevor sie bei mir landen.',er:'Ich möchte vorausplanen und Probleme lösen, bevor sie bei ihr landen.'},
-            {id:'C5',sie:'Direktes Feedback zu Zuverlässigkeit und Qualität soll für uns normal sein.',er:'Direktes Feedback von ihr zu meiner Zuverlässigkeit und Qualität soll für mich normal sein.'},
-            {id:'C6',sie:'Wiederkehrende Routinen sind mir lieber als ständig neue Einzelanweisungen.',er:'Wiederkehrende Routinen sind mir lieber als ständig neue Einzelanweisungen.'}
+          {key:'C',title:'Standards, Disziplin & Korrektur',short:'Disziplin',min:'wenig wichtig',max:'sehr wichtig',questions:[
+            {id:'C1',sie:'Ich möchte nicht mehrfach erinnern müssen, wenn eine Verantwortung einmal klar übertragen wurde.',er:'Ich möchte lernen, ihre Erwartungen ohne wiederholtes Erinnern zuverlässig zu erfüllen.'},
+            {id:'C2',sie:'Wenn ich sage, dass etwas nicht gut genug ist, möchte ich eine Korrektur erwarten können.',er:'Es kann sich für mich richtig anfühlen, etwas erneut oder besser zu machen, wenn sie mit meinem Ergebnis nicht zufrieden ist.',insight:'Korrektur und Wiederholung können für ihn Teil von Führung sein, statt bloß Kritik.'},
+            {id:'C3',sie:'Ich finde es reizvoll, Qualität und Zuverlässigkeit deutlich zu bewerten und Fortschritt einzufordern.',er:'Mich motiviert es, wenn sie meine Leistung deutlich bewertet und von mir Verbesserung erwartet.',insight:'Er kann direkte Bewertung und Leistungsanspruch durch sie als motivierend oder reizvoll erleben.'},
+            {id:'C4',sie:'Konsequenzen dürfen für mich spürbar sein, wenn er wiederholt unter einem klar vereinbarten Standard bleibt.',er:'Ich wünsche mir, dass vereinbarte Konsequenzen tatsächlich spürbar sind, wenn ich ihre Standards wiederholt nicht erfülle.',insight:'Er könnte stärkere Konsequenzen wünschen, als sie ihm bisher zutraut.'},
+            {id:'C5',sie:'Ich möchte bestimmen können, wann eine Aufgabe wirklich abgeschlossen und gut genug ist.',er:'Es gefällt mir, wenn letztlich sie entscheidet, ob meine Aufgabe vollständig und gut genug erfüllt ist.',insight:'Die endgültige Bewertung durch sie kann für ihn ein bewusst gewünschter Machtaspekt sein.'},
+            {id:'C6',sie:'Disziplin in unserer Dynamik darf für mich einen erotischen Unterton haben, auch wenn es um Alltagspflichten geht.',er:'Mich reizt es, wenn selbst gewöhnliche Pflichten durch ihre Führung einen erotischen Unterton bekommen.',insight:'Er verbindet möglicherweise Alltagsdienst stärker mit Erotik, als auf den ersten Blick sichtbar ist.'}
           ]},
-          {key:'D',title:'Belohnung, Konsequenz & Motivation',short:'Konsequenz',min:'kaum reizvoll',max:'sehr reizvoll',questions:[
-            {id:'D1',sie:'Punkte, Privilegien oder sichtbare Anerkennung finde ich als Belohnung für guten Einsatz passend.',er:'Punkte, Privilegien oder sichtbare Anerkennung motivieren mich als Belohnung für guten Einsatz.'},
-            {id:'D2',sie:'Ich mag die Idee, besondere gemeinsame oder persönliche Privilegien bewusst zu vergeben.',er:'Ich mag die Idee, dass besondere gemeinsame oder persönliche Privilegien bewusst von ihr vergeben werden.'},
-            {id:'D3',sie:'Sexuelle Privilegien können für mich eine reizvolle Belohnung innerhalb unserer Dynamik sein.',er:'Sexuelle Privilegien können für mich eine reizvolle Belohnung innerhalb unserer Dynamik sein.'},
-            {id:'D4',sie:'Wenn etwas deutlich unter Standard bleibt, finde ich zusätzliche Verantwortung oder Wiederholung als Konsequenz passend.',er:'Wenn etwas deutlich unter ihrem Standard bleibt, kann ich zusätzliche Verantwortung oder Wiederholung als Konsequenz akzeptieren.'},
-            {id:'D5',sie:'Demütigung oder bewusstes Kleinmachen kann für mich als erotisches Element oder Konsequenz natürlich in diese Dynamik gehören.',er:'Demütigung oder bewusstes Kleinmachen kann für mich als erotisches Element oder Konsequenz natürlich in diese Dynamik gehören.'},
-            {id:'D6',sie:'Konkretes Lob möchte ich gezielt geben, wenn er mir wirklich Arbeit abgenommen oder einen Standard besonders gut erfüllt hat.',er:'Konkretes Lob von ihr bedeutet mir besonders viel, wenn ich ihr wirklich Arbeit abgenommen oder einen Standard besonders gut erfüllt habe.'}
+          {key:'D',title:'Belohnung, Privilegien & Demütigung',short:'Privilegien',min:'kaum reizvoll',max:'sehr reizvoll',questions:[
+            {id:'D1',sie:'Ich mag es, Privilegien bewusst zu vergeben, statt dass für ihn alles selbstverständlich verfügbar ist.',er:'Mich reizt es, wenn bestimmte Privilegien nicht selbstverständlich sind, sondern von ihr vergeben werden.',insight:'Er kann den Reiz daraus ziehen, dass Zugang zu Gewünschtem von ihrer Entscheidung abhängt.'},
+            {id:'D2',sie:'Sexuelle Privilegien können für mich eine besonders wirkungsvolle Form von Belohnung sein.',er:'Sexuelle Privilegien als Belohnung durch sie sprechen mich besonders an.',insight:'Sexuelle Belohnung hat für ihn möglicherweise deutlich mehr Gewicht als gewöhnliche Anerkennung.'},
+            {id:'D3',sie:'Ich finde es reizvoll, eine Belohnung bewusst hinauszuzögern, kleiner ausfallen zu lassen oder ganz zurückzuhalten.',er:'Mich reizt es, wenn sie Belohnungen oder sexuelle Freigabe bewusst hinauszögert oder zurückhält.',insight:'Aufschub und Zurückhaltung können für ihn selbst Teil der gewünschten Spannung sein.'},
+            {id:'D4',sie:'Demütigungen gehören für mich grundsätzlich in diese Dynamik, wenn ich gerade Lust auf diese Seite meiner Führung habe.',er:'Erotische Demütigung durch sie ist für mich ein wichtiger oder besonders intensiver Teil meiner Unterordnung.',insight:'Demütigung könnte für ihn kein Randthema, sondern ein zentraler erotischer Wunsch sein.'},
+            {id:'D5',sie:'Vergleiche, bewusstes Kleinmachen oder das Betonen seiner untergeordneten Rolle können mich reizen.',er:'Vergleiche, bewusstes Kleinmachen oder das deutliche Benennen meiner untergeordneten Rolle können mich stark reizen.',insight:'Er kann eine deutlich härtere Sprache und stärkere Rollenmarkierung wünschen, als sie vielleicht erwartet.'},
+            {id:'D6',sie:'Ich möchte selbst entscheiden, ob er gerade Lob, ein Privileg, eine Aufgabe oder eine strengere Konsequenz bekommt.',er:'Mich reizt es, nicht vorher zu wissen, ob sie mich lobt, belohnt, weiter dienen lässt oder strenger mit mir wird.',insight:'Ungewissheit und ihre Entscheidungsfreiheit können für ihn Teil des Reizes sein.'}
           ]},
-          {key:'E',title:'Rituale & sichtbare Rollen',short:'Rituale',min:'unwichtig',max:'sehr wichtig',questions:[
-            {id:'E1',sie:'Feste Begrüßungs-, Service- oder Abendrituale würden mir helfen, unsere Rollen spürbar zu machen.',er:'Feste Begrüßungs-, Service- oder Abendrituale würden mir helfen, unsere Rollen spürbar zu erleben.'},
-            {id:'E2',sie:'Ich finde es reizvoll, bei seinem Auftreten oder seiner Kleidung gelegentlich Vorgaben zu machen.',er:'Ich finde es reizvoll, wenn sie bei meinem Auftreten oder meiner Kleidung gelegentlich Vorgaben macht.'},
-            {id:'E3',sie:'Eine besondere Anrede oder kleine private Zeichen von Hierarchie würden mir gefallen.',er:'Eine besondere Anrede oder kleine private Zeichen von Hierarchie würden mir gefallen.'},
-            {id:'E4',sie:'Ein regelmäßiger Wochen- oder Monatscheck zu Aufgaben, Standards und Entwicklung wäre für mich nützlich.',er:'Ein regelmäßiger Wochen- oder Monatscheck zu Aufgaben, Standards und Entwicklung wäre für mich nützlich.'},
-            {id:'E5',sie:'Einige klare, dauerhaft geltende Regeln finde ich angenehmer als alles spontan auszuhandeln.',er:'Einige klare, dauerhaft geltende Regeln finde ich angenehmer als alles spontan auszuhandeln.'},
-            {id:'E6',sie:'Auch im Alltag darf unsere Rollenverteilung für uns beide sichtbar und spürbar sein, nicht nur im Schlafzimmer.',er:'Auch im Alltag darf unsere Rollenverteilung für uns beide sichtbar und spürbar sein, nicht nur im Schlafzimmer.'}
+          {key:'E',title:'Rituale, Zeichen & Rollenleben',short:'Rituale',min:'unwichtig',max:'sehr wichtig',questions:[
+            {id:'E1',sie:'Feste Begrüßungs-, Service- oder Abendrituale würden mir helfen, seine Rolle unmittelbar zu spüren.',er:'Feste Rituale helfen mir, mich bewusst in meine dienende oder untergeordnete Rolle einzufinden.',insight:'Er könnte Rituale als emotionalen Übergang in seine Rolle brauchen oder besonders genießen.'},
+            {id:'E2',sie:'Ich finde es reizvoll, sein Auftreten, seine Kleidung oder kleine Details seines Erscheinungsbilds mitzubestimmen.',er:'Es reizt mich, wenn sie über mein Auftreten oder bestimmte Details meiner Kleidung bestimmt.',insight:'Kontrolle über Auftreten und Kleidung kann für ihn ein unerwartet starker Rollenreiz sein.'},
+            {id:'E3',sie:'Eine besondere Anrede oder klare sprachliche Hierarchie würde mir gefallen.',er:'Eine besondere Anrede oder deutlich hierarchische Sprache verstärkt für mich die erotische Wirkung unserer Rollen.',insight:'Sprache und Anrede können für ihn ein wichtiger erotischer Verstärker sein.'},
+            {id:'E4',sie:'Ich möchte, dass er mir in bestimmten Situationen bewusst zeigt, dass meine Position über seiner steht.',er:'Es gefällt mir, ihre höhere Position durch kleine Gesten, Haltung oder Rituale sichtbar anzuerkennen.',insight:'Er könnte sichtbare Zeichen der Unterordnung stärker genießen als nur private Gedanken darüber.'},
+            {id:'E5',sie:'Einige dauerhaft geltende Regeln dürfen unsere Rollen auch außerhalb sexueller Situationen spürbar machen.',er:'Ich wünsche mir Regeln, die meine Rolle auch außerhalb sexueller Situationen spürbar halten.',insight:'Er könnte Kontinuität im Alltag wünschen statt nur punktueller Sessions.'},
+            {id:'E6',sie:'Ich möchte, dass unsere erotische Hierarchie im Alltag gelegentlich subtil mitschwingt.',er:'Mich reizt es, wenn ich im Alltag kleine Erinnerungen daran bekomme, dass sie führt und ich mich ihr unterordne.',insight:'Kleine alltägliche Machtsignale können für ihn wichtiger sein als seltene große Inszenierungen.'}
           ]},
-          {key:'F',title:'Macht & Sexualität',short:'Sexualität',min:'wenig relevant',max:'zentral',questions:[
-            {id:'F1',sie:'Ich möchte, dass meine sexuelle Lust und mein Genuss häufiger ausdrücklich im Mittelpunkt stehen.',er:'Ich möchte, dass ihre sexuelle Lust und ihr Genuss häufiger ausdrücklich im Mittelpunkt stehen.'},
-            {id:'F2',sie:'Es reizt mich, häufiger Tempo, Ablauf und Schwerpunkt unserer Sexualität zu bestimmen.',er:'Es reizt mich, wenn sie häufiger Tempo, Ablauf und Schwerpunkt unserer Sexualität bestimmt.'},
-            {id:'F3',sie:'Orgasmuskontrolle oder Keuschheit meines Mannes kann für mich ein reizvoller Teil weiblicher Führung sein.',er:'Orgasmuskontrolle oder Keuschheit kann für mich ein reizvoller Teil ihrer Führung sein.'},
-            {id:'F4',sie:'Erotische Demütigung, Vergleiche oder bewusstes Kleinmachen passen für mich grundsätzlich zu unserer Sexualität.',er:'Erotische Demütigung, Vergleiche oder bewusstes Kleinmachen passen für mich grundsätzlich zu unserer Sexualität.'},
-            {id:'F5',sie:'Eine sexuelle Service-Rolle für ihn – mit meinem Genuss als Schwerpunkt – reizt mich.',er:'Eine sexuelle Service-Rolle für mich – mit ihrem Genuss als Schwerpunkt – reizt mich.'},
-            {id:'F6',sie:'Ich möchte sexuelle Wünsche äußern können, ohne sie zuerst danach zu filtern, ob sie für ihn gleich viel Nutzen haben.',er:'Ich finde es stimmig, wenn sie sexuelle Wünsche äußert, ohne sie zuerst danach zu filtern, ob sie für mich gleich viel Nutzen haben.'}
+          {key:'F',title:'Sexuelle Kontrolle & ihre Lust',short:'Sexualität',min:'wenig relevant',max:'zentral',questions:[
+            {id:'F1',sie:'Ich möchte, dass meine Lust, meine Orgasmen und mein Genuss deutlich häufiger im Mittelpunkt unserer Sexualität stehen.',er:'Mich erregt es, wenn ihre Lust, ihre Orgasmen und ihr Genuss klar wichtiger behandelt werden als meine.',insight:'Er kann echte Erregung daraus ziehen, dass ihre sexuelle Befriedigung Vorrang vor seiner hat.'},
+            {id:'F2',sie:'Es reizt mich, Tempo, Ablauf, Beginn und Ende sexueller Situationen häufiger selbst zu bestimmen.',er:'Mich reizt es, wenn sie bestimmt, wann Sexualität beginnt, wie sie abläuft und wann sie für mich endet.',insight:'Er könnte mehr Kontrolle über Ablauf und Freigabe abgeben wollen als bisher sichtbar.'},
+            {id:'F3',sie:'Orgasmuskontrolle, Verzögerung oder Keuschheit meines Mannes kann für mich ein zentraler Teil weiblicher Führung sein.',er:'Orgasmuskontrolle, Verzögerung oder Keuschheit durch sie können für mich zu den stärksten Elementen ihrer Führung gehören.',insight:'Keuschheit oder Orgasmuskontrolle könnte für ihn zu den wichtigsten erotischen Wünschen der FLR gehören.'},
+            {id:'F4',sie:'Ich finde es reizvoll, wenn seine sexuelle Befriedigung von meiner Erlaubnis oder meiner Stimmung abhängt.',er:'Mich erregt die Vorstellung, dass meine sexuelle Befriedigung von ihrer Erlaubnis oder ihrer Stimmung abhängt.',insight:'Abhängigkeit von ihrer sexuellen Freigabe kann für ihn selbst der eigentliche Reiz sein.'},
+            {id:'F5',sie:'Eine sexuelle Service-Rolle für ihn, bei der mein Körper und mein Genuss im Mittelpunkt stehen, spricht mich an.',er:'Eine sexuelle Service-Rolle, in der ich mich stark auf ihren Körper und ihren Genuss konzentriere, spricht mich sehr an.',insight:'Er könnte sexuelle Hingabe und Service stärker wollen als wechselseitige Gleichverteilung.'},
+            {id:'F6',sie:'Ich möchte sexuelle Wünsche und Fantasien äußern können, auch wenn sie vor allem mir Lust, Macht oder Genuss geben.',er:'Mich reizt es, ihre sexuellen Wünsche zu erfüllen, auch wenn der hauptsächliche Lust- oder Machtgewinn bei ihr liegt.',insight:'Er kann gerade den einseitigen Fokus auf ihre Lust als Teil seiner Unterordnung wünschen.'}
           ]},
-          {key:'G',title:'Freiheit, Lifestyle & Priorität der Frau',short:'Freiheit',min:'wenig wichtig',max:'sehr wichtig',questions:[
-            {id:'G1',sie:'Meine freie Zeit soll bewusst geschützt werden und nicht automatisch für Haushalt oder Organisation draufgehen.',er:'Ihre freie Zeit soll bewusst geschützt werden und nicht automatisch für Haushalt oder Organisation draufgehen.'},
-            {id:'G2',sie:'Freundinnen, eigene Interessen, Sport, Reisen oder Beauty dürfen einen wichtigen Platz in meinem Leben haben.',er:'Ihre Freundinnen, eigenen Interessen, Sport, Reisen oder Beauty dürfen einen wichtigen Platz in ihrem Leben haben.'},
-            {id:'G3',sie:'Ich möchte ohne schlechtes Gewissen Zeit und Geld für Dinge verwenden können, die vor allem mir Freude machen.',er:'Ich finde es gut, wenn sie ohne schlechtes Gewissen Zeit und Geld für Dinge verwendet, die vor allem ihr Freude machen.'},
-            {id:'G4',sie:'Ich möchte selbstverständlich allein ausgehen, Unternehmungen planen oder eigene Erfahrungen machen können.',er:'Ich finde es selbstverständlich, dass sie allein ausgeht, Unternehmungen plant oder eigene Erfahrungen macht.'},
-            {id:'G5',sie:'Bei gemeinsamen Planungen dürfen meine Wünsche bewusst etwas stärker gewichtet werden.',er:'Bei gemeinsamen Planungen dürfen ihre Wünsche bewusst etwas stärker gewichtet werden.'},
-            {id:'G6',sie:'Ich möchte, dass meine wachsende Eigenständigkeit und mein Selbstbewusstsein als Gewinn für unsere Dynamik gesehen werden.',er:'Ich sehe ihre wachsende Eigenständigkeit und ihr Selbstbewusstsein als Gewinn für unsere Dynamik.'}
+          {key:'G',title:'Ihre Freiheit, Selbstsicherheit & Begehrlichkeit',short:'Freiheit',min:'wenig wichtig',max:'sehr wichtig',questions:[
+            {id:'G1',sie:'Meine freie Zeit soll bewusst geschützt werden, damit ich mich nicht hauptsächlich über Pflichten definiere.',er:'Ich möchte dazu beitragen, dass sie mehr freie Zeit hat und sich weniger über Pflichten definieren muss.'},
+            {id:'G2',sie:'Ich möchte mich attraktiv, begehrenswert und sexuell selbstbewusst fühlen dürfen, ohne mich dafür kleiner zu machen.',er:'Mich spricht es an, wenn sie sich attraktiv, begehrenswert und sexuell selbstbewusst zeigt.',insight:'Ihr sexuelles Selbstbewusstsein kann für ihn selbst ein wichtiger Reiz sein.'},
+            {id:'G3',sie:'Ich möchte Zeit und Geld für Kleidung, Beauty, Genuss oder Erlebnisse verwenden können, die vor allem mir Freude machen.',er:'Es gefällt mir, wenn sie Zeit und Geld für Kleidung, Beauty, Genuss oder Erlebnisse nutzt, die vor allem ihr Freude machen.',insight:'Er kann es genießen, wenn ihre eigenen Wünsche sichtbar Raum und Ressourcen bekommen.'},
+            {id:'G4',sie:'Ich möchte selbstverständlich allein ausgehen, eigene Pläne machen und mich unabhängig als Frau erleben können.',er:'Mich reizt oder freut es, wenn sie selbstständig ausgeht, eigene Pläne verfolgt und sich unabhängig als Frau erlebt.',insight:'Ihre Unabhängigkeit kann für ihn nicht nur akzeptabel, sondern ausdrücklich attraktiv sein.'},
+            {id:'G5',sie:'Ich möchte meine weibliche und sexuelle Ausstrahlung bewusst genießen und stärker ausleben können.',er:'Ich wünsche mir, dass sie ihre weibliche und sexuelle Ausstrahlung selbstbewusster und sichtbarer auslebt.',insight:'Er könnte wünschen, dass sie ihre Sexualität offensiver und selbstbewusster lebt.'},
+            {id:'G6',sie:'Je selbstbewusster und freier ich werde, desto stärker darf sich auch meine Führungsrolle entwickeln.',er:'Je selbstbewusster und freier sie wird, desto mehr darf ihre Führungsrolle über mich wachsen.',insight:'Er könnte eine stärkere Entwicklung ihrer Führung ausdrücklich begrüßen, statt nur den aktuellen Stand zu akzeptieren.'}
           ]},
-          {key:'H',title:'Kommunikation & Entwicklung',short:'Entwicklung',min:'wenig wichtig',max:'sehr wichtig',questions:[
-            {id:'H1',sie:'Ich möchte Erwartungen und Kritik direkt aussprechen können, ohne jedes Mal eine Grundsatzdiskussion auszulösen.',er:'Ich möchte ihre Erwartungen und Kritik direkt annehmen können, ohne jedes Mal eine Grundsatzdiskussion daraus zu machen.'},
-            {id:'H2',sie:'Er soll auch sagen können, wenn ihn etwas tatsächlich überfordert oder eine Regel nicht funktioniert.',er:'Ich möchte sagen können, wenn mich etwas tatsächlich überfordert oder eine Regel nicht funktioniert.'},
-            {id:'H3',sie:'Unsere Regeln dürfen regelmäßig angepasst werden, wenn sie mir keinen echten Nutzen mehr bringen.',er:'Unsere Regeln dürfen regelmäßig angepasst werden, wenn sie ihr keinen echten Nutzen mehr bringen.'},
-            {id:'H4',sie:'Fehler oder Unsicherheiten möchte ich lieber offen besprechen als durch Schweigen oder Ausweichen verdecken.',er:'Fehler oder Unsicherheiten möchte ich lieber offen besprechen als durch Schweigen oder Ausweichen verdecken.'},
-            {id:'H5',sie:'Ich wünsche mir, dass er sich langfristig in Zuverlässigkeit, Aufmerksamkeit, Service und Selbstständigkeit weiterentwickelt.',er:'Ich möchte mich langfristig in Zuverlässigkeit, Aufmerksamkeit, Service und Selbstständigkeit weiterentwickeln.'},
-            {id:'H6',sie:'Die weiblich geführte Dynamik soll sich für mich wie eine bewusst gewählte Beziehungsform anfühlen, nicht wie zusätzliche Arbeit.',er:'Die weiblich geführte Dynamik soll sich für mich wie eine bewusst gewählte Beziehungsform anfühlen, nicht wie eine Rolle, die ich nur widerwillig erfülle.'}
+          {key:'H',title:'Fantasien, Offenheit & Entwicklung',short:'Entwicklung',min:'wenig wichtig',max:'sehr wichtig',questions:[
+            {id:'H1',sie:'Ich möchte von ihm nicht nur hören, was er akzeptiert, sondern auch, welche Formen meiner Führung er sich insgeheim stärker wünscht.',er:'Ich möchte ihr ehrlich sagen können, welche Formen ihrer Führung, Kontrolle oder Strenge ich mir stärker wünsche, auch wenn ich mich bisher nicht getraut habe.',insight:'Er könnte Wünsche zurückhalten, weil er nicht weiß, ob sie diese Seite von ihm sehen möchte.'},
+            {id:'H2',sie:'Ich möchte erfahren, welche Situationen ihn besonders stark in das Gefühl von Unterordnung bringen.',er:'Ich kann klar benennen, welche Situationen, Worte oder Handlungen bei mir das stärkste Gefühl von Unterordnung auslösen.',insight:'Seine stärksten Trigger für Unterordnung lassen sich gezielt entdecken statt nur vermuten.'},
+            {id:'H3',sie:'Ich möchte unterscheiden können, was ihm nur als Fantasie gefällt und was er wirklich häufiger erleben möchte.',er:'Ich kann unterscheiden, was für mich nur Fantasie ist und was ich tatsächlich häufiger mit ihr erleben möchte.',insight:'Seine Fantasien und seine real gewünschten Praktiken müssen nicht dasselbe sein.'},
+            {id:'H4',sie:'Es interessiert mich, ob er sich manchmal mehr Intensität wünscht, als er von selbst ausspricht.',er:'Ich wünsche mir manchmal mehr Intensität, Strenge oder erotische Macht von ihr, als ich von selbst anspreche.',insight:'Er könnte eine stärkere Dynamik wünschen, als sein bisheriges Verhalten erkennen lässt.'},
+            {id:'H5',sie:'Ich möchte wissen, ob seine Unterordnung für ihn hauptsächlich sexuell, emotional oder Teil seiner Beziehungsidentität ist.',er:'Meine Unterordnung fühlt sich für mich nicht nur sexuell an, sondern auch emotional oder als Teil meiner Beziehungsidentität.',insight:'Unterordnung könnte für ihn tiefer gehen als sexuelle Erregung und seine Rolle in der Beziehung betreffen.'},
+            {id:'H6',sie:'Unsere FLR darf sich mit der Zeit deutlich erotischer und intensiver entwickeln, wenn sich das für mich gut anfühlt.',er:'Ich wünsche mir, dass sich unsere FLR mit der Zeit erotischer und intensiver entwickeln kann, wenn sie daran Freude hat.',insight:'Er könnte langfristig eine deutlich erotischere und intensivere FLR wünschen.'}
           ]}
         ],
         data(){return ensureCompassData(DataManager.lokaleDaten).flr;},
@@ -6247,7 +6262,7 @@
         renderProfile(){const role=this.role(),count=this.count(role),total=this.allQuestions().length;const lab=document.getElementById('flrProfileLabel');if(lab)lab.textContent=`Profil · ${this.roleLabels[role]}`;const p=document.getElementById('flrProgressText');if(p)p.textContent=`${count} / ${total} Fragen`;const bar=document.getElementById('flrProgressBar');if(bar)bar.style.width=`${Math.round(count/total*100)}%`;const evalBtn=document.getElementById('flrEvaluate');if(evalBtn)evalBtn.disabled=count!==total;this.renderQuestionnaire();if(this.complete(role))this.renderIndividualResults();else document.getElementById('flrResults')?.classList.remove('visible');QuestionnaireHub.renderProgress?.();},
         pairQuestionRows(){return this.allQuestions().map(q=>({q,er:this.answer(q.id,'er'),sie:this.answer(q.id,'sie'),diff:Math.abs(this.answer(q.id,'er')-this.answer(q.id,'sie')),common:Math.min(this.answer(q.id,'er'),this.answer(q.id,'sie'))}));},
         pairList(items,mode,empty){if(!items.length)return `<p class="compass-disclaimer">${esc(empty)}</p>`;return `<div class="pair-answer-list">${items.map(x=>`<div class="pair-answer-item ${mode}"><strong>${esc(x.q.id+' · '+x.q.sie)}</strong><span>Er ${x.er}/5 · Sie ${x.sie}/5${mode==='talk'?` · Abstand ${x.diff}`:''}</span></div>`).join('')}</div>`;},
-        renderPair(){const missing=document.getElementById('flrPairMissing'),results=document.getElementById('flrPairResults'),ec=this.count('er'),sc=this.count('sie'),total=this.allQuestions().length;if(!this.complete('er')||!this.complete('sie')){results?.classList.add('hidden');missing?.classList.remove('hidden');if(missing)missing.innerHTML=`<h3>Noch nicht vollständig vergleichbar</h3><p class="compass-disclaimer">Sie: ${sc}/${total} · Er: ${ec}/${total}. Sobald beide den FLR-Fragebogen vollständig beantwortet haben, erscheint die gemeinsame Auswertung.</p>`;return;}missing?.classList.add('hidden');results?.classList.remove('hidden');const she=this.sectionScores('sie'),he=this.sectionScores('er');document.getElementById('flrSheSummary').innerHTML=this.roleSummaryHtml('sie');document.getElementById('flrHeSummary').innerHTML=this.roleSummaryHtml('er');const pairs=this.sections.map((section,i)=>({section,sie:she[i].value,er:he[i].value,diff:Math.abs(she[i].value-he[i].value),common:Math.min(she[i].value,he[i].value)}));document.getElementById('flrPairAxes').innerHTML=pairs.map(x=>`<div class="flr-pair-axis"><div class="flr-pair-axis-head"><strong>${esc(x.section.title)}</strong><span>Sie ${x.sie.toFixed(1)} · Er ${x.er.toFixed(1)} · Δ ${x.diff.toFixed(1)}</span></div><p>${x.common>=4?'Beide bewerten diesen Bereich als sehr wichtig.':x.common>=3.4?'Hier gibt es eine deutliche gemeinsame Basis.':x.diff>=1.2?'Hier unterscheiden sich eure Perspektiven sichtbar.':'Dieser Bereich liegt bei euch eher im mittleren oder niedrigeren Bereich.'}</p></div>`).join('');const shared=pairs.filter(x=>x.sie>=3.7&&x.er>=3.7).sort((a,b)=>b.common-a.common);const diffs=[...pairs].sort((a,b)=>b.diff-a.diff).filter(x=>x.diff>=.7).slice(0,5);document.getElementById('flrShared').innerHTML=shared.length?`<div class="pair-answer-list">${shared.map(x=>`<div class="pair-answer-item good"><strong>${esc(x.section.title)}</strong><span>Sie ${x.sie.toFixed(1)} · Er ${x.er.toFixed(1)}</span></div>`).join('')}</div>`:'<p class="compass-disclaimer">Noch kein Bereich liegt bei beiden klar im hohen Bereich.</p>';document.getElementById('flrDifferences').innerHTML=diffs.length?`<div class="pair-answer-list">${diffs.map(x=>`<div class="pair-answer-item talk"><strong>${esc(x.section.title)}</strong><span>Sie ${x.sie.toFixed(1)} · Er ${x.er.toFixed(1)} · Abstand ${x.diff.toFixed(1)}</span></div>`).join('')}</div>`:'<p class="compass-disclaimer">Eure Bereichswerte liegen insgesamt recht nah beieinander.</p>';const rows=this.pairQuestionRows(),gaps=rows.filter(x=>x.diff>=2).sort((a,b)=>b.diff-a.diff).slice(0,8);document.getElementById('flrQuestionGaps').innerHTML=this.pairList(gaps,'talk','Keine einzelnen Fragen mit einem Abstand von mindestens 2 Punkten.');},
+        renderPair(){const missing=document.getElementById('flrPairMissing'),results=document.getElementById('flrPairResults'),ec=this.count('er'),sc=this.count('sie'),total=this.allQuestions().length;if(!this.complete('er')||!this.complete('sie')){results?.classList.add('hidden');missing?.classList.remove('hidden');if(missing)missing.innerHTML=`<h3>Noch nicht vollständig vergleichbar</h3><p class="compass-disclaimer">Sie: ${sc}/${total} · Er: ${ec}/${total}. Sobald beide den FLR-Fragebogen vollständig beantwortet haben, erscheint die gemeinsame Auswertung.</p>`;return;}missing?.classList.add('hidden');results?.classList.remove('hidden');const she=this.sectionScores('sie'),he=this.sectionScores('er');document.getElementById('flrSheSummary').innerHTML=this.roleSummaryHtml('sie');document.getElementById('flrHeSummary').innerHTML=this.roleSummaryHtml('er');const pairs=this.sections.map((section,i)=>({section,sie:she[i].value,er:he[i].value,diff:Math.abs(she[i].value-he[i].value),common:Math.min(she[i].value,he[i].value)}));document.getElementById('flrPairAxes').innerHTML=pairs.map(x=>`<div class="flr-pair-axis"><div class="flr-pair-axis-head"><strong>${esc(x.section.title)}</strong><span>Sie ${x.sie.toFixed(1)} · Er ${x.er.toFixed(1)} · Δ ${x.diff.toFixed(1)}</span></div><p>${x.common>=4?'Beide bewerten diesen Bereich als sehr wichtig.':x.common>=3.4?'Hier gibt es eine deutliche gemeinsame Basis.':x.diff>=1.2?'Hier unterscheiden sich eure Perspektiven sichtbar.':'Dieser Bereich liegt bei euch eher im mittleren oder niedrigeren Bereich.'}</p></div>`).join('');const shared=pairs.filter(x=>x.sie>=3.7&&x.er>=3.7).sort((a,b)=>b.common-a.common);const diffs=[...pairs].sort((a,b)=>b.diff-a.diff).filter(x=>x.diff>=.7).slice(0,5);document.getElementById('flrShared').innerHTML=shared.length?`<div class="pair-answer-list">${shared.map(x=>`<div class="pair-answer-item good"><strong>${esc(x.section.title)}</strong><span>Sie ${x.sie.toFixed(1)} · Er ${x.er.toFixed(1)}</span></div>`).join('')}</div>`:'<p class="compass-disclaimer">Noch kein Bereich liegt bei beiden klar im hohen Bereich.</p>';document.getElementById('flrDifferences').innerHTML=diffs.length?`<div class="pair-answer-list">${diffs.map(x=>`<div class="pair-answer-item talk"><strong>${esc(x.section.title)}</strong><span>Sie ${x.sie.toFixed(1)} · Er ${x.er.toFixed(1)} · Abstand ${x.diff.toFixed(1)}</span></div>`).join('')}</div>`:'<p class="compass-disclaimer">Eure Bereichswerte liegen insgesamt recht nah beieinander.</p>';const rows=this.pairQuestionRows(),gaps=rows.filter(x=>x.diff>=2).sort((a,b)=>b.diff-a.diff).slice(0,8);document.getElementById('flrQuestionGaps').innerHTML=this.pairList(gaps,'talk','Keine einzelnen Fragen mit einem Abstand von mindestens 2 Punkten.');const revealing=rows.filter(x=>x.er>=4&&x.q.insight).sort((a,b)=>((b.er-b.sie)-(a.er-a.sie))||(b.er-a.er)).slice(0,8);const insightBox=document.getElementById('flrHerInsights');if(insightBox)insightBox.innerHTML=revealing.length?`<div class="pair-answer-list">${revealing.map(x=>`<div class="pair-answer-item good"><strong>${esc(x.q.insight)}</strong><span>Seine Antwort ${x.er}/5 · Ihre Einschätzung ${x.sie}/5${x.er>x.sie?` · er liegt ${x.er-x.sie} Punkt${x.er-x.sie===1?'':'e'} höher`:''}</span></div>`).join('')}</div>`:'<p class="compass-disclaimer">Seine hohen Antworten ergeben derzeit keine zusätzlichen auffälligen Schwerpunkte.</p>';},
         async reset(){const role=this.role();if(!confirm(`FLR-Antworten für „${this.roleLabels[role]}“ löschen?`))return;this.profile(role).answers={};this.profile(role).updatedAt=new Date().toISOString();await DataManager.save();this.renderProfile();showToast('FLR-Antworten gelöscht.','success');},
         bind(){const root=document.getElementById('flrCompassModule');if(!root)return;root.addEventListener('click',e=>{const view=e.target.closest('[data-flr-view]');if(view){this.setView(view.dataset.flrView);return;}const b=e.target.closest('[data-flr-id]');if(b){const role=this.role(),p=this.profile(role);p.answers[b.dataset.flrId]=Number(b.dataset.value);p.updatedAt=new Date().toISOString();this.scheduleSave();this.renderProfile();return;}});document.getElementById('flrEvaluate')?.addEventListener('click',()=>this.renderIndividualResults());document.getElementById('flrReset')?.addEventListener('click',()=>this.reset());},
         render(){const v=this.data().activeView||'sie';this.setView(v);},
