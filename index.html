@@ -485,6 +485,32 @@
       text-transform: uppercase;
     }
 
+    .category-heading {
+      display:flex;
+      align-items:center;
+      gap:14px;
+      margin:0 0 6px;
+    }
+    .category-heading .category-logo {
+      width:64px;
+      height:64px;
+      flex:0 0 64px;
+      object-fit:contain;
+      filter:drop-shadow(0 7px 12px rgba(91,36,47,.12));
+    }
+    .category-heading h2 {
+      flex:1 1 auto;
+      min-width:0;
+      margin:0;
+    }
+    @media (max-width:760px) {
+      .category-heading { gap:10px; align-items:center; }
+      .category-heading .category-logo { width:50px; height:50px; flex-basis:50px; }
+    }
+    @media (max-width:430px) {
+      .category-heading .category-logo { width:44px; height:44px; flex-basis:44px; }
+    }
+
     .card .sub {
       margin: 0 0 18px;
       color: var(--text-muted);
@@ -1101,6 +1127,7 @@
     }
 
     @media (max-width: 420px) {
+      .brand-logo { width:min(82vw, 330px); }
       .header-left h1 { font-size: 1.42rem; }
       .header-left h1 span { font-size: .34em; }
       .header-actions { width: 100%; }
@@ -2241,6 +2268,7 @@
       .media-item-actions { opacity:1; }
     }
     @media (max-width:430px) {
+      .brand-logo { width:min(88vw, 430px); }
       .header-left h1 { font-size:1.9rem; }
       .header-left h1 span { font-size:.25em; }
       .konto-wrap .label { font-size:.58rem; }
@@ -2351,6 +2379,15 @@
       display:block; width:fit-content; max-width:100%; border-radius:14px; cursor:pointer;
       transition:transform var(--transition), opacity var(--transition), background var(--transition);
     }
+    .brand-logo {
+      display:block;
+      width:clamp(240px, 42vw, 560px);
+      max-width:100%;
+      height:auto;
+      object-fit:contain;
+      object-position:left center;
+      filter:drop-shadow(0 7px 16px rgba(68,42,49,.08));
+    }
     .brand-home-link:hover { opacity:.9; }
     .brand-home-link:active { transform:scale(.985); }
     .brand-home-link:focus-visible { outline:3px solid var(--accent-glow); outline-offset:4px; }
@@ -2360,6 +2397,7 @@
     body.subview-mode .header-actions,
     body.subview-mode .progress-section { display:none !important; }
     body.subview-mode .brand-home-link { width:auto; }
+    body.subview-mode .brand-logo { width:clamp(170px, 28vw, 260px); max-height:54px; }
     body.subview-mode .relationship-kicker { margin-bottom:2px; font-size:.52rem; letter-spacing:.09em; }
     body.subview-mode .header-left h1 {
       margin:0; font-family:var(--font); font-size:.98rem; font-weight:850; line-height:1.12; letter-spacing:-.02em;
@@ -2697,8 +2735,7 @@
   <header>
     <div class="header-left">
       <div id="brandHomeLink" class="brand-home-link" role="button" tabindex="0" aria-label="Zur Hauptseite Heute" title="Zur Hauptseite">
-        <h1>Liebe &amp; Einsatz</h1>
-        <p>Punkte-System</p>
+        <img class="brand-logo" src="logo.png" alt="Liebe &amp; Einsatz · Punkte-System">
       </div>
       <div class="header-actions">
         <button id="syncBtn" type="button" title="Daten neu laden" aria-label="Daten neu laden">↻ Aktualisieren</button>
@@ -2777,27 +2814,27 @@
 
     <!-- AUFGABEN -->
     <section id="tab-aufgaben" style="display:none;" class="tab-content card" role="tabpanel" aria-labelledby="tabBtn-aufgaben">
-      <h2><span>Seine Aufgaben</span><span class="tag">Ihre Bewertung</span></h2>
+      <div class="category-heading"><img class="category-logo" src="logo-aufgaben.png" alt="" aria-hidden="true"><h2><span>Seine Aufgaben</span><span class="tag">Ihre Bewertung</span></h2></div>
       <p class="sub">Er erledigt · sie bewertet Qualität und Punkte · wiederholbar</p>
       <div id="aufgabenContainer"></div>
     </section>
 
     <!-- EINLÖSUNGEN -->
     <section id="tab-einloesungen" class="tab-content card" style="display:none;" role="tabpanel" aria-labelledby="tabBtn-einloesungen">
-      <h2><span>Einlösekatalog</span><span class="tag">Verdient</span></h2>
+      <div class="category-heading"><img class="category-logo" src="logo-einloesungen.png" alt="" aria-hidden="true"><h2><span>Einlösekatalog</span><span class="tag">Verdient</span></h2></div>
       <p class="sub">Was er sich mit seinem Punktestand einlösen darf.</p>
       <div id="einloesungenContainer"></div>
     </section>
 
     <!-- TAGEBUCH (ohne Formular – nur Liste) -->
     <section id="tab-tagebuch" class="tab-content card" style="display:none;" role="tabpanel" aria-labelledby="tabBtn-tagebuch">
-      <h2><span>Mein Tagebuch</span><span class="tag">Privat</span></h2>
+      <div class="category-heading"><img class="category-logo" src="logo-tagebuch.png" alt="" aria-hidden="true"><h2><span>Mein Tagebuch</span><span class="tag">Privat</span></h2></div>
       <p class="sub">Gedanken, Erlebnisse, geheime Wünsche … (Klick auf Eintrag zeigt Text)</p>
       <div id="tagebuchContainer"></div>
     </section>
     <!-- PAAR-KOMPASS -->
     <section id="tab-kompass" class="tab-content card" style="display:none;" role="tabpanel" aria-labelledby="tabBtn-kompass">
-      <h2><span>Paar-Kompass</span><span class="tag">Perspektiven &amp; Fragebögen</span></h2>
+      <div class="category-heading"><img class="category-logo" src="logo-kompass.png" alt="" aria-hidden="true"><h2><span>Paar-Kompass</span><span class="tag">Perspektiven &amp; Fragebögen</span></h2></div>
       <p class="sub">Wie sieht sie eure Dynamik – und wie sieht er sie? Wählt einen Fragebogen. Jeder Test bleibt geschlossen, bis ihr ihn bewusst öffnet; später können hier weitere Fragebögen ergänzt werden.</p>
 
       <div id="compassQuestionnaireLibrary" class="questionnaire-library">
@@ -2974,7 +3011,7 @@
 
     <!-- PUZZLE / TETRIS BILD-FREIGABE -->
     <section id="tab-puzzle" class="tab-content card" style="display:none;" role="tabpanel" aria-labelledby="tabBtn-puzzle">
-      <h2><span>🎮 Spiele &amp; Bilder</span><span class="tag">10 Level</span></h2>
+      <div class="category-heading"><img class="category-logo" src="logo-spiele.png" alt="" aria-hidden="true"><h2><span>Spiele &amp; Bilder</span><span class="tag">10 Level</span></h2></div>
       <p class="sub">Farbkugeln kombinieren oder Worträtsel lösen. 10 feste Level haben jeweils vier Bilder im Pool; pro Runde wird automatisch eines davon zufällig ausgewählt.</p>
 
       <div class="puzzle-layout">
@@ -3063,7 +3100,7 @@
         <!-- EINSTELLUNGEN (mit integriertem Verlauf) -->
     <!-- MEDIEN-ARCHIV -->
     <section id="tab-medien" class="tab-content card" style="display:none;" role="tabpanel" aria-labelledby="tabBtn-medien">
-      <h2><span>Unsere Medien</span><span class="tag">Archiv</span></h2>
+      <div class="category-heading"><img class="category-logo" src="logo-medien.png" alt="" aria-hidden="true"><h2><span>Unsere Medien</span><span class="tag">Archiv</span></h2></div>
       <p class="sub">Bilder, Videos, Links, Comics und die Heldengeschichte – ruhiger gesammelt an einem Ort.</p>
 
       <div class="media-subnav" role="tablist" aria-label="Medien-Bereiche">
@@ -3217,7 +3254,7 @@
 
     <!-- FEMTOPIA · KLARER LEITFADEN -->
     <section id="tab-schule" class="tab-content card femdom-simple" style="display:none;" role="tabpanel" aria-labelledby="tabBtn-schule">
-      <h2><span>Femtopia</span><span class="tag">Klarheit · Einstieg · Ideen</span></h2>
+      <div class="category-heading"><img class="category-logo" src="logo-femtopia.png" alt="" aria-hidden="true"><h2><span>Femtopia</span><span class="tag">Klarheit · Einstieg · Ideen</span></h2></div>
       <p class="sub">Weniger Theorie, mehr Orientierung: warum weibliche Führung dir nützen kann, wie du klein beginnst und welche Ideen, Rituale oder erotischen Dynamiken ihr bewusst ausprobieren möchtet.</p>
 
       <div class="school-shell">
@@ -3365,7 +3402,7 @@
 
     <!-- EINSTELLUNGEN -->
     <section id="tab-einstellungen" class="tab-content card" style="display:none;" role="tabpanel" aria-labelledby="tabBtn-einstellungen">
-      <h2><span>⚙️ Einstellungen</span><span class="tag">System</span></h2>
+      <div class="category-heading"><img class="category-logo" src="logo-einstellungen.png" alt="" aria-hidden="true"><h2><span>Einstellungen</span><span class="tag">System</span></h2></div>
       <p class="sub">Sicherheit, Datenverwaltung und ein genauer Aktivitätsverlauf.</p>
 
       <div class="settings-layout">
