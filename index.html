@@ -6,6 +6,7 @@
   <meta name="theme-color" content="#f7f3f0" id="themeColorMeta" />
   <title>Punkte-System · Liebe & Einsatz</title>
   <style>
+  /* HINTERGRUNDBILD-DATEI: background.jpg */
     /* ===== MODERNES REDESIGN – Logik/IDs bleiben unverändert ===== */
     :root {
       color-scheme: light;
@@ -85,16 +86,22 @@
       transition: background-color var(--transition), color var(--transition);
     }
 
+    /* Eigenes Hintergrundbild:
+       Lege im selben GitHub-Ordner wie index.html eine Datei namens background.jpg ab.
+       Das Bild wird automatisch auf allen Bereichen als dezenter, fixer Hintergrund verwendet. */
     body::before {
       content: "";
       position: fixed;
       inset: 0;
       z-index: -1;
       pointer-events: none;
-      opacity: .35;
-      background-image: radial-gradient(rgba(255,255,255,.5) .6px, transparent .6px);
-      background-size: 14px 14px;
-      mask-image: linear-gradient(to bottom, #000, transparent 55%);
+      opacity: .14;
+      background-image: url("background.jpg");
+      background-size: cover;
+      background-position: center center;
+      background-repeat: no-repeat;
+      filter: saturate(.82) contrast(.94);
+      transform: translateZ(0);
     }
 
     button, input, select, textarea { font: inherit; }
@@ -437,7 +444,7 @@
       padding: 23px;
       border: 1px solid var(--card-border);
       border-radius: var(--radius-lg);
-      background: linear-gradient(145deg, color-mix(in srgb, var(--surface-solid) 97%, transparent), var(--surface));
+      background: linear-gradient(145deg, color-mix(in srgb, var(--surface-solid) 94%, transparent), color-mix(in srgb, var(--surface) 96%, transparent));
       box-shadow: var(--shadow);
       backdrop-filter: blur(14px);
       -webkit-backdrop-filter: blur(14px);
@@ -1996,13 +2003,16 @@
       --green-light:rgba(145,170,154,.12);
     }
     body {
+      position:relative;
+      isolation:isolate;
       max-width:1240px;
       background:
-        radial-gradient(circle at 3% 0%, color-mix(in srgb,var(--accent) 15%,transparent), transparent 32rem),
-        radial-gradient(circle at 100% 15%, color-mix(in srgb,var(--gold) 13%,transparent), transparent 29rem),
-        linear-gradient(155deg,var(--bg),var(--bg-deep));
+        radial-gradient(circle at 3% 0%, color-mix(in srgb,var(--accent) 13%,transparent), transparent 32rem),
+        radial-gradient(circle at 100% 15%, color-mix(in srgb,var(--gold) 11%,transparent), transparent 29rem),
+        linear-gradient(155deg,color-mix(in srgb,var(--bg) 93%,transparent),color-mix(in srgb,var(--bg-deep) 94%,transparent));
     }
-    body::before { opacity:.18; background-size:18px 18px; }
+    body::before { opacity:.14; }
+    html[data-theme="dark"] body::before { opacity:.10; filter:saturate(.70) brightness(.72); }
 
     header {
       overflow:hidden;
