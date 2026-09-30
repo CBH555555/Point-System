@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#f7f3f0" id="themeColorMeta" />
   <title>Punkte-System · Liebe & Einsatz</title>
   <style>
-  /* HINTERGRUNDBILD-DATEI: background.jpg */
+  /* HINTERGRUNDBILD-DATEI: background.jpeg */
     /* ===== MODERNES REDESIGN – Logik/IDs bleiben unverändert ===== */
     :root {
       color-scheme: light;
@@ -69,6 +69,8 @@
     * { box-sizing: border-box; }
     html { scroll-behavior: smooth; }
     body {
+      position: relative;
+      isolation: isolate;
       margin: 0 auto;
       max-width: 1180px;
       min-height: 100vh;
@@ -87,21 +89,70 @@
     }
 
     /* Eigenes Hintergrundbild:
-       Lege im selben GitHub-Ordner wie index.html eine Datei namens background.jpg ab.
-       Das Bild wird automatisch auf allen Bereichen als dezenter, fixer Hintergrund verwendet. */
-    body::before {
+       Lege im selben GitHub-Ordner wie index.html eine Datei namens background.jpeg ab.
+       Zwei Ebenen sorgen dafür, dass das Motiv auf Hoch- und Querformat gut sichtbar bleibt:
+       1) eine bildschirmfüllende, weichere COVER-Ebene
+       2) darüber eine CONTAIN-Ebene, die möglichst das komplette Bild zeigt. */
+    body::before,
+    body::after {
       content: "";
       position: fixed;
       inset: 0;
-      z-index: -1;
       pointer-events: none;
-      opacity: .14;
-      background-image: url("background.jpg");
-      background-size: cover;
-      background-position: center center;
+      background-image: url("background.jpeg");
       background-repeat: no-repeat;
-      filter: saturate(.82) contrast(.94);
+      background-position: center center;
       transform: translateZ(0);
+    }
+
+    body::before {
+      z-index: -2;
+      opacity: .22;
+      background-size: cover;
+      filter: saturate(.92) contrast(1.02) brightness(.98) blur(1.5px);
+      transform: scale(1.015) translateZ(0);
+    }
+
+    body::after {
+      z-index: -1;
+      opacity: .28;
+      background-size: contain;
+      filter: saturate(1.03) contrast(1.03) brightness(1.01);
+    }
+
+    html[data-theme="dark"] body::before {
+      opacity: .16;
+      filter: saturate(.78) contrast(1.02) brightness(.62) blur(1.5px);
+    }
+
+    html[data-theme="dark"] body::after {
+      opacity: .20;
+      filter: saturate(.82) contrast(1.02) brightness(.72);
+    }
+
+    @media (max-width: 760px) and (orientation: portrait) {
+      body::before {
+        opacity: .24;
+        background-position: center 36%;
+      }
+      body::after {
+        opacity: .30;
+        background-size: 100% auto;
+        background-position: center 24%;
+      }
+    }
+
+    @media (max-width: 920px) and (orientation: landscape) {
+      body::before { background-position: center center; }
+      body::after {
+        opacity: .25;
+        background-size: auto 96vh;
+        background-position: center center;
+      }
+    }
+
+    @media (min-width: 1400px) {
+      body::after { background-size: min(1500px, 92vw) auto; }
     }
 
     button, input, select, textarea { font: inherit; }
@@ -2038,8 +2089,6 @@
         radial-gradient(circle at 100% 15%, color-mix(in srgb,var(--gold) 11%,transparent), transparent 29rem),
         linear-gradient(155deg,color-mix(in srgb,var(--bg) 93%,transparent),color-mix(in srgb,var(--bg-deep) 94%,transparent));
     }
-    body::before { opacity:.14; }
-    html[data-theme="dark"] body::before { opacity:.10; filter:saturate(.70) brightness(.72); }
 
     header {
       overflow:hidden;
