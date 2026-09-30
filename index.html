@@ -805,6 +805,18 @@
     }
     .log-entry .time { flex-shrink: 0; color: var(--text-muted); font-size: .62rem; opacity: .75; }
     .log-entry .msg { min-width: 0; word-break: break-word; }
+    .log-entry .msg > strong { display:block; color:var(--text); font-family:var(--font); font-size:.78rem; line-height:1.4; }
+    .log-meta { margin-top:3px; color:var(--text-muted); font-family:var(--font); font-size:.64rem; line-height:1.4; }
+    .log-changes { display:grid; gap:6px; margin-top:8px; }
+    .log-change { padding:7px 8px; border:1px solid var(--card-border); border-radius:9px; background:var(--surface-solid); font-family:var(--font); }
+    .log-change b { display:block; margin-bottom:4px; color:var(--text); font-size:.64rem; }
+    .log-change-values { display:grid; gap:3px; }
+    .log-change-values span { white-space:pre-wrap; overflow-wrap:anywhere; color:var(--text-muted); font-size:.62rem; line-height:1.45; }
+    .log-change-values .after { color:var(--text); }
+    .log-actions { display:flex; gap:8px; flex-wrap:wrap; margin-top:10px; }
+    .log-open-btn { border:1px solid var(--card-border); border-radius:10px; background:var(--bg); color:var(--text); padding:8px 10px; cursor:pointer; font-size:.64rem; font-weight:800; }
+    .log-open-btn:hover { background:var(--surface-solid); }
+    .log-focus-target { outline:2px solid var(--accent); outline-offset:4px; box-shadow:0 0 0 6px var(--accent-glow); transition:box-shadow .2s ease, outline-color .2s ease; }
 
     .modal {
       position: fixed;
@@ -1177,6 +1189,38 @@
 
     @media (max-width:760px) { .pair-summary-grid{grid-template-columns:1fr;} .pair-reality-grid{grid-template-columns:repeat(2,minmax(0,1fr));} .pair-hero{align-items:stretch;flex-direction:column;} .pair-save-btn{width:100%;} }
     @media (max-width:420px) { .pair-view-tabs{grid-template-columns:repeat(2,minmax(0,1fr));} .pair-history-row{grid-template-columns:1fr repeat(2,minmax(60px,.6fr));} .pair-history-row span:nth-child(4),.pair-history-row span:nth-child(5){display:none;} }
+
+    /* ===== MODULARE PAAR-KOMPASS-FRAGEBÖGEN ===== */
+    .questionnaire-library { display:grid; gap:14px; }
+    .questionnaire-library-head { padding:17px; border:1px solid var(--card-border); border-radius:18px; background:linear-gradient(145deg,var(--surface-soft),var(--surface-solid)); }
+    .questionnaire-library-head h3 { margin:4px 0 5px; font-size:1.12rem; }
+    .questionnaire-library-head p, .questionnaire-library-note { margin:0; color:var(--text-muted); font-size:.75rem; line-height:1.5; }
+    .questionnaire-card-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; }
+    .questionnaire-card { display:grid; grid-template-columns:auto minmax(0,1fr); gap:13px; align-items:start; padding:17px; border:1px solid var(--card-border); border-radius:18px; background:var(--surface-soft); color:var(--text); text-align:left; cursor:pointer; box-shadow:var(--shadow-sm); transition:transform var(--transition),border-color var(--transition),box-shadow var(--transition); }
+    .questionnaire-card:hover { transform:translateY(-2px); border-color:color-mix(in srgb,var(--accent) 32%,var(--card-border)); box-shadow:var(--shadow); }
+    .questionnaire-icon { display:grid; place-items:center; width:44px; height:44px; border-radius:14px; background:var(--accent-light); font-size:1.35rem; }
+    .questionnaire-copy { display:grid; gap:4px; min-width:0; }
+    .questionnaire-copy strong { font-size:.91rem; line-height:1.3; }
+    .questionnaire-copy small { color:var(--accent-strong); font-size:.64rem; font-weight:850; }
+    .questionnaire-copy span { color:var(--text-muted); font-size:.72rem; line-height:1.45; }
+    .questionnaire-copy em { margin-top:4px; color:var(--text-muted); font-size:.62rem; font-style:normal; font-weight:750; }
+    .questionnaire-module { display:grid; gap:14px; }
+    .questionnaire-module-head { display:flex; align-items:center; gap:12px; padding:10px 0 2px; }
+    .questionnaire-module-head > div { display:grid; gap:1px; }
+    .questionnaire-module-head span { color:var(--text-muted); font-size:.62rem; font-weight:800; text-transform:uppercase; letter-spacing:.08em; }
+    .questionnaire-module-head strong { color:var(--text); font-size:.94rem; }
+    .questionnaire-back { min-height:38px; padding:8px 11px; border:1px solid var(--card-border); border-radius:11px; background:var(--surface-soft); color:var(--text); font-size:.72rem; font-weight:800; cursor:pointer; }
+    .flr-intro-card { padding:15px 16px; border:1px solid color-mix(in srgb,var(--gold) 28%,var(--card-border)); border-radius:16px; background:var(--gold-light); }
+    .flr-intro-card strong { display:block; margin-bottom:4px; }
+    .flr-intro-card p { margin:0; color:var(--text-muted); font-size:.74rem; line-height:1.5; }
+    .flr-questionnaire { display:grid; gap:12px; }
+    .flr-bottom-note { margin-top:2px; }
+    .flr-pair-axis { padding:11px 12px; border:1px solid var(--card-border); border-radius:13px; background:var(--surface-solid); }
+    .flr-pair-axis-head { display:flex; justify-content:space-between; gap:10px; margin-bottom:6px; }
+    .flr-pair-axis-head strong { font-size:.78rem; }
+    .flr-pair-axis-head span { color:var(--text-muted); font-size:.64rem; font-weight:800; }
+    .flr-pair-axis p { margin:0; color:var(--text-muted); font-size:.7rem; line-height:1.45; }
+    @media (max-width:760px){ .questionnaire-card-grid{grid-template-columns:1fr;} }
 
     /* ===== SPIELE / FARBFALL + BILDFREIGABE ===== */
     .puzzle-layout {
@@ -2643,9 +2687,8 @@
   <header>
     <div class="header-left">
       <div id="brandHomeLink" class="brand-home-link" role="button" tabindex="0" aria-label="Zur Hauptseite Heute" title="Zur Hauptseite">
-        <div class="relationship-kicker">Ihre Führung · sein Fortschritt</div>
-        <h1>Liebe &amp; Einsatz <span>Punkte-System</span></h1>
-        <p>Ehemann sammelt · Ehefrau bewertet · Wiederholbar</p>
+        <h1>Liebe &amp; Einsatz</h1>
+        <p>Punkte-System</p>
       </div>
       <div class="header-actions">
         <button id="syncBtn" type="button" title="Daten neu laden" aria-label="Daten neu laden">↻ Aktualisieren</button>
@@ -2677,7 +2720,7 @@
 
   <div class="mobile-nav-shell" aria-label="App-Navigation">
     <button type="button" class="nav-menu-btn" id="navMenuBtn" aria-label="Menü öffnen" aria-expanded="false" aria-controls="mainTabBar">☰</button>
-    <div class="mobile-nav-current"><small>Bereich</small><span id="navCurrentLabel">Aufgaben</span></div>
+    <div class="mobile-nav-current"><small>Bereich</small><span id="navCurrentLabel">Heute</span></div>
   </div>
 
   <div class="tab-bar" id="mainTabBar" role="tablist">
@@ -2687,7 +2730,7 @@
     <button class="tab-btn" data-tab="tagebuch" id="tabBtn-tagebuch" role="tab" aria-selected="false" aria-controls="tab-tagebuch">Tagebuch</button>
     <button class="tab-btn" data-tab="kompass" id="tabBtn-kompass" role="tab" aria-selected="false" aria-controls="tab-kompass">Kompass</button>
     <button class="tab-btn" data-tab="puzzle" id="tabBtn-puzzle" role="tab" aria-selected="false" aria-controls="tab-puzzle">Spiele</button>
-    <button class="tab-btn" data-tab="medien" id="tabBtn-medien" role="tab" aria-selected="false" aria-controls="tab-medien">Momente</button>
+    <button class="tab-btn" data-tab="medien" id="tabBtn-medien" role="tab" aria-selected="false" aria-controls="tab-medien">Medien</button>
     <button class="tab-btn" data-tab="schule" id="tabBtn-schule" role="tab" aria-selected="false" aria-controls="tab-schule">Femtopia</button>
     <button class="tab-btn" data-tab="einstellungen" id="tabBtn-einstellungen" role="tab" aria-selected="false" aria-controls="tab-einstellungen">Einstellungen</button>
   </div>
@@ -2696,7 +2739,7 @@
   <nav class="mobile-dock" aria-label="Schnellnavigation">
     <button type="button" class="active" data-dock-tab="heute" aria-label="Heute"><span>♡</span>Heute</button>
     <button type="button" data-dock-tab="aufgaben" aria-label="Aufgaben"><span>✓</span>Aufgaben</button>
-    <button type="button" data-dock-tab="medien" aria-label="Momente"><span>◉</span>Momente</button>
+    <button type="button" data-dock-tab="medien" aria-label="Medien"><span>◉</span>Medien</button>
     <button type="button" data-dock-action="more" aria-label="Mehr Bereiche"><span>☰</span>Mehr</button>
   </nav>
 
@@ -2706,55 +2749,19 @@
 
     <!-- HEUTE / STARTSEITE -->
     <section id="tab-heute" class="tab-content card" role="tabpanel" aria-labelledby="tabBtn-heute">
-      <div class="today-dashboard">
-        <div class="today-hero">
-          <div>
-            <span class="today-eyebrow">Ihre Führung · sein Fortschritt</span>
-            <h2>Heute im Blick</h2>
-            <p>Seine nächsten Pflichten, Ihre Bewertung und die gemeinsamen Momente – klar und übersichtlich an einem Ort.</p>
-          </div>
-          <div class="today-score"><small>Sein Punktestand</small><strong id="todayScore">0</strong></div>
-        </div>
-
+      <div class="today-dashboard today-dashboard-compact">
         <section class="recent-activity" aria-labelledby="recentActivityTitle">
           <div class="recent-activity-head">
             <div>
               <span class="today-card-kicker">Zuletzt passiert</span>
-              <h3 id="recentActivityTitle">Letzte Aktivitäten</h3>
+              <h2 id="recentActivityTitle">Letzte Aktivitäten</h2>
             </div>
-            <small>Die letzten 3 · antippen zum Öffnen</small>
+            <small>Die letzten 5 · antippen zum Öffnen</small>
           </div>
           <div id="recentActivityList" class="recent-activity-list" aria-live="polite">
             <div class="recent-activity-empty">Noch keine Aktivität vorhanden.</div>
           </div>
         </section>
-
-        <div class="today-grid">
-          <article class="today-card">
-            <span class="today-card-kicker">Als Nächstes</span>
-            <h3 id="todayTaskTitle">Keine offene Aufgabe</h3>
-            <p id="todayTaskText">Sobald eine Aufgabe offen ist, erscheint sie hier.</p>
-            <div class="today-meta" id="todayTaskMeta"></div>
-          </article>
-          <article class="today-card">
-            <span class="today-card-kicker">Letzter Moment</span>
-            <h3 id="todayMomentTitle">Noch kein Moment</h3>
-            <p id="todayMomentText">Tagebuch und Mediensammlung werden hier zusammengeführt.</p>
-            <div class="today-meta" id="todayMomentMeta"></div>
-          </article>
-          <article class="today-card">
-            <span class="today-card-kicker">Einlösungen</span>
-            <h3 id="todayRewardTitle">Noch nichts verfügbar</h3>
-            <p id="todayRewardText">Der aktuelle Punktestand entscheidet, was er sich verdient leisten kann.</p>
-            <div class="today-meta" id="todayRewardMeta"></div>
-          </article>
-        </div>
-
-        <div class="today-actions">
-          <button type="button" class="primary" id="todayNewTask">Neue Aufgabe für ihn</button>
-          <button type="button" id="todayOpenRewards">Einlösungen ansehen</button>
-          <button type="button" id="todayOpenMoments">Momente öffnen</button>
-        </div>
       </div>
     </section>
 
@@ -2780,9 +2787,30 @@
     </section>
     <!-- PAAR-KOMPASS -->
     <section id="tab-kompass" class="tab-content card" style="display:none;" role="tabpanel" aria-labelledby="tabBtn-kompass">
-      <h2><span>Paar-Kompass</span><span class="tag">Perspektiven</span></h2>
-      <p class="sub">Zwei getrennte Perspektiven, ein gemeinsames Bild: Fantasie, reale Offenheit, Grenzen, Nachsorge und Entwicklung werden getrennt ausgewertet.</p>
+      <h2><span>Paar-Kompass</span><span class="tag">Perspektiven &amp; Fragebögen</span></h2>
+      <p class="sub">Wie sieht sie eure Dynamik – und wie sieht er sie? Wählt einen Fragebogen. Jeder Test bleibt geschlossen, bis ihr ihn bewusst öffnet; später können hier weitere Fragebögen ergänzt werden.</p>
 
+      <div id="compassQuestionnaireLibrary" class="questionnaire-library">
+        <div class="questionnaire-library-head">
+          <span class="today-card-kicker">Fragebögen</span>
+          <h3>Ein Thema auswählen</h3>
+          <p>Die Antworten von „Sie“ und „Er“ werden getrennt gespeichert und anschließend als Paarperspektive verglichen.</p>
+        </div>
+        <div class="questionnaire-card-grid">
+          <button type="button" class="questionnaire-card" data-questionnaire-open="flr">
+            <span class="questionnaire-icon">👑</span>
+            <span class="questionnaire-copy"><strong>FLR · weibliche Führung im Alltag</strong><small>48 Fragen · Sie / Er / gemeinsam</small><span>Führung, Service, Eigeninitiative, Belohnung, Demütigung, Rituale, Sexualität, Freiheit und Entwicklung.</span><em id="flrLibraryProgress">Noch nicht begonnen</em></span>
+          </button>
+          <button type="button" class="questionnaire-card" data-questionnaire-open="cuckold">
+            <span class="questionnaire-icon">♟️</span>
+            <span class="questionnaire-copy"><strong>Cuckold / Hotwife · Paar-Kompass</strong><small>60 Fragen · Sie / Er / gemeinsam / Entwicklung</small><span>Fantasie, reale Offenheit, Vergleich, Demütigung, Außenkontakte, Gefühle, Grenzen und Nachsorge.</span><em id="cuckoldLibraryProgress">Noch nicht begonnen</em></span>
+          </button>
+        </div>
+        <p class="questionnaire-library-note">Die Struktur ist absichtlich modular. Weitere Fragebögen können später als eigene Karte ergänzt werden, ohne die bestehenden Tests unübersichtlich zu machen.</p>
+      </div>
+
+      <div id="cuckoldCompassModule" class="questionnaire-module hidden">
+        <div class="questionnaire-module-head"><button type="button" class="questionnaire-back" data-questionnaire-back>← Fragebögen</button><div><span>Cuckold / Hotwife</span><strong>Perspektiven-Kompass</strong></div></div>
       <div class="compass-shell">
         <div class="compass-privacy">
           <span aria-hidden="true">🔒</span>
@@ -2880,6 +2908,57 @@
 
         <p class="compass-disclaimer">Der Kompass ist eine strukturierte Gesprächshilfe, keine psychologische Diagnose. Unterschiedliche Fantasien sind nicht automatisch ein Problem; für reale Handlungen ist die Zustimmung beider Personen entscheidend.</p>
       </div>
+      </div>
+
+      <div id="flrCompassModule" class="questionnaire-module hidden">
+        <div class="questionnaire-module-head"><button type="button" class="questionnaire-back" data-questionnaire-back>← Fragebögen</button><div><span>FLR</span><strong>Weibliche Führung im Alltag</strong></div></div>
+        <div class="flr-intro-card">
+          <strong>Wie erlebt ihr weibliche Führung wirklich?</strong>
+          <p>Dieser Fragebogen betrachtet dieselben Themen getrennt aus ihrer und seiner Perspektive. Es geht nicht darum, möglichst „streng“ oder „fortgeschritten“ zu sein, sondern darum, wo ihr dieselbe Dynamik wollt, wo ihr unterschiedliche Erwartungen habt und welche Bereiche euch besonders wichtig sind.</p>
+        </div>
+
+        <div class="pair-view-tabs flr-view-tabs" role="tablist" aria-label="FLR Fragebogen Ansicht">
+          <button type="button" class="pair-view-btn active" data-flr-view="sie">👩 Sie</button>
+          <button type="button" class="pair-view-btn" data-flr-view="er">👨 Er</button>
+          <button type="button" class="pair-view-btn" data-flr-view="paar">❤️ Gemeinsam</button>
+        </div>
+
+        <div id="flrProfileArea">
+          <div class="compass-progress-card">
+            <div class="compass-progress-head"><span id="flrProfileLabel">Profil · Sie</span><strong id="flrProgressText">0 / 48 Fragen</strong></div>
+            <div class="compass-progress-track"><div class="compass-progress-bar" id="flrProgressBar"></div></div>
+          </div>
+          <div id="flrQuestionnaire" class="flr-questionnaire"></div>
+          <div class="compass-actions">
+            <button type="button" class="primary" id="flrEvaluate" disabled>✨ Perspektive auswerten</button>
+            <button type="button" id="flrReset">↺ Antworten löschen</button>
+          </div>
+          <div class="compass-results" id="flrResults">
+            <div class="compass-result-grid">
+              <div class="compass-result-card"><h3 id="flrScoreTitle">Profil</h3><div class="compass-score-list" id="flrScoreList"></div></div>
+              <div class="compass-result-card"><h3>Was fällt auf?</h3><div id="flrIndividualSummary" class="compass-insights"></div></div>
+            </div>
+          </div>
+        </div>
+
+        <div id="flrPairArea" class="hidden">
+          <div id="flrPairMissing" class="compass-result-card"></div>
+          <div id="flrPairResults" class="pair-results hidden">
+            <div class="compass-result-card pair-hero"><div><h3>❤️ Eure FLR-Perspektive</h3><p class="compass-disclaimer">Hier werden ihre und seine Antworten nicht zu einem einzigen Wert verschmolzen. Ihr seht Gemeinsamkeiten und Unterschiede nebeneinander.</p></div></div>
+            <div class="compass-result-grid">
+              <div class="compass-result-card"><h3>Wie sieht sie es?</h3><div id="flrSheSummary" class="compass-insights"></div></div>
+              <div class="compass-result-card"><h3>Wie sieht er es?</h3><div id="flrHeSummary" class="compass-insights"></div></div>
+            </div>
+            <div class="compass-result-card"><h3>Bereich für Bereich</h3><div id="flrPairAxes" class="pair-distance-list"></div></div>
+            <div class="pair-summary-grid">
+              <div class="compass-result-card"><h3>❤️ Gemeinsame Schwerpunkte</h3><div id="flrShared"></div></div>
+              <div class="compass-result-card"><h3>↔️ Größte Unterschiede</h3><div id="flrDifferences"></div></div>
+              <div class="compass-result-card"><h3>🔎 Konkrete Fragen zum Besprechen</h3><div id="flrQuestionGaps"></div></div>
+            </div>
+          </div>
+        </div>
+        <p class="compass-disclaimer flr-bottom-note">Der FLR-Fragebogen ist eine Gesprächs- und Reflexionshilfe. Er bewertet nicht, ob eure Beziehung „richtig“ oder „falsch“ geführt wird.</p>
+      </div>
     </section>
 
 
@@ -2974,7 +3053,7 @@
         <!-- EINSTELLUNGEN (mit integriertem Verlauf) -->
     <!-- MEDIEN-ARCHIV -->
     <section id="tab-medien" class="tab-content card" style="display:none;" role="tabpanel" aria-labelledby="tabBtn-medien">
-      <h2><span>Unsere Momente</span><span class="tag">Archiv</span></h2>
+      <h2><span>Unsere Medien</span><span class="tag">Archiv</span></h2>
       <p class="sub">Bilder, Videos, Links, Comics und die Heldengeschichte – ruhiger gesammelt an einem Ort.</p>
 
       <div class="media-subnav" role="tablist" aria-label="Medien-Bereiche">
@@ -3030,32 +3109,15 @@
         </div>
       </div>
 
-      <p class="media-section-hint">Erst Bereich wählen, dann Inhalte ansehen. So bleibt die Sammlung auch mit vielen Medien übersichtlich.</p>
       <div class="media-category-nav" role="tablist" aria-label="Medientyp wählen">
-        <button type="button" class="media-category-filter active" data-media-category-filter="overview" aria-selected="true">Übersicht</button>
-        <button type="button" class="media-category-filter" data-media-category-filter="bild" aria-selected="false">Bilder</button>
-        <button type="button" class="media-category-filter" data-media-category-filter="video" aria-selected="false">Videos</button>
+        <button type="button" class="media-category-filter active" data-media-category-filter="comic" aria-selected="true">Comics</button>
         <button type="button" class="media-category-filter" data-media-category-filter="link" aria-selected="false">Links</button>
-        <button type="button" class="media-category-filter" data-media-category-filter="comic" aria-selected="false">Comics</button>
+        <button type="button" class="media-category-filter" data-media-category-filter="video" aria-selected="false">Videos</button>
+        <button type="button" class="media-category-filter" data-media-category-filter="bild" aria-selected="false">Bilder</button>
       </div>
 
-      <div class="media-category-grid is-overview" id="mediaCategoryGrid">
-        <article class="media-category" data-media-category="bild">
-          <div class="media-category-head"><h3>🖼️ Bilder</h3><span class="media-category-count" id="mediaCount-bild">0</span></div>
-          <div class="media-list" id="mediaList-bild"></div>
-        </article>
-
-        <article class="media-category" data-media-category="video">
-          <div class="media-category-head"><h3>🎬 Videos</h3><span class="media-category-count" id="mediaCount-video">0</span></div>
-          <div class="media-list" id="mediaList-video"></div>
-        </article>
-
-        <article class="media-category" data-media-category="link">
-          <div class="media-category-head"><h3>🔗 Links</h3><span class="media-category-count" id="mediaCount-link">0</span></div>
-          <div class="media-list" id="mediaList-link"></div>
-        </article>
-
-        <article class="media-category media-comics" data-media-category="comic">
+      <div class="media-category-grid is-focus" id="mediaCategoryGrid">
+        <article class="media-category media-comics category-active" data-media-category="comic">
           <div class="media-category-head"><h3>💬 Comics</h3><span class="media-category-count" id="mediaCount-comic">0</span></div>
           <div class="media-list" id="mediaList-comic"></div>
 
@@ -3066,9 +3128,23 @@
             </button>
           </div>
         </article>
+
+        <article class="media-category" data-media-category="link">
+          <div class="media-category-head"><h3>🔗 Links</h3><span class="media-category-count" id="mediaCount-link">0</span></div>
+          <div class="media-list" id="mediaList-link"></div>
+        </article>
+
+        <article class="media-category" data-media-category="video">
+          <div class="media-category-head"><h3>🎬 Videos</h3><span class="media-category-count" id="mediaCount-video">0</span></div>
+          <div class="media-list" id="mediaList-video"></div>
+        </article>
+
+        <article class="media-category" data-media-category="bild">
+          <div class="media-category-head"><h3>🖼️ Bilder</h3><span class="media-category-count" id="mediaCount-bild">0</span></div>
+          <div class="media-list" id="mediaList-bild"></div>
+        </article>
       </div>
 
-      <p class="media-storage-note">ℹ️ Dateien werden in Supabase Storage gespeichert. Im Hauptdatensatz wird nur noch die URL abgelegt.</p>
       </div>
 
       <div id="mediaPane-geschichte" class="media-pane hidden">
@@ -3078,7 +3154,7 @@
               <div class="story-intro">
                 <div>
                   <h3>Deine Geschichte wächst Kapitel für Kapitel</h3>
-                  <p>Die Kapitelnummer bestimmt die Reihenfolge. Bilder werden komprimiert in Supabase Storage gespeichert; Text und Links bleiben im Datensatz.</p>
+                  <p>Die Kapitelnummer bestimmt die Reihenfolge. Text, Bilder und Links können jederzeit ergänzt oder geändert werden.</p>
                 </div>
                 <button type="button" id="storyNewBtn">＋ Neues Kapitel</button>
               </div>
@@ -3131,8 +3207,8 @@
 
     <!-- FEMTOPIA · KLARER LEITFADEN -->
     <section id="tab-schule" class="tab-content card femdom-simple" style="display:none;" role="tabpanel" aria-labelledby="tabBtn-schule">
-      <h2><span>Femtopia</span><span class="tag">Warum · Einstieg · Praxis</span></h2>
-      <p class="sub">Kein großer Kurs: erst verstehen, was weibliche Führung dir geben kann. Dann klein anfangen, passende Aufgaben wählen und – wenn es euch reizt – Macht, Demütigung, Keuschheit oder Cuckolding bewusst entwickeln.</p>
+      <h2><span>Femtopia</span><span class="tag">Klarheit · Einstieg · Ideen</span></h2>
+      <p class="sub">Weniger Theorie, mehr Orientierung: warum weibliche Führung dir nützen kann, wie du klein beginnst und welche Ideen, Rituale oder erotischen Dynamiken ihr bewusst ausprobieren möchtet.</p>
 
       <div class="school-shell">
         <nav class="atelier-nav femdom-simple-nav" aria-label="Femtopia Bereiche">
@@ -3148,6 +3224,7 @@
             <span class="atelier-kicker">Warum weibliche Führung?</span>
             <h3>Mehr Raum für sie. Mehr Klarheit für ihn.</h3>
             <p>Die Idee ist nicht, dass du den ganzen Tag „dominant spielen“ musst. Führung kann ganz praktisch bedeuten: Deine Wünsche zählen früher, Aufgaben verschwinden aus deinem Kopf, deine freie Zeit wird geschützt und Sexualität orientiert sich stärker an deiner Lust.</p>
+            <p>Ihr könnt eure Beziehung dabei bewusst frauenzentriert gestalten: mehr weibliche Entscheidungsmacht, mehr männliche Servicearbeit, mehr Raum für weibliche Lust und weniger selbstverständliche weibliche Sorgearbeit. Das ist eure bewusste Beziehungsvision und Wertvorstellung – keine Universalformel.</p>
           </div>
 
           <div class="fd-benefit-grid">
@@ -3168,17 +3245,6 @@
             </ul><p class="fd-caveat">Das sind mögliche Vorteile – nicht jeder Mann erlebt Unterordnung gleich. Sie funktioniert nur als freiwillig gewählte Rolle.</p></article>
           </div>
 
-          <article class="fd-vision">
-            <span class="atelier-kicker">Euer kleines Matriarchat</span>
-            <h4>Eine bewusste Beziehungsvision</h4>
-            <p>Ihr könnt eure Beziehung bewusst frauenzentriert gestalten: mehr weibliche Entscheidungsmacht, mehr männliche Servicearbeit, mehr Raum für weibliche Lust und weniger selbstverständliche weibliche Sorgearbeit. „Eine bessere Welt“ ist dabei eure <b>Wertvorstellung</b>, keine wissenschaftlich bewiesene Universalformel.</p>
-          </article>
-
-          <div class="fd-evidence">
-            <strong>Was Forschung tatsächlich stützt:</strong>
-            <span>Aktuelle Paarforschung verbindet einen höheren männlichen Anteil am Mental Load mit höherer Beziehungs- und sexueller Zufriedenheit von Frauen. Eine große Meta-Analyse findet außerdem einen klaren Zusammenhang zwischen guter sexueller Kommunikation und Beziehungs- sowie sexueller Zufriedenheit.</span>
-            <div class="fd-inline-links"><a href="https://pubmed.ncbi.nlm.nih.gov/42630014/" target="_blank" rel="noopener">Mental Load · PubMed ↗</a><a href="https://pubmed.ncbi.nlm.nih.gov/34968095/" target="_blank" rel="noopener">Sexuelle Kommunikation · Meta-Analyse ↗</a></div>
-          </div>
 
           <details class="fd-inspiration">
             <summary>Meine Inspiration · Bilder &amp; Kommentare</summary>
@@ -3231,9 +3297,9 @@
           </div>
 
           <div class="fd-reward-grid">
-            <article><h4>Wie kann ich ihn belohnen?</h4><ul><li>konkretes Lob: „Das hat mir heute wirklich Arbeit abgenommen.“</li><li>Punkte oder Privilegien in eurem bestehenden System</li><li>mehr Nähe, gemeinsame Zeit oder eine gewünschte Aktivität</li><li>ein besonderes Service-Ritual, wenn gerade das für ihn reizvoll ist</li><li>sexuelle Privilegien nur dort, wo beide sie tatsächlich wollen</li></ul></article>
+            <article><h4>Wie kann ich ihn belohnen?</h4><ul><li>konkretes Lob: „Das hat mir heute wirklich Arbeit abgenommen.“</li><li>Punkte oder Privilegien in eurem bestehenden System</li><li>mehr Nähe, gemeinsame Zeit oder eine gewünschte Aktivität</li><li>ein besonderes Service-Ritual, wenn gerade das für ihn reizvoll ist</li><li>gerne auch sexuelle Privilegien</li></ul></article>
             <article><h4>Kann eine Aufgabe selbst Belohnung sein?</h4><p>Ja – <b>wenn Dienen für ihn freiwillig lustvoll oder bedeutungsvoll ist.</b> Dann kann ein besonderer Auftrag als Privileg funktionieren: für dich kochen, dich verwöhnen, etwas Persönliches vorbereiten oder bei einem Ritual näher an dir sein. Eine ungeliebte Pflicht sollte dagegen nicht künstlich als „Belohnung“ verkauft werden.</p></article>
-            <article><h4>Und wenn etwas nicht klappt?</h4><p>Erst praktisch korrigieren: Aufgabe fertigstellen, Fehler beheben, Standard noch einmal klar machen. Konsequenzen können Privilegien, zusätzliche Verantwortung oder Wiederholung sein. Demütigung gehört nur hinein, wenn sie ausdrücklich Teil eurer erotischen Vereinbarung ist.</p></article>
+            <article><h4>Und wenn etwas nicht klappt?</h4><p>Erst praktisch korrigieren: Aufgabe fertigstellen, Fehler beheben, Standard noch einmal klar machen. Konsequenzen können Privilegien, zusätzliche Verantwortung oder Wiederholung sein. Demütigungen gehören hier natürlich dazu und können bewusst als Konsequenz oder erotisches Element eingesetzt werden.</p></article>
           </div>
           <div class="fd-curated-wrap">
             <div class="fd-curated-title">Passende Aufgabenideen</div>
@@ -3250,13 +3316,12 @@
           <div class="atelier-section-head"><div><h3>Macht &amp; Sexualität entwickeln</h3><p>Der Maßstab bleibt deine Lust und Freiheit: Was möchtest <em>du</em> erleben, und welche Form seiner Unterordnung macht genau das spannender?</p></div></div>
 
           <div class="fd-power-grid">
-            <article><span>Weibliche Lust</span><h4>Deine Sexualität zuerst denken</h4><p>Beginne nicht mit „Was soll ich ihm antun?“, sondern mit „Was möchte ich häufiger, länger, anders oder überhaupt einmal ausprobieren?“ Gute sexuelle Kommunikation hängt in Studien deutlich mit höherer sexueller Zufriedenheit zusammen.</p><b>Start:</b><p>Ein Wunsch pro Woche, den du konkret aussprichst und anschließend bewertest.</p></article>
+            <article><span>Weibliche Lust</span><h4>Deine Sexualität zuerst denken</h4><p>Beginne nicht mit „Was soll ich ihm antun?“, sondern mit „Was möchte ich häufiger, länger, anders oder überhaupt einmal ausprobieren?“ Der Fokus bleibt auf deinem Wunsch, deinem Tempo und deiner Freude.</p><b>Start:</b><p>Ein Wunsch pro Woche, den du konkret aussprichst und anschließend bewertest.</p></article>
             <article><span>Degradierung</span><h4>Wenn du ihn wirklich klein machen willst</h4><p>In dieser Kategorie geht es bewusst um derbe Erotiksprache: Penisgröße, frühes Kommen, Ausdauer, Toy-Vergleich, Ex-Liebhaber und die Vorstellung, dass andere Männer sexuell überlegen sein könnten. Wenn genau das euer gemeinsames Spiel ist, darfst du direkt, unfair und übertrieben formulieren. Der Rahmen gilt einmal für die ganze Kategorie; die einzelnen Ideen konzentrieren sich danach auf konkrete Sätze.</p><b>Stil:</b><p>Nicht erklären, sondern treffen: kurz, trocken, vergleichend und aus deiner Perspektive. Du entscheidest, ob du ihn als „Schlappschwanz“, „Winzling“, „Schnellspritzer“ oder einfach als den Mann ansprichst, der mit Konkurrenz leben muss.</p></article>
-            <article><span>Keuschheit</span><h4>Warum überhaupt sexuelle Kontrolle?</h4><p>Für manche Paare verstärkt sie das Gefühl, dass seine sexuelle Freigabe nicht selbstverständlich ist und ihre Entscheidung Gewicht hat. Community-Quellen berichten außerdem häufig von mehr Aufmerksamkeit und Service – das ist jedoch keine Garantie und keine klinische Evidenz.</p><b>Start:</b><p>Erst kurze, vereinbarte Zeiträume und klare Regeln. Komfort, Hygiene und sofortiges Beenden bei Beschwerden haben Vorrang.</p></article>
-            <article><span>Cuckolding / Hotwife</span><h4>Warum sollte ich überhaupt andere Männer treffen?</h4><p>Weil seine Fantasie dir etwas eröffnen kann, das <em>dir</em> gefällt: wieder begehrt werden, flirten, neue Männer kennenlernen, andere sexuelle Dynamiken erleben und deine eigene Sexualität weniger als Paarpflicht denken. Wenn du dabei eher Stolz und Freiheit als Demütigung möchtest, passt die Hotwife-Perspektive oft besser; Cuckolding kann zusätzlich Vergleich, Eifersucht und seine Unterordnung erotisieren.</p><b>Warum fällt es mir schwer?</b><p>Monogamie ist die gesellschaftliche Norm. Schuldgefühl, Angst vor Bewertung oder die Frage „Darf eine verheiratete Frau das?“ können stärker sein als dein tatsächlicher eigener Widerstand. Du musst daraus nichts Reales machen – aber du darfst neugierig sein.</p><b>Ein möglicher Weg:</b><p>Fantasie oder Toy-Rollenspiel → Dating-App ansehen → chatten → flirten → allein ausgehen → Kaffee/Date → körperliche Nähe → nur wenn du es selbst willst: Sex. Dein Mann kann auf Wunsch Männer vorschlagen; die Entscheidung bleibt bei dir. Dritte Personen werden nicht getäuscht und behalten immer ihre eigene Zustimmung und Privatsphäre.</p></article>
+            <article><span>Keuschheit</span><h4>Warum überhaupt sexuelle Kontrolle?</h4><p>Für manche Paare verstärkt sie das Gefühl, dass seine sexuelle Freigabe nicht selbstverständlich ist und ihre Entscheidung Gewicht hat. Aufmerksamkeit, Vorfreude und bewusste Kontrolle können dadurch stärker in den Vordergrund rücken.</p></article>
+            <article><span>Cuckolding / Hotwife</span><h4>Warum sollte ich überhaupt andere Männer treffen?</h4><p>Weil seine Fantasie dir etwas eröffnen kann, das <em>dir</em> gefällt: wieder begehrt werden, flirten, neue Männer kennenlernen, andere sexuelle Dynamiken erleben und deine eigene Sexualität weniger als Paarpflicht denken. Wenn du dabei eher Stolz und Freiheit als Demütigung möchtest, passt die Hotwife-Perspektive oft besser; Cuckolding kann zusätzlich Vergleich, Eifersucht und seine Unterordnung erotisieren.</p><b>Warum fällt es mir schwer?</b><p>Monogamie ist die gesellschaftliche Norm. Schuldgefühl, Angst vor Bewertung oder die Frage „Darf eine verheiratete Frau das?“ können stärker sein als dein tatsächlicher eigener Widerstand.</p><b>Ein möglicher Weg:</b><p>Fantasie oder Toy-Rollenspiel → Dating-App ansehen → chatten → flirten → allein ausgehen → Kaffee/Date → körperliche Nähe → nur wenn du es selbst willst: Sex. Dein Mann kann auf Wunsch Männer vorschlagen; die Entscheidung bleibt bei dir. Dritte Personen werden nicht getäuscht und behalten immer ihre eigene Zustimmung und Privatsphäre.</p></article>
           </div>
 
-          <div class="fd-safety"><strong>Die Grenze ist einfach:</strong><span>Erotische Unterordnung ist nur dann Teil eurer Dynamik, wenn Zustimmung frei, informiert, spezifisch und jederzeit widerrufbar bleibt. Intensiver heißt nicht automatisch besser.</span><a href="https://www.plannedparenthood.org/learn/relationships/sexual-consent" target="_blank" rel="noopener">Consent-Grundlagen ↗</a></div>
           <div class="fd-curated-wrap">
             <div class="fd-curated-title">Passende erotische Vertiefungen</div>
             <div class="fd-curated-grid">
@@ -3269,16 +3334,7 @@
         </section>
 
         <section class="atelier-panel" data-atelier-panel-content="sources">
-          <div class="atelier-section-head"><div><h3>Quellen &amp; Weiterlesen</h3><p>Getrennt nach Forschung und Community-/Praxisquellen, damit klar bleibt, was empirische Evidenz und was Erfahrungswissen bzw. Lifestyle-Perspektive ist.</p></div></div>
-          <div class="fd-source-group"><h4>Forschung &amp; allgemeine Beziehungs-/Sexualgesundheit</h4><div class="school-source-grid">
-            <a class="school-source-card" href="https://pubmed.ncbi.nlm.nih.gov/42630014/" target="_blank" rel="noopener"><strong>Mental Load &amp; Zufriedenheit · PubMed</strong><span>Aktuelle Forschung zu Haushalts-/Mental-Load-Verteilung und Beziehungs- bzw. sexueller Zufriedenheit von Frauen.</span><em>Studie öffnen ↗</em></a>
-            <a class="school-source-card" href="https://pubmed.ncbi.nlm.nih.gov/34968095/" target="_blank" rel="noopener"><strong>Sexuelle Kommunikation · Meta-Analyse</strong><span>93 Studien mit 38.499 Personen: Qualität sexueller Kommunikation korreliert mit Beziehungs- und sexueller Zufriedenheit.</span><em>Studie öffnen ↗</em></a>
-            <a class="school-source-card" href="https://pubmed.ncbi.nlm.nih.gov/40126203/" target="_blank" rel="noopener"><strong>Monogamie vs. einvernehmliche Nicht-Monogamie · Meta-Analyse</strong><span>35 Studien mit 24.489 Personen: insgesamt keine bedeutsamen Unterschiede bei Beziehungs- oder sexueller Zufriedenheit.</span><em>Studie öffnen ↗</em></a>
-            <a class="school-source-card" href="https://pubmed.ncbi.nlm.nih.gov/38182813/" target="_blank" rel="noopener"><strong>Mononormativität &amp; Stigma · PubMed</strong><span>Forschung dazu, wie gesellschaftliche Monogamie-Normen und Stigma gegenüber einvernehmlicher Nicht-Monogamie internalisiert werden können.</span><em>Studie öffnen ↗</em></a>
-            <a class="school-source-card" href="https://www.healthline.com/health/healthy-sex/cuckolding" target="_blank" rel="noopener"><strong>Cuckolding vs. Hotwife · Überblick</strong><span>Sexualgesundheitlicher Überblick zu Motiven, Unterschieden, Grenzen und schrittweiser Erkundung.</span><em>Quelle öffnen ↗</em></a>
-            <a class="school-source-card" href="https://ncsfreedom.org/2021/01/16/best-practices-for-consent-to-kink/" target="_blank" rel="noopener"><strong>NCSF · Consent bei Kink</strong><span>Explizite vorherige Zustimmung und klare Stop-Möglichkeit als Grundlage für einvernehmliche Kink-Praktiken.</span><em>Quelle öffnen ↗</em></a>
-            <a class="school-source-card" href="https://www.plannedparenthood.org/learn/relationships/sexual-consent" target="_blank" rel="noopener"><strong>Consent · Planned Parenthood</strong><span>Freie, informierte, spezifische und jederzeit widerrufbare Zustimmung.</span><em>Quelle öffnen ↗</em></a>
-          </div></div>
+          <div class="atelier-section-head"><div><h3>Quellen &amp; Weiterlesen</h3><p>Kompakt gehaltene Praxis- und Communityquellen für weibliche Führung, Aufgaben, Service und Rollenverständnis.</p></div></div>
           <div class="fd-source-group"><h4>Femdom / weiblich geführte Beziehung · Praxis- und Communityquellen</h4><div class="school-source-grid">
             <a class="school-source-card" href="https://femaleled.info/what-is-a-female-led-relationship/" target="_blank" rel="noopener"><strong>Femaleled.info · Grundlagen</strong><span>Community-Perspektive auf weibliche Führung als langfristige Beziehungsdynamik.</span><em>Quelle öffnen ↗</em></a>
             <a class="school-source-card" href="https://femaleled.info/female-led-relationship-training-darling-he-was-never-going-to-train-himself/" target="_blank" rel="noopener"><strong>Femaleled.info · Training &amp; Service</strong><span>Standards, Zuverlässigkeit, Aufmerksamkeit und Service als praktische Kompetenzen.</span><em>Artikel öffnen ↗</em></a>
@@ -3286,7 +3342,7 @@
             <a class="school-source-card" href="https://lady-sas.com/en/female-led-relationship-guide/" target="_blank" rel="noopener"><strong>Lady Sas · Guide</strong><span>Rollen, Regeln, Aufgaben, Konsequenzen und schrittweiser Einstieg.</span><em>Guide öffnen ↗</em></a>
             <a class="school-source-card" href="https://lady-sas.com/en/femdom-guide-books/female-led-relationship-book/" target="_blank" rel="noopener"><strong>Lady Sas · Buchübersicht</strong><span>Behandelt unter anderem Aufgaben, Belohnung/Bestrafung, Keuschheit, Cuckolding und neu gewonnene freie Zeit der Frau.</span><em>Quelle öffnen ↗</em></a>
           </div></div>
-          <p class="school-local-note">Femaleled.info und Lady Sas sind Lifestyle-/Communityquellen, keine wissenschaftlichen Belege. Forschungsaussagen in Femtopia werden deshalb getrennt davon ausgewiesen.</p>
+          <p class="school-local-note">Die Links sind bewusst als kompakte Praxis- und Inspirationsquellen gedacht, nicht als wissenschaftlicher Teil der App.</p>
         </section>
 
         <!-- Kuratierte Detailideen: nur aus dem gerade gewählten Abschnitt -->
@@ -3300,7 +3356,7 @@
     <!-- EINSTELLUNGEN -->
     <section id="tab-einstellungen" class="tab-content card" style="display:none;" role="tabpanel" aria-labelledby="tabBtn-einstellungen">
       <h2><span>⚙️ Einstellungen</span><span class="tag">System</span></h2>
-      <p class="sub">Sicherheit, Datenverwaltung und nachvollziehbare Änderungen – getrennt vom normalen Aktivitätsverlauf.</p>
+      <p class="sub">Sicherheit, Datenverwaltung und ein genauer Aktivitätsverlauf.</p>
 
       <div class="settings-layout">
         <div class="settings-group">
@@ -3315,7 +3371,7 @@
 
         <div class="settings-group">
           <div class="settings-section-title"><span class="icon">☁️</span><span>Daten &amp; Cloud</span></div>
-          <p class="settings-note">Alle Daten werden in der Supabase-Cloud gespeichert. Synchronisation erfolgt automatisch beim Speichern.</p>
+          <p class="settings-note">Hauptdaten wie Aufgaben, Tagebuch, Medien und Punktestand werden in der Supabase-Cloud gespeichert. Femtopia-Moodboard-Bilder und einige Ideennotizen bleiben lokal in diesem Browser.</p>
           <div class="flex-wrap" style="margin-top:10px;">
             <button id="exportDatenBtn" class="btn-primary" style="width:auto; padding:10px 20px; margin-top:0; background:var(--bg); color:var(--text); border:1px solid var(--card-border);">📥 Daten exportieren (JSON)</button>
             <button id="importDatenBtn" class="btn-primary" style="width:auto; padding:10px 20px; margin-top:0; background:var(--bg); color:var(--text); border:1px solid var(--card-border);">📤 Daten importieren (JSON)</button>
@@ -3324,451 +3380,8 @@
         </div>
 
         <div class="settings-group">
-          <div class="settings-section-title"><span class="icon">🧾</span><span>Änderungsprotokoll</span></div>
-          <p class="settings-note">Nachvollziehbare Versionshistorie der Oberfläche. Jede Änderung wird mit ID, Datum, betroffenem Bereich, konkretem Vorher/Nachher und technischer Auswirkung dokumentiert.</p>
-
-          <div class="change-protocol-standard">
-            <strong>Protokollstandard ab V7</strong>
-            Für jede künftige Anpassung werden mindestens <b>Version/ID</b>, <b>Datum</b>, <b>Bereich</b>, <b>konkrete Änderung</b>, <b>Zweck/Auswirkung</b> und <b>bewusst unveränderte Kernfunktionen</b> festgehalten. So lässt sich später unterscheiden, ob nur Darstellung/Struktur oder tatsächlich Datenlogik verändert wurde.
-          </div>
-
-
-          <details class="change-doc" open>
-            <summary>V18 · Degradierung deutlich direkter · 29.09.2026</summary>
-            <div class="change-doc-body">
-              <div class="change-meta-grid">
-                <div class="change-meta"><small>Änderungs-ID</small><strong>UI-2026-09-29-018</strong></div>
-                <div class="change-meta"><small>Bereich</small><strong>Femtopia · Macht &amp; Sexualität · Degradierung</strong></div>
-                <div class="change-meta"><small>Art</small><strong>Inhalte / Sprache / Kuratierung</strong></div>
-                <div class="change-meta"><small>Cloud-Datenmigration</small><strong>Nein</strong></div>
-              </div>
-              <div class="change-block"><div class="change-block-title">Vorher</div><p>V17 enthielt sechs kuratierte Degradierungs-Ideen. SPH, frühes Kommen und Toy-Vergleich waren bereits vorhanden, die Beispiele blieben aber relativ erklärend und vorsichtig formuliert.</p></div>
-              <div class="change-block"><div class="change-block-title">Konkret geändert</div><ul>
-                <li>Degradierungs-Auswahl von sechs auf zehn kuratierte Ideen erweitert.</li>
-                <li>SPH, „Schlappschwanz“, „Winzling“, „Schnellspritzer“ und frühes Kommen mit konkreten derberen Beispielsätzen ausformuliert.</li>
-                <li>Neue Vergleichsideen mit Ex-Partnern, anderen Männern, Toys und einer erfundenen Konkurrenzfigur ergänzt.</li>
-                <li>Rollenspiel-Sätze rund um „richtiger Mann“, bessere frühere sexuelle Erfahrungen, Ausdauer und sexuelle Unterlegenheit ergänzt.</li>
-                <li>Wiederholte weiche Erklärungen aus den einzelnen Karten entfernt; der vereinbarte Rahmen wird einmal am Anfang der Kategorie gesetzt.</li>
-              </ul></div>
-              <div class="change-block"><div class="change-block-title">Auswirkung</div><p>Die Kategorie liefert jetzt wesentlich schneller konkrete Sprache, die sie unmittelbar auswählen oder an ihren eigenen Stil anpassen kann, statt primär zu erklären, was Degradierung ist.</p></div>
-              <span class="change-scope">Dateiumfang: nur Femtopia-Degradierungsinhalte, Kuratierung und Änderungsprotokoll</span><br>
-              <span class="unchanged-badge">Unverändert: Supabase-Konfiguration · Cloud-Datenmodell · DataManager · PIN · Sync/Speichern · Punkte-/Bewertungslogik</span>
-            </div>
-          </details>
-
-          <details class="change-doc" open>
-            <summary>V17 · Bereich in „Femtopia“ umbenannt · 29.09.2026</summary>
-            <div class="change-doc-body">
-              <div class="change-meta-grid">
-                <div class="change-meta"><small>Änderungs-ID</small><strong>UI-2026-09-29-017</strong></div>
-                <div class="change-meta"><small>Bereich</small><strong>Femtopia</strong></div>
-                <div class="change-meta"><small>Art</small><strong>Benennung / Branding</strong></div>
-                <div class="change-meta"><small>Cloud-Datenmigration</small><strong>Nein</strong></div>
-              </div>
-              <div class="change-block"><div class="change-block-title">Vorher</div><p>Der Bereich wurde in Navigation und Überschrift als „Femdom Atelier“ beziehungsweise kurz „Femdom“ bezeichnet.</p></div>
-              <div class="change-block"><div class="change-block-title">Konkret geändert</div><ul>
-                <li>Hauptnavigation von „Femdom“ auf „Femtopia“ umbenannt.</li>
-                <li>Bereichsüberschrift „Femdom Atelier“ durch „Femtopia“ ersetzt.</li>
-                <li>Allgemeine UI-Texte und Barrierefreiheitsbezeichnungen auf den neuen Namen angepasst.</li>
-                <li>Fachbegriffe wie „Femdom“ bleiben dort erhalten, wo sie Inhalte, Praktiken oder externe Quellen sachlich bezeichnen.</li>
-              </ul></div>
-              <div class="change-block"><div class="change-block-title">Auswirkung</div><p>Der gesamte Bereich tritt für die Nutzerin nun unter einer einzigen, eigenständigen Marke auf: <b>Femtopia</b>. Inhalte und Funktionen wurden nicht verändert.</p></div>
-              <span class="change-scope">Dateiumfang: nur sichtbare Benennung/Branding des Schulbereichs und Änderungsprotokoll</span><br>
-              <span class="unchanged-badge">Unverändert: Inhalte · Bilder · Kommentare · lokale Femtopia-Daten · Supabase-Konfiguration · Cloud-Datenmodell · DataManager · PIN · Sync/Speichern · Punkte-/Bewertungslogik</span>
-            </div>
-          </details>
-
-          <details class="change-doc" open>
-            <summary>V16 · Degradierung direkter · Cuckolding positiver · 29.09.2026</summary>
-            <div class="change-doc-body">
-              <div class="change-meta-grid">
-                <div class="change-meta"><small>Änderungs-ID</small><strong>UI-2026-09-29-016</strong></div>
-                <div class="change-meta"><small>Bereich</small><strong>Femdom Atelier · Macht &amp; Sexualität</strong></div>
-                <div class="change-meta"><small>Art</small><strong>Inhalte / Kuratierung / Quellen</strong></div>
-                <div class="change-meta"><small>Cloud-Datenmigration</small><strong>Nein</strong></div>
-              </div>
-              <div class="change-block"><div class="change-block-title">Vorher</div><p>V15 zeigte bei jeder Detailidee noch die Metaangaben „Aufwand“ und „Intensität“. Degradierung blieb sprachlich eher zurückhaltend und Cuckolding wurde zwar erklärt, aber nur über drei ausgewählte Schritte vertieft.</p></div>
-              <div class="change-block"><div class="change-block-title">Konkret geändert</div><ul>
-                <li>„Aufwand“ und „Intensität“ vollständig aus den sichtbaren Ideen-Karten entfernt.</li>
-                <li>Degradierung um deutlich direktere, ausdrücklich vereinbarte Erotiksprache erweitert: Penisgröße/SPH, „Schlappschwanz“, „Winzling“, „Schnellspritzer“, zu frühes Kommen, Leistungsbewertung, Toy-Vergleich und dienende sexuelle Rolle.</li>
-                <li>Degradierung zeigt nun sechs kuratierte Ideen statt drei.</li>
-                <li>Cuckolding wird stärker aus Sicht der Frau erklärt: Begehrtwerden, sexuelle Eigenständigkeit, Neuheit, Entscheidungsfreiheit und neue sexuelle Dynamiken.</li>
-                <li>Hotwife als positivere, weniger demütigungszentrierte Perspektive ergänzt und von Cuckolding unterschieden.</li>
-                <li>Neu erklärt wird, warum sich der Schritt trotz Zustimmung des Ehemanns zunächst schwer anfühlen kann: gesellschaftliche Monogamie-Normen, Schuldgefühl und Angst vor Bewertung.</li>
-                <li>Cuckolding-/Hotwife-Vertiefung auf neun kuratierte Ideen erweitert: Hemmungen verstehen, Dating-App, Chat, Flirt, Männer vorschlagen lassen, Rollenspiel/Toy, Date und bei eigenem Wunsch reale sexuelle Begegnung.</li>
-                <li>Quellen zu einvernehmlicher Nicht-Monogamie, Mononormativität/Stigma, Cuckolding/Hotwife und Kink-Consent ergänzt.</li>
-              </ul></div>
-              <div class="change-block"><div class="change-block-title">Auswirkung</div><p>Der Sexualitätsbereich ist direkter und näher an der gewünschten Dynamik, bleibt aber auf wenige aufrufbare Themenblöcke begrenzt. Intensivere Sprache und reale Außenkontakte werden klar als freiwillig vereinbarte Erwachsenen-Dynamik behandelt.</p></div>
-              <span class="change-scope">Dateiumfang: nur Atelier-Inhalte, kuratierte Ideen, Darstellung der Ideen-Karten und Quellen</span><br>
-              <span class="unchanged-badge">Unverändert: Supabase-Konfiguration · Supabase-Storage-Konfiguration · Cloud-Datenmodell · DataManager-Speicherlogik · PIN-Prüfung/Änderung · Sync/Speichern · Punkte-/Bewertungslogik</span>
-            </div>
-          </details>
-
-          <details class="change-doc" open>
-            <summary>V15 · Ideen kuratiert statt Gesamtkatalog · 29.09.2026</summary>
-            <div class="change-doc-body">
-              <div class="change-meta-grid">
-                <div class="change-meta"><small>Änderungs-ID</small><strong>UI-2026-09-29-015</strong></div>
-                <div class="change-meta"><small>Bereich</small><strong>Femdom Atelier</strong></div>
-                <div class="change-meta"><small>Art</small><strong>Vereinfachung / Kuratierung</strong></div>
-                <div class="change-meta"><small>Cloud-Datenmigration</small><strong>Nein</strong></div>
-              </div>
-              <div class="change-block"><div class="change-block-title">Vorher</div><p>V14 versteckte den vollständigen Ideenbestand zwar hinter einer Detailbibliothek, führte dort aber weiterhin zu einer großen Such-, Filter- und Kategorienansicht. Dadurch wirkte „Konkrete Ideen“ erneut wie ein umfangreicher Katalog.</p></div>
-              <div class="change-block"><div class="change-block-title">Konkret geändert</div><ul>
-                <li>Gesamtbibliothek, „Alle Themen“, Suchfeld und globale Kategoriennavigation aus der sichtbaren Atelier-Oberfläche entfernt.</li>
-                <li>Jeder Hauptbereich zeigt nur noch wenige passende Themenblöcke; ein Klick öffnet jeweils exakt drei kuratierte Ideen.</li>
-                <li>Einstieg: Führung beginnen sowie Grenzen &amp; Kommunikation.</li>
-                <li>Aufgaben: Haushalt &amp; Entlastung, Zuverlässigkeit, Service &amp; Verwöhnen sowie Lifestyle &amp; freie Zeit.</li>
-                <li>Macht &amp; Sexualität: ihre Lust, Degradierung, Keuschheit und Cuckolding.</li>
-                <li>Die kuratierten Listen verwenden eindeutige Ideen-IDs; dieselbe Idee wird nicht in mehreren sichtbaren Themenblöcken verwendet.</li>
-                <li>Bilder, Kommentare, Interessiert/Test/Behalten bleiben direkt an den ausgewählten Ideen verfügbar.</li>
-              </ul></div>
-              <div class="change-block"><div class="change-block-title">Auswirkung</div><p>Die Frau sieht nicht mehr den gesamten Ideenbestand, sondern nur wenige Vorschläge passend zu dem Bereich, den sie gerade liest. Das Atelier bleibt dadurch fokussiert und deutlich weniger überwältigend.</p></div>
-              <span class="change-scope">Dateiumfang: nur Atelier-Navigation und kuratierte Sicht auf bestehende Ideen</span><br>
-              <span class="unchanged-badge">Unverändert: Supabase-Konfiguration · Supabase-Storage-Konfiguration · Cloud-Datenmodell · DataManager-Speicherlogik · PIN-Prüfung/Änderung · Sync/Speichern · Punkte-/Bewertungslogik</span>
-            </div>
-          </details>
-
-          <details class="change-doc" open>
-            <summary>V14 · Femdom klarer fokussiert · 29.09.2026</summary>
-            <div class="change-doc-body">
-              <div class="change-meta-grid">
-                <div class="change-meta"><small>Änderungs-ID</small><strong>UI-2026-09-29-014</strong></div>
-                <div class="change-meta"><small>Bereich</small><strong>Femdom Atelier</strong></div>
-                <div class="change-meta"><small>Art</small><strong>Informationsarchitektur / Inhalte</strong></div>
-                <div class="change-meta"><small>Cloud-Datenmigration</small><strong>Nein</strong></div>
-              </div>
-              <div class="change-block"><div class="change-block-title">Vorher</div><p>V13 bot zehn gleichrangige Atelier-Unterbereiche mit Lernweg, Lifestyle-Moodboard, Führung, Entwicklung, Ideen, Tests, Reviews und Ritualen. Der Funktionsumfang war hoch, die eigentliche Leitfrage „Warum weibliche Führung – und was bringt sie beiden?“ ging dadurch zu leicht unter.</p></div>
-              <div class="change-block"><div class="change-block-title">Konkret geändert</div><ul>
-                <li>Hauptnavigation des Ateliers auf fünf Bereiche reduziert: „Warum?“, „Klein anfangen“, „Aufgaben &amp; Belohnen“, „Macht &amp; Sexualität“ und „Quellen“.</li>
-                <li>„Warum?“ erklärt getrennt den möglichen Nutzen für sie und für ihn sowie das frauenzentrierte Beziehungsleitbild; Forschungsaussagen werden klar von Lifestyle-/Werturteilen getrennt.</li>
-                <li>„Klein anfangen“ auf einen vierstufigen Einstieg reduziert: Nutzen wählen, Verantwortung übertragen, selbstständig ausführen lassen, nach sieben Tagen bewerten.</li>
-                <li>Aufgabenbereich um klare Vergabeformel, Beispiele für Haushalt/Mental Load/Service/Lifestyle/Auftreten/Entwicklung sowie Belohnungs- und Korrekturlogik ergänzt.</li>
-                <li>Macht- und Sexualitätsbereich konzentriert sich auf weibliche Lust, einvernehmliche Degradierung, Keuschheit und Cuckolding – jeweils mit „Warum?“ und einem kleinen Einstieg.</li>
-                <li>112 bestehende Ideen bleiben vollständig erhalten, sind aber nur noch eine aufrufbare Detailbibliothek. Dort bleiben Bildanhänge, Kommentare, Interessiert/Test/Behalten weiterhin verfügbar.</li>
-                <li>Moodboard bleibt als einklappbare persönliche Inspiration in „Warum?“ erhalten statt einen eigenen Hauptbereich zu belegen.</li>
-                <li>Quellen in „Forschung“ und „Femdom-/Communitypraxis“ getrennt, damit empirische Aussagen und Erfahrungswissen nachvollziehbar bleiben.</li>
-              </ul></div>
-              <div class="change-block"><div class="change-block-title">Auswirkung</div><p>Das Atelier beantwortet nun zuerst den Nutzen weiblicher Führung und führt erst danach zu konkreter Praxis. Die Oberfläche ist deutlich kleiner; vorhandene Ideen, Bilder und Kommentare bleiben als Vertiefung verfügbar.</p></div>
-              <span class="change-scope">Dateiumfang: Atelier-UI / Texte / Quellenstruktur; bestehende lokale Atelier-Daten werden weiterverwendet</span><br>
-              <span class="unchanged-badge">Unverändert: Supabase-Konfiguration · Supabase-Storage-Konfiguration · Cloud-Datenmodell · DataManager-Speicherlogik · PIN-Prüfung/Änderung · Sync/Speichern · Punkte-/Bewertungslogik</span>
-            </div>
-          </details>
-
-          <details class="change-doc" open>
-            <summary>V13 · Lifestyle, Wellness, Bilder &amp; Kommentare · 29.09.2026</summary>
-            <div class="change-doc-body">
-              <div class="change-meta-grid">
-                <div class="change-meta"><small>Änderungs-ID</small><strong>UI-2026-09-29-013</strong></div>
-                <div class="change-meta"><small>Bereich</small><strong>Femdom Atelier</strong></div>
-                <div class="change-meta"><small>Art</small><strong>UI / lokale Medien &amp; Kommentare</strong></div>
-                <div class="change-meta"><small>Cloud-Datenmigration</small><strong>Nein</strong></div>
-              </div>
-              <div class="change-block"><div class="change-block-title">Vorher</div><p>V12 war als Lern- und Entwicklungsweg deutlich strukturierter, wirkte aber weiterhin stark wie Training/Schule. Wellness, Frauen-Lifestyle, visuelle Inspiration und Femdom-Ästhetik hatten noch zu wenig eigenen Raum. Kommentare an Ideen waren technisch eher persönliche Notizen und Bilder konnten im Atelier nicht ergänzt werden.</p></div>
-              <div class="change-block"><div class="change-block-title">Konkret geändert</div><ul>
-                <li>Neuen Unterbereich „Lifestyle &amp; Inspiration“ mit Wellness, Beauty, Genuss, Zuhause/Ambiente, Stil, weiblicher Lust, Femdom-Ästhetik und freier Zeit ergänzt.</li>
-                <li>18 zusätzliche Ideen in den Kategorien „Wellness &amp; Frauen-Lifestyle“ und „Femdom Lifestyle &amp; Ästhetik“ ergänzt.</li>
-                <li>Eigenes Moodboard ergänzt: lokale Bilder können mit Titel, Kategorie und Wunsch/Gedanke hochgeladen werden.</li>
-                <li>Moodboard-Bilder erhalten einen eigenen Kommentarverlauf mit Absender „Sie“, „Er“ oder „Gemeinsam“ und Zeitstempel.</li>
-                <li>Auch einzelne Lernideen können nun einen lokalen Bildanhang erhalten bzw. wieder entfernen.</li>
-                <li>Kommentarbereich an Ideen von „Notiz“ auf echten Kommentarverlauf erweitert; ältere V11/V12-Notizen bleiben lesbar und werden ohne Datenverlust weitergeführt.</li>
-                <li>Lokale Bildspeicherung erfolgt separat in IndexedDB, damit die bestehende Supabase-/Storage-Struktur nicht verändert werden muss.</li>
-              </ul></div>
-              <div class="change-block"><div class="change-block-title">Auswirkung</div><p>Das Atelier verbindet den Lernweg nun stärker mit Frauen-Lifestyle, Wellness, Genuss und visueller Inspiration. Inhalte können nicht nur bewertet oder getestet, sondern auch mit eigenen Bildern und einem kleinen Dialog zwischen beiden ergänzt werden.</p></div>
-              <span class="change-scope">Dateiumfang: Atelier-UI + 18 neue lokale Ideen + IndexedDB-Bildspeicher + lokaler Kommentarverlauf</span><br>
-              <span class="unchanged-badge">Unverändert: Supabase-Konfiguration · Supabase-Storage-Konfiguration · Cloud-Datenmodell · DataManager-Speicherlogik · PIN-Prüfung/Änderung · Sync/Speichern · Punkte-/Bewertungslogik</span>
-            </div>
-          </details>
-
-          <details class="change-doc" open>
-            <summary>V12 · Femdom Atelier · Lernweg statt Ideenliste · 29.09.2026</summary>
-            <div class="change-doc-body">
-              <div class="change-meta-grid">
-                <div class="change-meta"><small>Änderungs-ID</small><strong>UI-2026-09-29-012</strong></div>
-                <div class="change-meta"><small>Bereich</small><strong>Femdom Atelier</strong></div>
-                <div class="change-meta"><small>Art</small><strong>UI / lokale Lernlogik</strong></div>
-                <div class="change-meta"><small>Cloud-Datenmigration</small><strong>Nein</strong></div>
-              </div>
-              <div class="change-block"><div class="change-block-title">Vorher</div><p>V11 bestand im Kern aus einer großen Ideenbibliothek mit Suche, Themenfilter, „Gemerkt“, „Wichtig“ und Kommentaren. Die 94 Impulse waren umfangreich, aber noch nicht als persönlicher Lern- und Entwicklungsweg organisiert.</p></div>
-              <div class="change-block"><div class="change-block-title">Konkret geändert</div><ul>
-                <li>Bereich von „Frauenschule“ in „Femdom Atelier · Ihre Führung · seine Entwicklung“ umbenannt.</li>
-                <li>Neue interne Navigation ergänzt: Heute für mich, Ihre Führung, Seine Entwicklung, Ideen entdecken, Im Test, Behalten, Wochenreview, Rituale sowie Wissen &amp; Quellen.</li>
-                <li>„Heute für mich“ zeigt täglich drei kompakte Impulse aus Alltag, Führung und Genuss statt sofort die gesamte Bibliothek.</li>
-                <li>„Ihre Führung“ als sechs Lernfelder aufgebaut; „Seine Entwicklung“ als neun Kompetenzfelder von Zuverlässigkeit und Eigeninitiative bis Kommunikation und Selbstkontrolle.</li>
-                <li>Ideenstatus auf den Ablauf „Interessiert mich → 7 Tage ausprobieren → Behalten“ umgestellt. Laufende Tests zeigen Tag und Fortschritt.</li>
-                <li>Alte V11-Markierungen werden lokal übernommen: bisher „Gemerkt/Wichtig“ wird beim ersten Öffnen als „Interessiert mich“ migriert; bestehende Kommentare bleiben erhalten.</li>
-                <li>Aufwand und Intensität werden getrennt angezeigt, damit „intensiver“ nicht mit „fortgeschrittener/besser“ verwechselt wird.</li>
-                <li>Wochenreview mit Fragen für sie und ihn, einem Wochenfokus und lokaler Review-Historie ergänzt.</li>
-                <li>Ritualverwaltung mit vordefinierten und eigenen Ritualen ergänzt.</li>
-                <li>Sicherheitswissen und Quellen in einen eigenen Unterbereich verschoben, damit die Alltagsansicht ruhig bleibt.</li>
-              </ul></div>
-              <div class="change-block"><div class="change-block-title">Auswirkung</div><p>Der Bereich funktioniert nicht mehr nur als Sammlung, sondern als persönlicher Kreislauf aus Entdecken, Testen, Auswerten und dauerhaftem Übernehmen. Gleichzeitig werden ihre Führung und seine Entwicklung getrennt verständlich gemacht.</p></div>
-              <span class="change-scope">Dateiumfang: Atelier-UI + lokale Zustände/Tests + Review + Rituale + bestehende 94 Ideen neu organisiert</span><br>
-              <span class="unchanged-badge">Unverändert: Supabase-Konfiguration · Storage-Konfiguration · Cloud-Datenmodell · DataManager-Speicherlogik · PIN-Prüfung/Änderung · Sync/Speichern · Punkte-/Bewertungslogik</span>
-            </div>
-          </details>
-
-          <details class="change-doc" open>
-            <summary>V11 · Frauenschule &amp; Ideenbibliothek · 29.09.2026</summary>
-            <div class="change-doc-body">
-              <div class="change-meta-grid">
-                <div class="change-meta"><small>Änderungs-ID</small><strong>UI-2026-09-29-011</strong></div>
-                <div class="change-meta"><small>Bereich</small><strong>Neuer Bereich · Frauenschule</strong></div>
-                <div class="change-meta"><small>Art</small><strong>Informationsbereich / lokale UI-Daten</strong></div>
-                <div class="change-meta"><small>Datenmigration</small><strong>Nein</strong></div>
-              </div>
-              <div class="change-block">
-                <div class="change-block-title">Vorher</div>
-                <p>Es gab keinen eigenen Lern- und Ideenbereich, in dem die Frau kurze Anregungen nach Themen durchsuchen, persönliche Favoriten auswählen oder direkt an einer Idee eigene Notizen festhalten konnte.</p>
-              </div>
-              <div class="change-block">
-                <div class="change-block-title">Konkret geändert</div>
-                <ul>
-                  <li>Neuen Hauptbereich „Frauenschule“ ergänzt; bewusst ohne sichtbares Beziehungskürzel.</li>
-                  <li>Umfangreiche Kurzideen nach Themen gegliedert: Einstieg &amp; Führung, Haushalt &amp; Mental Load, Standards, Service, Kleidung, weibliche Lust, Orgasmussteuerung &amp; Keuschheit, Demütigung, Cuckolding/Außenkontakte, Rituale, Kommunikation und Entwicklung.</li>
-                  <li>Suche, Themenfilter sowie persönliche Markierungen „Gemerkt“ und „Wichtig“ ergänzt.</li>
-                  <li>Jede Idee besitzt eine lokale Kommentar-/Notizfunktion; Kommentare können wieder gelöscht werden.</li>
-                  <li>Merkliste, Wichtig-Markierungen und Kommentare werden ausschließlich in localStorage dieses Browsers gespeichert und nicht an Supabase übertragen.</li>
-                  <li>Sicherheits- und Einvernehmlichkeits-Hinweise für intensive Praktiken sowie Quellenbereich mit Femaleled.info, Lady-Sas.com und weiterführenden Buch-/Guide-Seiten ergänzt.</li>
-                  <li>Schwebenden „Neu“-Button innerhalb der Frauenschule ausgeblendet, weil der Bereich ausschließlich der Auswahl und Information dient.</li>
-                </ul>
-              </div>
-              <div class="change-block">
-                <div class="change-block-title">Auswirkung</div>
-                <p>Die Frau kann sich schnell und ohne lange Texte inspirieren lassen, interessante Themen markieren und daraus schrittweise ihren eigenen Führungsstil zusammenstellen. Der neue Bereich arbeitet unabhängig von den bestehenden Cloud-Daten.</p>
-              </div>
-              <span class="change-scope">Dateiumfang: neuer Tab + CSS + statische Ideenbibliothek + lokale Merkliste/Kommentare + Quellenlinks</span><br>
-              <span class="unchanged-badge">Unverändert: Supabase-Konfiguration · Storage-Konfiguration · bestehendes Cloud-Datenmodell · DataManager-Speicherlogik · PIN-Prüfung/Änderung · Sync/Speichern · Punkte-/Bewertungslogik</span>
-            </div>
-          </details>
-
-          <details class="change-doc" open>
-            <summary>V10 · Markenblock dauerhaft &amp; Startseiten-Link · 29.09.2026</summary>
-            <div class="change-doc-body">
-              <div class="change-meta-grid">
-                <div class="change-meta"><small>Änderungs-ID</small><strong>UI-2026-09-29-010</strong></div>
-                <div class="change-meta"><small>Bereich</small><strong>Header · Navigation</strong></div>
-                <div class="change-meta"><small>Art</small><strong>UI / Navigation</strong></div>
-                <div class="change-meta"><small>Datenmigration</small><strong>Nein</strong></div>
-              </div>
-              <div class="change-block">
-                <div class="change-block-title">Vorher</div>
-                <p>In Unterbereichen wurden „Ihre Führung · sein Fortschritt“ sowie „Ehemann sammelt · Ehefrau bewertet · Wiederholbar“ im kompakten Kopf ausgeblendet. Der Markenname selbst hatte keine direkte Zurück-zur-Startseite-Funktion.</p>
-              </div>
-              <div class="change-block">
-                <div class="change-block-title">Konkret geändert</div>
-                <ul>
-                  <li>Die drei Marken-/Rollenzeilen „Ihre Führung · sein Fortschritt“, „Liebe &amp; Einsatz · Punkte-System“ und „Ehemann sammelt · Ehefrau bewertet · Wiederholbar“ bleiben jetzt auch in Unterbereichen sichtbar.</li>
-                  <li>Der Kopf bleibt in Unterbereichen weiterhin kompakt; lediglich Typografie und Abstände werden verkleinert.</li>
-                  <li>Der komplette Markenblock ist jetzt anklickbar und führt über den bereits vorhandenen Heute-Tab direkt zur Hauptseite.</li>
-                  <li>Die Rückkehr erfolgt innerhalb der laufenden Seite ohne Neuladen; dadurch wird die PIN-Abfrage nicht erneut ausgelöst.</li>
-                  <li>Die Tastaturbedienung wurde ergänzt: Enter oder Leertaste auf dem Markenblock führt ebenfalls zur Hauptseite.</li>
-                </ul>
-              </div>
-              <div class="change-block">
-                <div class="change-block-title">Auswirkung</div>
-                <p>Die Identität und Rollenbeschreibung bleiben in jedem Bereich präsent, während „Liebe &amp; Einsatz“ gleichzeitig als vertrauter Home-Link funktioniert.</p>
-              </div>
-              <span class="change-scope">Dateiumfang: CSS + Header-Markup + reine Tab-Navigation</span><br>
-              <span class="unchanged-badge">Unverändert: Supabase-Konfiguration · Storage-Konfiguration · Datenmodell · PIN-Prüfung/Änderung · Sync/Speichern · Punkte-/Bewertungslogik</span>
-            </div>
-          </details>
-
-          <details class="change-doc" open>
-            <summary>V9 · Startseite fokussiert &amp; Unterseiten vereinfacht · 29.09.2026</summary>
-            <div class="change-doc-body">
-              <div class="change-meta-grid">
-                <div class="change-meta"><small>Änderungs-ID</small><strong>UI-2026-09-29-009</strong></div>
-                <div class="change-meta"><small>Bereich</small><strong>Start · Header · Navigation · Aktivitäten</strong></div>
-                <div class="change-meta"><small>Art</small><strong>UI / Informationshierarchie</strong></div>
-                <div class="change-meta"><small>Datenmigration</small><strong>Nein</strong></div>
-              </div>
-              <div class="change-block">
-                <div class="change-block-title">Vorher</div>
-                <p>Auf der Startseite wurden zuletzt Design- und Versionsänderungen angezeigt. Zusätzlich blieb der große Kopfbereich auch beim Wechsel in einzelne Kategorien vollständig sichtbar.</p>
-              </div>
-              <div class="change-block">
-                <div class="change-block-title">Konkret geändert</div>
-                <ul>
-                  <li>Sichtbare Kürzel und direkte Bezeichnungen für das Beziehungskonzept aus Header, Startseite und historischen UI-Texten entfernt. Die konkrete Rollenlogik in Aufgaben, Bewertung und Punktestand bleibt bestehen.</li>
-                  <li>Den bisherigen Startseitenblock „Neuigkeiten / letzte Änderungen“ vollständig entfernt.</li>
-                  <li>Auf „Heute“ eine kompakte Liste „Letzte Aktivitäten“ ergänzt. Sie zeigt ausschließlich die drei neuesten echten Einträge aus dem vorhandenen Aktivitätsverlauf.</li>
-                  <li>Aktivitätseinträge anklickbar gemacht: je nach Inhalt führen sie zu Aufgaben, Einlösungen, Tagebuch, Momenten oder Einstellungen.</li>
-                  <li>Beim Öffnen einer Kategorie wird der große Kopfbereich automatisch zu einer kompakten App-Leiste reduziert; Beschreibung, Aktionen und Fortschrittsblock werden dort ausgeblendet.</li>
-                  <li>Auf „Heute“ bleibt die ausführlichere Startansicht mit Punktestand, Fortschritt und Übersicht vollständig erhalten.</li>
-                </ul>
-              </div>
-              <div class="change-block">
-                <div class="change-block-title">Auswirkung</div>
-                <p>Die Startseite zeigt jetzt tatsächliche Nutzung statt Versionsinformationen. Unterseiten beginnen schneller beim eigentlichen Inhalt und benötigen deutlich weniger vertikalen Platz.</p>
-              </div>
-              <span class="change-scope">Dateiumfang: CSS + sichtbares HTML + UI-Renderer für Aktivitätsanzeige + reine Navigationsdarstellung</span><br>
-              <span class="unchanged-badge">Unverändert: Supabase-Konfiguration · Storage-Konfiguration · Datenmodell · PIN-Logik · Sync/Speichern · Punkte-/Bewertungslogik</span>
-            </div>
-          </details>
-
-          <details class="change-doc" open data-news-summary="Heute-Startseite, mobile 4-Punkte-Navigation und ruhigere Alltagsoberfläche ergänzt.">
-            <summary>V8 · App-Hierarchie vervollständigt · 29.09.2026</summary>
-            <div class="change-doc-body">
-              <div class="change-meta-grid">
-                <div class="change-meta"><small>Änderungs-ID</small><strong>UI-2026-09-29-008</strong></div>
-                <div class="change-meta"><small>Bereich</small><strong>Start · Navigation · Momente · Kompass</strong></div>
-                <div class="change-meta"><small>Art</small><strong>UI / Informationshierarchie</strong></div>
-                <div class="change-meta"><small>Datenmigration</small><strong>Nein</strong></div>
-              </div>
-              <div class="change-block">
-                <div class="change-block-title">Vorher</div>
-                <p>Nach dem Öffnen stand direkt ein Funktionsbereich im Vordergrund. Mobil gab es zwar das Hamburger-Menü, aber noch keine reduzierte Schnellnavigation. Technische Cloud-Bezeichnungen waren teilweise auch außerhalb der Einstellungen sichtbar.</p>
-              </div>
-              <div class="change-block">
-                <div class="change-block-title">Konkret geändert</div>
-                <ul>
-                  <li>Neue Startseite „Heute“ ergänzt: aktueller Punktestand, nächste offene Aufgabe, letzter persönlicher Moment und aktuell erreichbare Einlösung werden zusammengeführt.</li>
-                  <li>Mobile Schnellnavigation mit vier Zielen ergänzt: Heute, Aufgaben, Momente und Mehr. „Mehr“ öffnet weiterhin das bestehende Hamburger-Menü für alle übrigen Bereiche.</li>
-                  <li>Die vorhandene Zeile „Ehemann sammelt · Ehefrau bewertet · Wiederholbar“, die Rollenlogik und die Meilensteine unverändert beibehalten.</li>
-                  <li>Alltagsansichten von expliziter Supabase-Fachsprache entlastet; technische Cloud-Angaben bleiben vollständig unter Einstellungen → Daten &amp; Cloud dokumentiert.</li>
-                  <li>Aufgaben, Einlösungen, Kompass, Spiele, Momente und Einstellungen erhalten subtil unterschiedliche Flächenstimmungen, ohne ihre IDs oder Funktionen zu ändern.</li>
-                  <li>Der schwebende Neu-Button wird auf „Heute“ ausgeblendet, da dort eine eindeutige Schnellaktion „Neue Aufgabe für ihn“ vorhanden ist.</li>
-                </ul>
-              </div>
-              <div class="change-block">
-                <div class="change-block-title">Auswirkung</div>
-                <p>Nur Darstellung, Navigation und abgeleitete Übersichten aus bereits vorhandenen Daten. Es wurden keine Tabellen, Felder oder gespeicherten Datensätze migriert.</p>
-              </div>
-              <span class="change-scope">Dateiumfang: CSS + Startseiten-Markup + Navigations-UI + UI-Renderer für abgeleitete Heute-Zusammenfassung</span><br>
-              <span class="unchanged-badge">Unverändert: Supabase-Konfiguration · Storage-Konfiguration · DataManager-Speicherlogik · Datenmodell · PIN-Logik · Sync/Speichern · Bewertungslogik</span>
-            </div>
-          </details>
-
-          <details class="change-doc" data-news-summary="Änderungsprotokoll auf feste, nachvollziehbare Felder umgestellt.">
-            <summary>V7 · Protokollierung präzisiert · 29.09.2026</summary>
-            <div class="change-doc-body">
-              <div class="change-meta-grid">
-                <div class="change-meta"><small>Änderungs-ID</small><strong>UI-2026-09-29-007</strong></div>
-                <div class="change-meta"><small>Bereich</small><strong>Einstellungen · Änderungsanzeige</strong></div>
-                <div class="change-meta"><small>Art</small><strong>Dokumentation / UI</strong></div>
-                <div class="change-meta"><small>Datenmigration</small><strong>Nein</strong></div>
-              </div>
-              <div class="change-block">
-                <div class="change-block-title">Vorher</div>
-                <p>Änderungen wurden pro Version hauptsächlich als freie Stichpunkte beschrieben. Was genau betroffen war und ob Kernlogik verändert wurde, war nur über die Texte ableitbar.</p>
-              </div>
-              <div class="change-block">
-                <div class="change-block-title">Konkret geändert</div>
-                <ul>
-                  <li>Änderungsdokumentation in ein festes Protokollschema mit Änderungs-ID, Bereich, Art, Datenmigration, Vorher/Nachher und technischer Auswirkung überführt.</li>
-                  <li>Ältere UI-Versionen V6, V5 und V4 in dasselbe Schema überführt, damit die Entwicklung rückwirkend leichter nachvollziehbar ist.</li>
-                  <li>Die damalige Änderungsanzeige wurde auf kurze Versionszusammenfassungen umgestellt; ab V9 erscheint sie nicht mehr auf der Startseite.</li>
-                </ul>
-              </div>
-              <div class="change-block">
-                <div class="change-block-title">Auswirkung</div>
-                <p>Nur Dokumentation und Darstellung. Keine Änderung an Nutzdaten, Cloud-Speicherung, Punkten, Bewertungen oder Berechtigungen.</p>
-              </div>
-              <span class="change-scope">Dateiumfang: CSS + Einstellungs-Markup + Neuigkeiten-Anzeige</span><br>
-              <span class="unchanged-badge">Unverändert: Supabase · Storage-Konfiguration · Datenmodell · PIN-Logik · Sync/Speichern</span>
-            </div>
-          </details>
-
-          <details class="change-doc" data-news-summary="Lifestyle-Redesign: ruhiger, hochwertiger und stärker auf die weibliche Führungsrolle ausgerichtet.">
-            <summary>V6 · Lifestyle-Redesign · 29.09.2026</summary>
-            <div class="change-doc-body">
-              <div class="change-meta-grid">
-                <div class="change-meta"><small>Änderungs-ID</small><strong>UI-2026-09-29-006</strong></div>
-                <div class="change-meta"><small>Bereich</small><strong>Gesamtoberfläche</strong></div>
-                <div class="change-meta"><small>Art</small><strong>Design + Informationshierarchie</strong></div>
-                <div class="change-meta"><small>Datenmigration</small><strong>Nein</strong></div>
-              </div>
-              <div class="change-block">
-                <div class="change-block-title">Vorher</div>
-                <p>Die App wirkte stärker wie ein funktionales Dashboard: viele gleichartige Karten, stärkere Rahmen, mehr Emojis und technische Bezeichnungen mit ähnlichem visuellen Gewicht wie die eigentlichen Beziehungsinhalte.</p>
-              </div>
-              <div class="change-block">
-                <div class="change-block-title">Konkret geändert</div>
-                <ul>
-                  <li>Farb- und Flächensystem auf Creme, Berry, Champagner und Salbei umgestellt; Schatten, Rundungen und Rahmen ruhiger abgestimmt.</li>
-                  <li>Header um „Ihre Führung · sein Fortschritt“ ergänzt; die bestehende Zeile „Ehemann sammelt · Ehefrau bewertet · Wiederholbar“ ausdrücklich beibehalten.</li>
-                  <li>Punktekonto im Header als „Sein Punktestand“ bezeichnet und visuell stärker der geführten Rolle des Ehemannes zugeordnet.</li>
-                  <li>Aufgabenbereich in „Seine Aufgaben“ mit Tag „Ihre Bewertung“ umbenannt; Funktionslogik der Bewertung blieb identisch.</li>
-                  <li>Einlösekatalog sprachlich auf verdiente Einlösungen fokussiert; Tagebuch, Kompass und Medienüberschriften ruhiger formuliert.</li>
-                  <li>Hauptnavigation von Emoji-lastigen Bezeichnungen auf reduzierte Textnavigation umgestellt; „Medien“ heißt sichtbar „Momente“, die interne Tab-ID blieb unverändert.</li>
-                  <li>Medienkarten erhalten größere Bildflächen und zurückhaltendere Aktionsbuttons; technische Elemente treten gegenüber dem Inhalt zurück.</li>
-                  <li>Oben einen Bereich „Neuigkeiten / Zuletzt verändert“ ergänzt und mit der Änderungsdokumentation verknüpft.</li>
-                </ul>
-              </div>
-              <div class="change-block">
-                <div class="change-block-title">Auswirkung</div>
-                <p>Änderung der sichtbaren Sprache, Hierarchie und Gestaltung. Keine Änderung der vorhandenen IDs für Kernbereiche und keine Änderung der gespeicherten Datenstruktur.</p>
-              </div>
-              <span class="change-scope">Dateiumfang: CSS + sichtbare HTML-Texte + Neuigkeiten-UI</span><br>
-              <span class="unchanged-badge">Unverändert: Supabase · Storage-Konfiguration · Datenmodell · PIN-Logik · Sync/Speichern</span>
-            </div>
-          </details>
-
-          <details class="change-doc" data-news-summary="GIF als eigene Kategorie entfernt und vollständig in Bilder integriert.">
-            <summary>V5 · GIFs in Bilder integriert · 29.09.2026</summary>
-            <div class="change-doc-body">
-              <div class="change-meta-grid">
-                <div class="change-meta"><small>Änderungs-ID</small><strong>UI-2026-09-29-005</strong></div>
-                <div class="change-meta"><small>Bereich</small><strong>Momente / Medien</strong></div>
-                <div class="change-meta"><small>Art</small><strong>Medien-UI</strong></div>
-                <div class="change-meta"><small>Datenmigration</small><strong>Nein</strong></div>
-              </div>
-              <div class="change-block">
-                <div class="change-block-title">Vorher</div>
-                <p>Bilder und GIFs wurden als zwei getrennte sichtbare Kategorien angeboten, obwohl beide bildbasierte Medien sind.</p>
-              </div>
-              <div class="change-block">
-                <div class="change-block-title">Konkret geändert</div>
-                <ul>
-                  <li>Eigene sichtbare GIF-Kategorie aus Mediennavigation und Auswahl entfernt.</li>
-                  <li>Bestehende GIF-Einträge werden im Bereich „Bilder“ mit angezeigt; vorhandene Animationen und Einträge bleiben erhalten.</li>
-                  <li>Neue GIF-Dateien können weiterhin über den Medientyp „Bild“ eingebunden werden.</li>
-                </ul>
-              </div>
-              <div class="change-block">
-                <div class="change-block-title">Auswirkung</div>
-                <p>Weniger Kategorien und eine einfachere Mediensammlung. Bestehende Datensätze müssen nicht umgeschrieben werden.</p>
-              </div>
-              <span class="change-scope">Dateiumfang: Mediennavigation + Medienanzeige/-auswahl</span><br>
-              <span class="unchanged-badge">Unverändert: Supabase · Storage-Konfiguration · Datenmodell · PIN-Logik · Sync/Speichern</span>
-            </div>
-          </details>
-
-          <details class="change-doc" data-news-summary="Mobile Navigation, Medienarchiv und Einstellungen systematisch neu gegliedert.">
-            <summary>V4 · App-Struktur systematisiert · 29.09.2026</summary>
-            <div class="change-doc-body">
-              <div class="change-meta-grid">
-                <div class="change-meta"><small>Änderungs-ID</small><strong>UI-2026-09-29-004</strong></div>
-                <div class="change-meta"><small>Bereich</small><strong>Navigation · Medien · Einstellungen</strong></div>
-                <div class="change-meta"><small>Art</small><strong>Informationsarchitektur</strong></div>
-                <div class="change-meta"><small>Datenmigration</small><strong>Nein</strong></div>
-              </div>
-              <div class="change-block">
-                <div class="change-block-title">Vorher</div>
-                <p>Auf Mobilgeräten standen viele Haupttabs gleichzeitig im Raster. Im Medienarchiv waren mehrere Medientypen gleichzeitig sichtbar und die Einstellungen hatten weniger klare Unterbereiche.</p>
-              </div>
-              <div class="change-block">
-                <div class="change-block-title">Konkret geändert</div>
-                <ul>
-                  <li>Mobile Hauptnavigation in ein Hamburger-Menü überführt, ohne bestehende Tab-IDs oder Tab-Inhalte umzubenennen.</li>
-                  <li>Medienarchiv in Übersicht → Medientyp → Inhalte gegliedert, sodass jeweils nur die ausgewählte Kategorie im Fokus steht.</li>
-                  <li>Einstellungen sichtbar in Sicherheit, Daten &amp; Cloud, Änderungsdokumentation und Aktivitätsverlauf getrennt.</li>
-                </ul>
-              </div>
-              <div class="change-block">
-                <div class="change-block-title">Auswirkung</div>
-                <p>Weniger visuelle Überfüllung auf kleinen Displays und klarere Ebenen. Funktionierende Backend- und PIN-Abläufe blieben erhalten.</p>
-              </div>
-              <span class="change-scope">Dateiumfang: Navigation + Medienstruktur + Einstellungen-Layout</span><br>
-              <span class="unchanged-badge">Unverändert: Supabase · Storage-Konfiguration · Datenmodell · PIN-Logik · Sync/Speichern</span>
-            </div>
-          </details>
-        </div>
-
-        <div class="settings-group">
           <div class="settings-section-title"><span class="icon">📜</span><span>Aktivitätsverlauf</span></div>
-          <p class="settings-note">Die letzten protokollierten Aktionen innerhalb der App.</p>
+          <p class="settings-note">Zeigt möglichst genau, was geändert wurde: Zeitpunkt, Bereich, betroffener Eintrag und konkrete Vorher-/Nachher-Werte – einschließlich Bild-, Kommentar- und Medienänderungen. Über „Öffnen“ springst du direkt in den passenden Bereich.</p>
           <div id="logContainer" style="margin-top:10px;">Keine Einträge</div>
         </div>
       </div>
@@ -3917,6 +3530,30 @@
       }
       function now() {
         return new Date().toLocaleString('de-DE', { hour12: false });
+      }
+      function logValue(value) {
+        if (value === undefined || value === null || value === '') return '—';
+        if (Array.isArray(value)) return value.length ? value.map(v => String(v)).join('\n') : '—';
+        if (typeof value === 'object') {
+          try { return JSON.stringify(value); } catch (_) { return String(value); }
+        }
+        return String(value);
+      }
+      function logValuesEqual(a, b) {
+        try { return JSON.stringify(a ?? null) === JSON.stringify(b ?? null); }
+        catch (_) { return String(a ?? '') === String(b ?? ''); }
+      }
+      function changedFields(before, after, fields) {
+        const result = [];
+        fields.forEach(([key, label]) => {
+          const oldValue = before ? before[key] : undefined;
+          const newValue = after ? after[key] : undefined;
+          if (!logValuesEqual(oldValue, newValue)) result.push({ field: label, before: logValue(oldValue), after: logValue(newValue) });
+        });
+        return result;
+      }
+      function logTargetLabel(item, fallback = 'Eintrag') {
+        return String(item?.text || item?.titel || item?.datum || fallback);
       }
       function showToast(message, type = 'info') {
         const container = document.getElementById('toastContainer');
@@ -4170,7 +3807,21 @@
         c.pairHistory = c.pairHistory.slice(0, 24);
         if (!['er','sie'].includes(c.activeRole)) c.activeRole = 'er';
         if (!['er','sie','paar','entwicklung'].includes(c.activeView)) c.activeView = c.activeRole;
-        c.schemaVersion = 3;
+        if (!c.flr || typeof c.flr !== 'object' || Array.isArray(c.flr)) c.flr = {};
+        if (!c.flr.profiles || typeof c.flr.profiles !== 'object' || Array.isArray(c.flr.profiles)) c.flr.profiles = {};
+        ['er','sie'].forEach(role => {
+          if (!c.flr.profiles[role] || typeof c.flr.profiles[role] !== 'object') c.flr.profiles[role] = {};
+          const p = c.flr.profiles[role];
+          if (!p.answers || typeof p.answers !== 'object' || Array.isArray(p.answers)) p.answers = {};
+          if (!Array.isArray(p.history)) p.history = [];
+          p.history = p.history.slice(0,24);
+          if (!('updatedAt' in p)) p.updatedAt = null;
+        });
+        if (!['er','sie','paar'].includes(c.flr.activeView)) c.flr.activeView = 'sie';
+        if (!Array.isArray(c.flr.pairHistory)) c.flr.pairHistory = [];
+        c.flr.pairHistory = c.flr.pairHistory.slice(0,24);
+        c.flr.schemaVersion = 1;
+        c.schemaVersion = 4;
         if (!('updatedAt' in c)) c.updatedAt = null;
         return c;
       }
@@ -4569,8 +4220,29 @@
         findAufgabe(id) { return this.lokaleDaten.aufgaben.find(x => x.id === id); },
         findEinloesung(id) { return this.lokaleDaten.einloesungen.find(x => x.id === id); },
         findTagebuch(id) { return this.lokaleDaten.tagebuch.find(x => x.id === id); },
-        addLog(text) {
-          this.lokaleDaten.log.push({ text, time: now() });
+        addLog(entry) {
+          const stamp = new Date();
+          const payload = typeof entry === 'string' ? { text: entry } : { ...(entry || {}) };
+          const changes = Array.isArray(payload.changes) ? payload.changes.map(change => ({
+            field: String(change?.field || 'Änderung'),
+            before: logValue(change?.before),
+            after: logValue(change?.after)
+          })) : [];
+          const text = String(payload.text || [payload.action, payload.target].filter(Boolean).join(': ') || 'Änderung');
+          this.lokaleDaten.log.push({
+            id: payload.id || genId(),
+            text,
+            area: String(payload.area || ''),
+            action: String(payload.action || ''),
+            target: String(payload.target || ''),
+            targetId: String(payload.targetId || ''),
+            changes,
+            at: payload.at || stamp.toISOString(),
+            time: payload.time || stamp.toLocaleString('de-DE', { day:'2-digit', month:'2-digit', year:'numeric', hour:'2-digit', minute:'2-digit', second:'2-digit', hour12:false })
+          });
+        },
+        addChangeLog({ area = '', action = 'Geändert', target = '', targetId = '', changes = [], text = '' } = {}) {
+          this.addLog({ area, action, target, targetId, changes, text: text || `${action}${target ? `: „${target}“` : ''}` });
         },
         updateKonto(änderung) {
           this.lokaleDaten.konto = Math.max(0, (Number(this.lokaleDaten.konto) || 0) + (Number(änderung) || 0));
@@ -4614,65 +4286,91 @@
             if (typeof PuzzleGame !== 'undefined' && PuzzleGame.initialized) PuzzleGame.render();
           } else if (tabName === 'kompass') {
             if (typeof CompassApp !== 'undefined' && CompassApp.initialized) CompassApp.refreshFromCloud();
+            if (typeof FlrCompassApp !== 'undefined' && FlrCompassApp.initialized) FlrCompassApp.refreshFromCloud();
+            if (typeof QuestionnaireHub !== 'undefined' && QuestionnaireHub.initialized) QuestionnaireHub.renderProgress();
           }
         },
 
         renderHeute(daten) {
           if (!daten) return;
           this.renderRecentActivities(daten.log);
-          ensureMedienData(daten);
-          const konto = Math.max(0, Number(daten.konto) || 0);
-          const offene = (daten.aufgaben || []).filter(a => a.status === 'offen');
-          const task = offene[0];
-          const tagebuch = (daten.tagebuch || []).slice().sort((a,b) => String(b.datum || '').localeCompare(String(a.datum || '')));
-          const latestDiary = tagebuch[0] || null;
-          const media = (daten.medien || []).slice();
-          const latestMedia = media.length ? media[media.length - 1] : null;
-          const affordable = (daten.einloesungen || []).filter(x => (Number(x.kosten) || 0) <= konto).sort((a,b) => (Number(b.kosten)||0) - (Number(a.kosten)||0));
-          const reward = affordable[0] || null;
+        },
 
-          const setText = (id, value) => { const el = document.getElementById(id); if (el) el.textContent = value || ''; };
-          setText('todayScore', konto.toLocaleString('de-DE'));
-          if (task) {
-            setText('todayTaskTitle', task.text || 'Offene Aufgabe');
-            setText('todayTaskText', `${offene.length} offene Aufgabe${offene.length === 1 ? '' : 'n'} warten auf seine Erledigung und Ihre Bewertung.`);
-            setText('todayTaskMeta', `${Number(task.punkte) || 0} Punkte`);
-          } else {
-            setText('todayTaskTitle', 'Keine offene Aufgabe');
-            setText('todayTaskText', 'Aktuell wartet keine Aufgabe auf seine Erledigung.');
-            setText('todayTaskMeta', 'Alles erledigt');
-          }
+        targetForLogEntry(entry) {
+          const area = String(entry?.area || '').toLowerCase();
+          if (area.includes('aufgaben')) return 'aufgaben';
+          if (area.includes('einlösungen') || area.includes('einloesungen')) return 'einloesungen';
+          if (area.includes('tagebuch')) return 'tagebuch';
+          if (area.includes('momente') || area.includes('heldengeschichte')) return 'medien';
+          if (area.includes('femtopia')) return 'schule';
+          if (/pin|export|import|daten|cloud|sync|synchron/.test(area)) return 'einstellungen';
+          const value = `${area} ${String(entry?.text || '').toLowerCase()}`;
+          if (/aufgabe|bewertet|erledigt|punkte vergeben/.test(value)) return 'aufgaben';
+          if (/einlösung|einloesung|eingelöst|eingeloest/.test(value)) return 'einloesungen';
+          if (/tagebuch/.test(value)) return 'tagebuch';
+          if (/medium|medien|bild|video|comic|geschichte|moment/.test(value)) return 'medien';
+          if (/femtopia|moodboard/.test(value)) return 'schule';
+          if (/pin|export|import|daten|cloud|sync|synchron/.test(value)) return 'einstellungen';
+          return 'heute';
+        },
 
-          if (latestDiary) {
-            const preview = String(latestDiary.text || '').replace(/\s+/g,' ').trim();
-            setText('todayMomentTitle', 'Letzter Tagebucheintrag');
-            setText('todayMomentText', preview ? (preview.length > 105 ? preview.slice(0,102) + '…' : preview) : 'Ein persönlicher Eintrag ist gespeichert.');
-            setText('todayMomentMeta', latestDiary.datum ? new Date(latestDiary.datum + 'T12:00:00').toLocaleDateString('de-DE') : 'Tagebuch');
-          } else if (latestMedia) {
-            setText('todayMomentTitle', latestMedia.titel || 'Letztes Medium');
-            setText('todayMomentText', latestMedia.beschreibung || 'Neu in eurer Sammlung.');
-            setText('todayMomentMeta', latestMedia.typ === 'gif' ? 'Bild' : (latestMedia.typ || 'Moment'));
-          } else {
-            setText('todayMomentTitle', 'Noch kein Moment');
-            setText('todayMomentText', 'Tagebuch und Mediensammlung werden hier zusammengeführt.');
-            setText('todayMomentMeta', 'Momente');
-          }
+        highlightTarget(node) {
+          if (!node) return;
+          node.classList.add('log-focus-target');
+          try { node.scrollIntoView({ behavior:'smooth', block:'center' }); } catch (_) {}
+          window.setTimeout(() => node.classList.remove('log-focus-target'), 2200);
+        },
 
-          if (reward) {
-            setText('todayRewardTitle', reward.text || 'Verfügbare Einlösung');
-            setText('todayRewardText', `${affordable.length} Einlösung${affordable.length === 1 ? '' : 'en'} liegen aktuell innerhalb seines Punktestands.`);
-            setText('todayRewardMeta', `${Number(reward.kosten) || 0} Punkte`);
-          } else {
-            setText('todayRewardTitle', 'Noch nichts verfügbar');
-            setText('todayRewardText', 'Sein aktueller Punktestand reicht noch für keine Einlösung.');
-            setText('todayRewardMeta', `${konto} Punkte vorhanden`);
+        openLogTarget(entry) {
+          const target = this.targetForLogEntry(entry);
+          document.getElementById(`tabBtn-${target}`)?.click();
+          const area = String(entry?.area || '').toLowerCase();
+          if (target === 'medien' && typeof MediaApp !== 'undefined') {
+            if (area.includes('heldengeschichte')) {
+              MediaApp.setView('geschichte');
+              if (entry?.targetId && typeof StoryApp !== 'undefined') {
+                StoryApp.openChapters?.add?.(entry.targetId);
+                StoryApp.render?.(DataManager.lokaleDaten.geschichten);
+              }
+            } else {
+              MediaApp.setView('sammlung');
+              const medium = entry?.targetId ? DataManager.findMedium?.(entry.targetId) : null;
+              const mediaType = medium?.typ === 'gif' ? 'bild' : medium?.typ;
+              if (mediaType && ['bild','video','link','comic'].includes(mediaType)) MediaApp.setCategory(mediaType);
+            }
           }
+          if (target === 'schule' && typeof SchoolApp !== 'undefined') {
+            if (area.includes('moodboard')) {
+              SchoolApp.showPanel?.('why');
+              const details = document.querySelector('.fd-inspiration');
+              if (details) details.open = true;
+            } else if (entry?.targetId && SchoolApp.byId?.(entry.targetId)) {
+              SchoolApp.openCurated?.(entry.targetId, 'Passende Idee');
+            } else {
+              SchoolApp.showPanel?.('why');
+            }
+          }
+          window.setTimeout(() => {
+            const id = String(entry?.targetId || '');
+            const safeId = window.CSS?.escape ? window.CSS.escape(id) : id.replace(/"/g, '\\"');
+            let node = null;
+            if (target === 'aufgaben' || target === 'einloesungen') node = document.querySelector(`.entry[data-id="${safeId}"]`);
+            else if (target === 'tagebuch') node = document.querySelector(`.tagebuch-eintrag[data-id="${safeId}"]`);
+            else if (target === 'medien') {
+              if (area.includes('heldengeschichte')) node = document.querySelector(`.story-chapter .story-toggle-row[data-id="${safeId}"]`)?.closest('.story-chapter');
+              else node = document.querySelector(`[data-media-action][data-id="${safeId}"]`)?.closest('.media-item');
+            } else if (target === 'schule') {
+              if (area.includes('moodboard')) node = document.querySelector(`[data-life-id="${safeId}"]`);
+              else node = document.querySelector(`[data-school-id="${safeId}"]`);
+            }
+            this.highlightTarget(node);
+          }, 150);
         },
 
         renderRecentActivities(log) {
           const container = document.getElementById('recentActivityList');
           if (!container) return;
-          const entries = (log || []).slice().reverse().slice(0, 3);
+          const entries = (log || []).slice().reverse().slice(0, 5);
           container.innerHTML = '';
           if (!entries.length) {
             const empty = document.createElement('div');
@@ -4681,17 +4379,7 @@
             container.appendChild(empty);
             return;
           }
-          const targetFor = (text) => {
-            const value = String(text || '').toLowerCase();
-            if (/aufgabe|bewertet|erledigt|punkte vergeben/.test(value)) return 'aufgaben';
-            if (/einlösung|eingelöst/.test(value)) return 'einloesungen';
-            if (/tagebuch/.test(value)) return 'tagebuch';
-            if (/medium|medien|bild|video|comic|geschichte|moment/.test(value)) return 'medien';
-            if (/pin|export|import|daten|cloud|sync|synchron/.test(value)) return 'einstellungen';
-            return 'heute';
-          };
           entries.forEach(entry => {
-            const target = targetFor(entry.text);
             const btn = document.createElement('button');
             btn.type = 'button';
             btn.className = 'recent-activity-item';
@@ -4709,15 +4397,13 @@
             arrow.className = 'activity-arrow';
             arrow.textContent = '›';
             btn.append(dot, copy, arrow);
-            btn.addEventListener('click', () => document.getElementById(`tabBtn-${target}`)?.click());
+            btn.addEventListener('click', () => this.openLogTarget(entry));
             container.appendChild(btn);
           });
         },
 
         renderKonto(konto) {
           document.getElementById('kontoAnzeige').textContent = konto || 0;
-          const todayScore = document.getElementById('todayScore');
-          if (todayScore) todayScore.textContent = (Number(konto) || 0).toLocaleString('de-DE');
         },
         updateProgress(konto) {
           const bar = document.getElementById('progressBar');
@@ -4838,9 +4524,10 @@
               const neuerWert = parseInt(input.value) || 0;
               const item = DataManager[`find${typ.charAt(0).toUpperCase() + typ.slice(1)}`](div.dataset.id);
               if (item) {
+                const field = typ === 'aufgabe' ? 'Punkte' : 'Kosten';
                 if (typ === 'aufgabe') item.punkte = neuerWert;
                 else item.kosten = neuerWert;
-                DataManager.addLog(`${typ} Punkte geändert auf ${neuerWert}.`);
+                if (neuerWert !== aktuellerWert) DataManager.addChangeLog({ area: typ === 'aufgabe' ? 'Aufgaben' : 'Einlösungen', action: `${field} geändert`, target: logTargetLabel(item), targetId: item.id, changes: [{ field, before: aktuellerWert, after: neuerWert }] });
                 DataManager.save().then(() => UIRenderer.renderAlles(DataManager.lokaleDaten));
               } else {
                 badge.textContent = aktuellerWert + (typ === 'aufgabe' ? ' P.' : ' P.');
@@ -5009,8 +4696,9 @@
             if (btn.classList.contains('entry-erledigt') && typ === 'aufgabe') {
               const item = DataManager.findAufgabe(id);
               if (item) {
+                const vorher = item.status || 'offen';
                 item.status = 'erledigt_unbewertet';
-                DataManager.addLog(`Ehemann meldet „${item.text}“ erledigt.`);
+                DataManager.addChangeLog({ area:'Aufgaben', action:'Als erledigt gemeldet', target:item.text, targetId:item.id, changes:[{ field:'Status', before:vorher, after:'erledigt_unbewertet' }] });
                 DataManager.save().then(() => UIRenderer.renderAlles(DataManager.lokaleDaten));
               }
               return;
@@ -5028,8 +4716,10 @@
                 return;
               }
               if (confirm(`„${item.text}“ für ${item.kosten} Punkte einlösen?`)) {
+                const vorher = Number(DataManager.lokaleDaten.konto) || 0;
                 DataManager.updateKonto(-item.kosten);
-                DataManager.addLog(`Ehemann löst ein: „${item.text}“ (${item.kosten} P.).`);
+                const nachher = Number(DataManager.lokaleDaten.konto) || 0;
+                DataManager.addChangeLog({ area:'Einlösungen', action:'Eingelöst', target:item.text, targetId:item.id, changes:[{ field:'Punktestand', before:vorher, after:nachher }, { field:'Kosten', before:'—', after:item.kosten }] });
                 DataManager.save().then(() => UIRenderer.renderAlles(DataManager.lokaleDaten));
               }
               return;
@@ -5046,8 +4736,9 @@
                   const imageUrl = await StorageManager.uploadCompressedImage(file, `${typ}/${id}`, 1200, 0.75);
                   const item = DataManager[`find${typ.charAt(0).toUpperCase() + typ.slice(1)}`](id);
                   if (item) {
+                    const vorher = item.image || '';
                     item.image = imageUrl;
-                    DataManager.addLog(`Bild zu ${typ} hinzugefügt.`);
+                    DataManager.addChangeLog({ area: typ === 'aufgabe' ? 'Aufgaben' : 'Einlösungen', action: vorher ? 'Bild ersetzt' : 'Bild hinzugefügt', target:logTargetLabel(item), targetId:item.id, changes:[{ field:'Bild', before:vorher || 'kein Bild', after:imageUrl }, { field:'Dateiname', before:'—', after:file.name || 'unbekannt' }] });
                     await DataManager.save();
                     UIRenderer.renderAlles(DataManager.lokaleDaten);
                   }
@@ -5064,8 +4755,9 @@
               const item = DataManager[`find${typ.charAt(0).toUpperCase() + typ.slice(1)}`](id);
               if (item && item.image) {
                 if (confirm('Bild wirklich entfernen?')) {
+                  const vorher = item.image;
                   item.image = '';
-                  DataManager.addLog(`Bild aus ${typ} entfernt.`);
+                  DataManager.addChangeLog({ area: typ === 'aufgabe' ? 'Aufgaben' : 'Einlösungen', action:'Bild entfernt', target:logTargetLabel(item), targetId:item.id, changes:[{ field:'Bild', before:vorher, after:'kein Bild' }] });
                   DataManager.save().then(() => UIRenderer.renderAlles(DataManager.lokaleDaten));
                 }
               }
@@ -5078,8 +4770,9 @@
                 const item = DataManager[`find${typ.charAt(0).toUpperCase() + typ.slice(1)}`](id);
                 if (item) {
                   if (!item.kommentare) item.kommentare = [];
-                  item.kommentare.push({ text: kommentarText.trim(), zeit: now() });
-                  DataManager.addLog(`Kommentar zu ${typ} hinzugefügt.`);
+                  const kommentar = { text: kommentarText.trim(), zeit: now() };
+                  item.kommentare.push(kommentar);
+                  DataManager.addChangeLog({ area: typ === 'aufgabe' ? 'Aufgaben' : 'Einlösungen', action:'Kommentar hinzugefügt', target:logTargetLabel(item), targetId:item.id, changes:[{ field:'Kommentar', before:'—', after:kommentar.text }] });
                   DataManager.save().then(() => UIRenderer.renderAlles(DataManager.lokaleDaten));
                 }
               }
@@ -5088,8 +4781,13 @@
 
             if (btn.classList.contains('entry-loeschen')) {
               if (confirm('Eintrag wirklich löschen?')) {
+                const item = DataManager[`find${typ.charAt(0).toUpperCase() + typ.slice(1)}`](id);
+                if (!item) return;
+                const fields = typ === 'aufgabe' ? [['text','Text'],['punkte','Punkte'],['status','Status'],['image','Bild']] : [['text','Text'],['kosten','Kosten'],['hinweis','Hinweis'],['image','Bild']];
+                const details = fields.map(([key,label]) => ({ field:label, before:logValue(item[key]), after:'gelöscht' }));
+                const target = logTargetLabel(item);
                 DataManager.deleteEintrag(id, typ);
-                DataManager.addLog(`${typ} gelöscht.`);
+                DataManager.addChangeLog({ area: typ === 'aufgabe' ? 'Aufgaben' : 'Einlösungen', action:'Eintrag gelöscht', target, targetId:id, changes:details });
                 DataManager.save().then(() => UIRenderer.renderAlles(DataManager.lokaleDaten));
               }
               return;
@@ -5224,8 +4922,9 @@
               if (!eintrag) return;
               const neuesDatum = prompt('Neues Datum (YYYY-MM-DD):', eintrag.datum);
               if (neuesDatum && /^\d{4}-\d{2}-\d{2}$/.test(neuesDatum)) {
+                const vorher = eintrag.datum || '';
                 eintrag.datum = neuesDatum;
-                DataManager.addLog(`Datum von Tagebucheintrag geändert.`);
+                if (vorher !== neuesDatum) DataManager.addChangeLog({ area:'Tagebuch', action:'Datum geändert', target:logTargetLabel(eintrag), targetId:eintrag.id, changes:[{ field:'Datum', before:vorher, after:neuesDatum }] });
                 DataManager.save().then(() => UIRenderer.renderAlles(DataManager.lokaleDaten));
               } else if (neuesDatum !== null) {
                 showToast('Ungültiges Datum.', 'error');
@@ -5247,8 +4946,9 @@
                   const imageUrl = await StorageManager.uploadCompressedImage(file, `tagebuch/${id}`, 1200, 0.75);
                   const eintrag = DataManager.findTagebuch(id);
                   if (eintrag) {
+                    const vorher = eintrag.image || '';
                     eintrag.image = imageUrl;
-                    DataManager.addLog(`Bild zu Tagebucheintrag hinzugefügt.`);
+                    DataManager.addChangeLog({ area:'Tagebuch', action:vorher ? 'Bild ersetzt' : 'Bild hinzugefügt', target:logTargetLabel(eintrag), targetId:eintrag.id, changes:[{ field:'Bild', before:vorher || 'kein Bild', after:imageUrl }, { field:'Dateiname', before:'—', after:file.name || 'unbekannt' }] });
                     await DataManager.save();
                     UIRenderer.renderAlles(DataManager.lokaleDaten);
                   }
@@ -5268,8 +4968,9 @@
               const eintrag = DataManager.findTagebuch(id);
               if (eintrag && eintrag.image) {
                 if (confirm('Bild wirklich entfernen?')) {
+                  const vorher = eintrag.image;
                   eintrag.image = '';
-                  DataManager.addLog(`Bild aus Tagebucheintrag entfernt.`);
+                  DataManager.addChangeLog({ area:'Tagebuch', action:'Bild entfernt', target:logTargetLabel(eintrag), targetId:eintrag.id, changes:[{ field:'Bild', before:vorher, after:'kein Bild' }] });
                   DataManager.save().then(() => UIRenderer.renderAlles(DataManager.lokaleDaten));
                 }
               }
@@ -5285,8 +4986,9 @@
                 const eintrag = DataManager.findTagebuch(id);
                 if (eintrag) {
                   if (!eintrag.kommentare) eintrag.kommentare = [];
-                  eintrag.kommentare.push({ text: kommentarText.trim(), zeit: now() });
-                  DataManager.addLog(`Kommentar zu Tagebucheintrag hinzugefügt.`);
+                  const kommentar = { text: kommentarText.trim(), zeit: now() };
+                  eintrag.kommentare.push(kommentar);
+                  DataManager.addChangeLog({ area:'Tagebuch', action:'Kommentar hinzugefügt', target:logTargetLabel(eintrag), targetId:eintrag.id, changes:[{ field:'Kommentar', before:'—', after:kommentar.text }] });
                   DataManager.save().then(() => UIRenderer.renderAlles(DataManager.lokaleDaten));
                 }
               }
@@ -5298,8 +5000,12 @@
               e.stopPropagation();
               const id = this.dataset.id;
               if (confirm('Tagebucheintrag wirklich löschen?')) {
+                const eintrag = DataManager.findTagebuch(id);
+                if (!eintrag) return;
+                const target = logTargetLabel(eintrag);
+                const details = [['datum','Datum'],['text','Text'],['image','Bild']].map(([key,label]) => ({ field:label, before:logValue(eintrag[key]), after:'gelöscht' }));
                 DataManager.deleteEintrag(id, 'tagebuch');
-                DataManager.addLog('Tagebucheintrag gelöscht.');
+                DataManager.addChangeLog({ area:'Tagebuch', action:'Eintrag gelöscht', target, targetId:id, changes:details });
                 DataManager.save().then(() => UIRenderer.renderAlles(DataManager.lokaleDaten));
               }
             });
@@ -5310,17 +5016,77 @@
         renderLog(log) {
           const container = document.getElementById('logContainer');
           container.innerHTML = '';
-          const entries = (log || []).slice().reverse().slice(0, 20);
+          const entries = (log || []).slice().reverse();
           if (entries.length === 0) {
             container.innerHTML = '<p style="color:var(--text-muted); text-align:center; padding:20px 0;">Keine Einträge</p>';
             return;
           }
           entries.forEach(e => {
-            container.innerHTML += `
-              <div class="log-entry">
-                <span class="time">${esc(e.time)}</span>
-                <span class="msg">${esc(e.text)}</span>
-              </div>`;
+            const row = document.createElement('div');
+            row.className = 'log-entry';
+            const time = document.createElement('span');
+            time.className = 'time';
+            if (e.at) {
+              const d = new Date(e.at);
+              time.textContent = Number.isNaN(d.getTime()) ? (e.time || '') : d.toLocaleString('de-DE', { day:'2-digit', month:'2-digit', year:'numeric', hour:'2-digit', minute:'2-digit', second:'2-digit', hour12:false });
+              if (!Number.isNaN(d.getTime())) time.title = d.toISOString();
+            } else time.textContent = e.time || '';
+
+            const body = document.createElement('div');
+            body.className = 'msg';
+            const title = document.createElement('strong');
+            title.textContent = e.text || e.action || 'Aktivität';
+            body.appendChild(title);
+
+            const metaParts = [];
+            if (e.area) metaParts.push(`Bereich: ${e.area}`);
+            if (e.target) metaParts.push(`Eintrag: ${e.target}`);
+            if (e.action) metaParts.push(`Aktion: ${e.action}`);
+            if (metaParts.length) {
+              const meta = document.createElement('div');
+              meta.className = 'log-meta';
+              meta.textContent = metaParts.join(' · ');
+              body.appendChild(meta);
+            }
+
+            const changes = Array.isArray(e.changes) ? e.changes : [];
+            if (changes.length) {
+              const list = document.createElement('div');
+              list.className = 'log-changes';
+              changes.forEach(change => {
+                const item = document.createElement('div');
+                item.className = 'log-change';
+                const field = document.createElement('b');
+                field.textContent = change.field || 'Änderung';
+                const values = document.createElement('div');
+                values.className = 'log-change-values';
+                const before = document.createElement('span');
+                before.className = 'before';
+                before.textContent = `Vorher: ${logValue(change.before)}`;
+                const after = document.createElement('span');
+                after.className = 'after';
+                after.textContent = `Nachher: ${logValue(change.after)}`;
+                values.append(before, after);
+                item.append(field, values);
+                list.appendChild(item);
+              });
+              body.appendChild(list);
+            }
+
+            const target = this.targetForLogEntry(e);
+            if (target !== 'heute') {
+              const actions = document.createElement('div');
+              actions.className = 'log-actions';
+              const openBtn = document.createElement('button');
+              openBtn.type = 'button';
+              openBtn.className = 'log-open-btn';
+              openBtn.textContent = 'Öffnen';
+              openBtn.addEventListener('click', () => this.openLogTarget(e));
+              actions.appendChild(openBtn);
+              body.appendChild(actions);
+            }
+            row.append(time, body);
+            container.appendChild(row);
           });
         }
       };
@@ -5384,8 +5150,9 @@
             const item = this.find(kind, id);
             if (!item || !Number.isInteger(index) || index < 0 || index >= ensureKommentare(item).length) return;
             if (!confirm('Diesen Kommentar wirklich löschen?')) return;
+            const removed = item.kommentare[index];
             item.kommentare.splice(index, 1);
-            DataManager.addLog(`Kommentar aus ${this.label(kind)} gelöscht.`);
+            DataManager.addChangeLog({ area:this.label(kind), action:'Kommentar gelöscht', target:logTargetLabel(item), targetId:id, changes:[{ field:'Kommentar', before:removed?.text || '—', after:'gelöscht' }, { field:'Kommentar-Zeit', before:removed?.zeit || '—', after:'gelöscht' }] });
             await DataManager.save();
             UIRenderer.renderAlles(DataManager.lokaleDaten);
             showToast('Kommentar gelöscht.', 'success');
@@ -5414,11 +5181,6 @@
           this.initialized = true;
           document.querySelectorAll('[data-media-view]').forEach(btn => btn.addEventListener('click', () => this.setView(btn.dataset.mediaView)));
           document.querySelectorAll('[data-media-category-filter]').forEach(btn => btn.addEventListener('click', () => this.setCategory(btn.dataset.mediaCategoryFilter)));
-          document.getElementById('mediaCategoryGrid')?.addEventListener('click', e => {
-            if (!document.getElementById('mediaCategoryGrid')?.classList.contains('is-overview')) return;
-            const category = e.target.closest('[data-media-category]')?.dataset.mediaCategory;
-            if (category) this.setCategory(category);
-          });
           document.getElementById('mediaCancelBtn')?.addEventListener('click', () => this.closeEditor());
           document.getElementById('mediaSaveBtn')?.addEventListener('click', () => this.saveEditor());
           document.getElementById('mediaType')?.addEventListener('change', () => this.updateEditorFields());
@@ -5439,16 +5201,18 @@
             if (action.dataset.mediaAction === 'comment') {
               const kommentarText = prompt('Dein Kommentar:');
               if (kommentarText && kommentarText.trim()) {
-                ensureKommentare(item).push({ text: kommentarText.trim(), zeit: now() });
-                DataManager.addLog(`Kommentar zu Medium „${item.titel}“ hinzugefügt.`);
+                const kommentar = { text: kommentarText.trim(), zeit: now() };
+                ensureKommentare(item).push(kommentar);
+                DataManager.addChangeLog({ area:'Medien', action:'Kommentar hinzugefügt', target:item.titel, targetId:item.id, changes:[{ field:'Kommentar', before:'—', after:kommentar.text }] });
                 DataManager.save().then(() => UIRenderer.renderAlles(DataManager.lokaleDaten));
               }
               return;
             }
             if (action.dataset.mediaAction === 'delete') {
               if (!confirm(`Medium „${item.titel}“ wirklich löschen?`)) return;
+              const details = [['typ','Typ'],['titel','Titel'],['beschreibung','Beschreibung'],['url','Web-Adresse'],['files','Dateien/Bilder']].map(([key,label]) => ({ field:label, before:logValue(item[key]), after:'gelöscht' }));
               DataManager.deleteMedium(item.id);
-              DataManager.addLog(`Medium gelöscht: „${item.titel}“`);
+              DataManager.addChangeLog({ area:'Medien', action:'Medium gelöscht', target:item.titel, targetId:item.id, changes:details });
               DataManager.save().then(() => UIRenderer.renderAlles(DataManager.lokaleDaten));
             }
             if (action.dataset.mediaAction === 'comic') {
@@ -5469,15 +5233,15 @@
           document.getElementById('mediaPane-geschichte')?.classList.toggle('hidden', target !== 'geschichte');
         },
 
-        setCategory(category = 'overview') {
-          const allowed = ['overview','bild','video','link','comic'];
-          const target = allowed.includes(category) ? category : 'overview';
+        setCategory(category = 'comic') {
+          const allowed = ['bild','video','link','comic'];
+          const target = allowed.includes(category) ? category : 'comic';
           const grid = document.getElementById('mediaCategoryGrid');
           if (!grid) return;
-          grid.classList.toggle('is-overview', target === 'overview');
-          grid.classList.toggle('is-focus', target !== 'overview');
+          grid.classList.remove('is-overview');
+          grid.classList.add('is-focus');
           grid.querySelectorAll('[data-media-category]').forEach(card => {
-            card.classList.toggle('category-active', target !== 'overview' && card.dataset.mediaCategory === target);
+            card.classList.toggle('category-active', card.dataset.mediaCategory === target);
           });
           document.querySelectorAll('[data-media-category-filter]').forEach(btn => {
             const active = btn.dataset.mediaCategoryFilter === target;
@@ -5624,11 +5388,20 @@
             if (id) {
               const item = DataManager.findMedium(id);
               if (!item) throw new Error('Medium wurde nicht gefunden.');
+              const vorher = { ...item, files:[...(item.files || [])] };
               Object.assign(item, { typ, titel, beschreibung, url, files });
-              DataManager.addLog(`Medium bearbeitet: „${titel}“`);
+              const changes = changedFields(vorher, item, [['typ','Typ'],['titel','Titel'],['beschreibung','Beschreibung'],['url','Web-Adresse'],['files','Dateien/Bilder']]);
+              if (selected.length) changes.push({ field:'Neu ausgewählte Datei(en)', before:'—', after:selected.map(file => `${file.name} (${file.type || 'Datei'}, ${file.size || 0} Bytes)`).join('\n') });
+              if (changes.length) DataManager.addChangeLog({ area:'Medien', action:'Medium bearbeitet', target:titel, targetId:item.id, changes });
             } else {
-              DataManager.addMedium({ typ, titel, beschreibung, url, files });
-              DataManager.addLog(`Neues Medium: „${titel}“`);
+              const item = DataManager.addMedium({ typ, titel, beschreibung, url, files });
+              const changes = [
+                { field:'Typ', before:'—', after:typ }, { field:'Titel', before:'—', after:titel },
+                { field:'Beschreibung', before:'—', after:beschreibung || '—' }, { field:'Web-Adresse', before:'—', after:url || '—' },
+                { field:'Dateien/Bilder', before:'—', after:logValue(files) }
+              ];
+              if (selected.length) changes.push({ field:'Hochgeladene Datei(en)', before:'—', after:selected.map(file => `${file.name} (${file.type || 'Datei'}, ${file.size || 0} Bytes)`).join('\n') });
+              DataManager.addChangeLog({ area:'Medien', action:'Neues Medium', target:titel, targetId:item.id, changes });
             }
             await DataManager.save();
             this.closeEditor();
@@ -5766,8 +5539,9 @@
               if (!item) return;
               const kommentarText = prompt('Dein Kommentar zu diesem Kapitel:');
               if (kommentarText && kommentarText.trim()) {
-                ensureKommentare(item).push({ text: kommentarText.trim(), zeit: now() });
-                DataManager.addLog(`Kommentar zu Geschichten-Kapitel „${item.titel}“ hinzugefügt.`);
+                const kommentar = { text: kommentarText.trim(), zeit: now() };
+                ensureKommentare(item).push(kommentar);
+                DataManager.addChangeLog({ area:'Heldengeschichte', action:'Kommentar hinzugefügt', target:item.titel, targetId:item.id, changes:[{ field:'Kommentar', before:'—', after:kommentar.text }] });
                 DataManager.save().then(() => UIRenderer.renderAlles(DataManager.lokaleDaten));
               }
               return;
@@ -5776,8 +5550,9 @@
               const item = DataManager.findGeschichte(id);
               if (!item) return;
               if (!confirm(`Kapitel „${item.titel}“ wirklich löschen?`)) return;
+              const details = [['kapitel','Kapitel'],['titel','Titel'],['datum','Datum'],['text','Text'],['bilder','Bilder'],['links','Links']].map(([key,label]) => ({ field:label, before:logValue(item[key]), after:'gelöscht' }));
               DataManager.deleteGeschichte(id);
-              DataManager.addLog(`Geschichten-Kapitel gelöscht: „${item.titel}“`);
+              DataManager.addChangeLog({ area:'Heldengeschichte', action:'Kapitel gelöscht', target:item.titel, targetId:id, changes:details });
               DataManager.save().then(() => UIRenderer.renderAlles(DataManager.lokaleDaten));
             }
           });
@@ -5912,11 +5687,19 @@
             if (id) {
               const item = DataManager.findGeschichte(id);
               if (!item) throw new Error('Kapitel wurde nicht gefunden.');
+              const vorher = { ...item, bilder:[...(item.bilder || [])], links:[...(item.links || [])] };
               Object.assign(item, { titel, text, datum, kapitel, bilder, links: parsed.result });
-              DataManager.addLog(`Geschichten-Kapitel bearbeitet: „${titel}“`);
+              const changes = changedFields(vorher, item, [['kapitel','Kapitel'],['titel','Titel'],['datum','Datum'],['text','Text'],['bilder','Bilder'],['links','Links']]);
+              if (selected.length) changes.push({ field:'Neu hochgeladene Bilder', before:'—', after:selected.map(file => `${file.name} (${file.type || 'Bild'}, ${file.size || 0} Bytes)`).join('\n') });
+              if (changes.length) DataManager.addChangeLog({ area:'Heldengeschichte', action:'Kapitel bearbeitet', target:titel, targetId:item.id, changes });
             } else {
-              DataManager.addGeschichte({ titel, text, datum, kapitel, bilder, links: parsed.result });
-              DataManager.addLog(`Neues Geschichten-Kapitel: „${titel}“`);
+              const item = DataManager.addGeschichte({ titel, text, datum, kapitel, bilder, links: parsed.result });
+              const changes = [
+                { field:'Kapitel', before:'—', after:kapitel }, { field:'Titel', before:'—', after:titel }, { field:'Datum', before:'—', after:datum },
+                { field:'Text', before:'—', after:text }, { field:'Bilder', before:'—', after:logValue(bilder) }, { field:'Links', before:'—', after:logValue(parsed.result) }
+              ];
+              if (selected.length) changes.push({ field:'Hochgeladene Bilder', before:'—', after:selected.map(file => `${file.name} (${file.type || 'Bild'}, ${file.size || 0} Bytes)`).join('\n') });
+              DataManager.addChangeLog({ area:'Heldengeschichte', action:'Neues Kapitel', target:titel, targetId:item.id, changes });
             }
             await DataManager.save();
             this.closeEditor();
@@ -6277,6 +6060,111 @@
         bind(){const root=document.getElementById('tab-kompass');if(!root)return;root.addEventListener('click',e=>{const vb=e.target.closest('[data-compass-view]');if(vb){this.setView(vb.dataset.compassView);return;}const b=e.target.closest('[data-compass-id]');if(b){const p=this.profile();p.answers[b.dataset.compassId]=Number(b.dataset.value);p.updatedAt=new Date().toISOString();this.scheduleSave();this.renderProfile();return;}});document.getElementById('compassEvaluate')?.addEventListener('click',()=>this.evaluate(true));document.getElementById('compassSnapshot')?.addEventListener('click',()=>this.snapshot());document.getElementById('compassPairSnapshot')?.addEventListener('click',()=>this.pairSnapshot());document.getElementById('compassExport')?.addEventListener('click',()=>this.exportData());document.getElementById('compassReset')?.addEventListener('click',()=>this.reset());},
         refreshFromCloud(){ensureCompassData(DataManager.lokaleDaten);this.render();const status=document.getElementById('compassCloudStatus');if(status)status.textContent='Cloud-Daten geladen ✓';},
         init(){if(this.initialized)return;this.initialized=true;ensureCompassData(DataManager.lokaleDaten);this.bind();this.render();}
+      };
+
+      // ===== FLR-PAARFRAGEBOGEN · MODULARER TEST =====
+      const FlrCompassApp = {
+        initialized:false, saveTimer:null,
+        roleLabels:{sie:'Sie',er:'Er'},
+        sections:[
+          {key:'A',title:'Führung & Entscheidungen',short:'Führung',min:'eher gleichrangig',max:'klare weibliche Führung',questions:[
+            {id:'A1',sie:'Ich möchte, dass meine Wünsche und Präferenzen in unserem Alltag häufiger zuerst berücksichtigt werden.',er:'Ich finde es stimmig, wenn ihre Wünsche und Präferenzen in unserem Alltag häufiger zuerst berücksichtigt werden.'},
+            {id:'A2',sie:'Bei ausgewählten Alltagsentscheidungen möchte ich bewusst das letzte Wort haben.',er:'Bei ausgewählten Alltagsentscheidungen gefällt mir die Vorstellung, dass sie bewusst das letzte Wort hat.'},
+            {id:'A3',sie:'Ich möchte Entscheidungen treffen können, ohne jeden Wunsch bis zu einem exakt gleichen Kompromiss auszuhandeln.',er:'Ich kann gut damit leben, wenn sie bestimmte Entscheidungen trifft, ohne dass wir jedes Mal einen exakt gleichen Kompromiss suchen.'},
+            {id:'A4',sie:'Ich möchte Standards für Bereiche festlegen können, die meinen Komfort oder unseren Alltag betreffen.',er:'Ich akzeptiere gern klare Standards von ihr für Bereiche, die ihren Komfort oder unseren Alltag betreffen.'},
+            {id:'A5',sie:'Es reizt mich, wenn er eine von mir getroffene Entscheidung zuverlässig umsetzt.',er:'Es reizt mich, eine von ihr getroffene Entscheidung zuverlässig umzusetzen.'},
+            {id:'A6',sie:'Eine dauerhaft leicht asymmetrische Verteilung von Entscheidungsmacht kann für mich Teil einer guten Beziehung sein.',er:'Eine dauerhaft leicht asymmetrische Verteilung von Entscheidungsmacht zugunsten meiner Frau kann für mich Teil einer guten Beziehung sein.'}
+          ]},
+          {key:'B',title:'Service & Entlastung',short:'Service',min:'wenig wichtig',max:'zentral',questions:[
+            {id:'B1',sie:'Ich möchte, dass er ganze Verantwortungsbereiche übernimmt, statt nur einzelne Anweisungen abzuarbeiten.',er:'Ich möchte ganze Verantwortungsbereiche übernehmen, statt nur einzelne Anweisungen abzuarbeiten.'},
+            {id:'B2',sie:'Für mich ist gute Führung dann gelungen, wenn mein Mental Load tatsächlich kleiner wird.',er:'Für mich ist guter Service dann gelungen, wenn ihr Mental Load tatsächlich kleiner wird.'},
+            {id:'B3',sie:'Ich wünsche mir, dass er Bedürfnisse und anstehende Aufgaben häufiger selbst erkennt.',er:'Ich möchte ihre Bedürfnisse und anstehende Aufgaben häufiger selbst erkennen, ohne erst gefragt zu werden.'},
+            {id:'B4',sie:'Sein Service soll mir sichtbar mehr freie Zeit für Ruhe, Pflege, Freundinnen, Hobbys oder eigene Pläne verschaffen.',er:'Mein Service darf ihr sichtbar mehr freie Zeit für Ruhe, Pflege, Freundinnen, Hobbys oder eigene Pläne verschaffen.'},
+            {id:'B5',sie:'Ich möchte Aufgaben nach meinem gewünschten Ergebnis bewerten dürfen, ohne jeden Arbeitsschritt zu kontrollieren.',er:'Ich finde es fair, wenn sie Aufgaben nach ihrem gewünschten Ergebnis bewertet, ohne jeden Arbeitsschritt kontrollieren zu müssen.'},
+            {id:'B6',sie:'Eine dienende Rolle meines Mannes kann für mich ein positiver und selbstverständlicher Teil unserer Beziehung sein.',er:'Eine dienende Rolle kann für mich ein positiver und selbstverständlicher Teil meiner Rolle in unserer Beziehung sein.'}
+          ]},
+          {key:'C',title:'Eigeninitiative & Zuverlässigkeit',short:'Initiative',min:'wenig wichtig',max:'sehr wichtig',questions:[
+            {id:'C1',sie:'Ich möchte nicht mehrfach erinnern müssen, wenn eine Verantwortung einmal klar übertragen wurde.',er:'Wenn mir eine Verantwortung klar übertragen wurde, möchte ich sie ohne mehrfaches Erinnern erfüllen.'},
+            {id:'C2',sie:'„Erledigt“ bedeutet für mich, dass auch die letzten Schritte vollständig abgeschlossen sind.',er:'Wenn ich etwas erledige, sollen auch die letzten Schritte vollständig abgeschlossen sein.'},
+            {id:'C3',sie:'Wenn etwas nicht meinem Standard entspricht, soll er den Fehler möglichst selbst erkennen und korrigieren.',er:'Wenn etwas nicht ihrem Standard entspricht, möchte ich den Fehler möglichst selbst erkennen und korrigieren.'},
+            {id:'C4',sie:'Ich wünsche mir, dass er vorausplant und Probleme löst, bevor sie bei mir landen.',er:'Ich möchte vorausplanen und Probleme lösen, bevor sie bei ihr landen.'},
+            {id:'C5',sie:'Direktes Feedback zu Zuverlässigkeit und Qualität soll für uns normal sein.',er:'Direktes Feedback von ihr zu meiner Zuverlässigkeit und Qualität soll für mich normal sein.'},
+            {id:'C6',sie:'Wiederkehrende Routinen sind mir lieber als ständig neue Einzelanweisungen.',er:'Wiederkehrende Routinen sind mir lieber als ständig neue Einzelanweisungen.'}
+          ]},
+          {key:'D',title:'Belohnung, Konsequenz & Motivation',short:'Konsequenz',min:'kaum reizvoll',max:'sehr reizvoll',questions:[
+            {id:'D1',sie:'Punkte, Privilegien oder sichtbare Anerkennung finde ich als Belohnung für guten Einsatz passend.',er:'Punkte, Privilegien oder sichtbare Anerkennung motivieren mich als Belohnung für guten Einsatz.'},
+            {id:'D2',sie:'Ich mag die Idee, besondere gemeinsame oder persönliche Privilegien bewusst zu vergeben.',er:'Ich mag die Idee, dass besondere gemeinsame oder persönliche Privilegien bewusst von ihr vergeben werden.'},
+            {id:'D3',sie:'Sexuelle Privilegien können für mich eine reizvolle Belohnung innerhalb unserer Dynamik sein.',er:'Sexuelle Privilegien können für mich eine reizvolle Belohnung innerhalb unserer Dynamik sein.'},
+            {id:'D4',sie:'Wenn etwas deutlich unter Standard bleibt, finde ich zusätzliche Verantwortung oder Wiederholung als Konsequenz passend.',er:'Wenn etwas deutlich unter ihrem Standard bleibt, kann ich zusätzliche Verantwortung oder Wiederholung als Konsequenz akzeptieren.'},
+            {id:'D5',sie:'Demütigung oder bewusstes Kleinmachen kann für mich als erotisches Element oder Konsequenz natürlich in diese Dynamik gehören.',er:'Demütigung oder bewusstes Kleinmachen kann für mich als erotisches Element oder Konsequenz natürlich in diese Dynamik gehören.'},
+            {id:'D6',sie:'Konkretes Lob möchte ich gezielt geben, wenn er mir wirklich Arbeit abgenommen oder einen Standard besonders gut erfüllt hat.',er:'Konkretes Lob von ihr bedeutet mir besonders viel, wenn ich ihr wirklich Arbeit abgenommen oder einen Standard besonders gut erfüllt habe.'}
+          ]},
+          {key:'E',title:'Rituale & sichtbare Rollen',short:'Rituale',min:'unwichtig',max:'sehr wichtig',questions:[
+            {id:'E1',sie:'Feste Begrüßungs-, Service- oder Abendrituale würden mir helfen, unsere Rollen spürbar zu machen.',er:'Feste Begrüßungs-, Service- oder Abendrituale würden mir helfen, unsere Rollen spürbar zu erleben.'},
+            {id:'E2',sie:'Ich finde es reizvoll, bei seinem Auftreten oder seiner Kleidung gelegentlich Vorgaben zu machen.',er:'Ich finde es reizvoll, wenn sie bei meinem Auftreten oder meiner Kleidung gelegentlich Vorgaben macht.'},
+            {id:'E3',sie:'Eine besondere Anrede oder kleine private Zeichen von Hierarchie würden mir gefallen.',er:'Eine besondere Anrede oder kleine private Zeichen von Hierarchie würden mir gefallen.'},
+            {id:'E4',sie:'Ein regelmäßiger Wochen- oder Monatscheck zu Aufgaben, Standards und Entwicklung wäre für mich nützlich.',er:'Ein regelmäßiger Wochen- oder Monatscheck zu Aufgaben, Standards und Entwicklung wäre für mich nützlich.'},
+            {id:'E5',sie:'Einige klare, dauerhaft geltende Regeln finde ich angenehmer als alles spontan auszuhandeln.',er:'Einige klare, dauerhaft geltende Regeln finde ich angenehmer als alles spontan auszuhandeln.'},
+            {id:'E6',sie:'Auch im Alltag darf unsere Rollenverteilung für uns beide sichtbar und spürbar sein, nicht nur im Schlafzimmer.',er:'Auch im Alltag darf unsere Rollenverteilung für uns beide sichtbar und spürbar sein, nicht nur im Schlafzimmer.'}
+          ]},
+          {key:'F',title:'Macht & Sexualität',short:'Sexualität',min:'wenig relevant',max:'zentral',questions:[
+            {id:'F1',sie:'Ich möchte, dass meine sexuelle Lust und mein Genuss häufiger ausdrücklich im Mittelpunkt stehen.',er:'Ich möchte, dass ihre sexuelle Lust und ihr Genuss häufiger ausdrücklich im Mittelpunkt stehen.'},
+            {id:'F2',sie:'Es reizt mich, häufiger Tempo, Ablauf und Schwerpunkt unserer Sexualität zu bestimmen.',er:'Es reizt mich, wenn sie häufiger Tempo, Ablauf und Schwerpunkt unserer Sexualität bestimmt.'},
+            {id:'F3',sie:'Orgasmuskontrolle oder Keuschheit meines Mannes kann für mich ein reizvoller Teil weiblicher Führung sein.',er:'Orgasmuskontrolle oder Keuschheit kann für mich ein reizvoller Teil ihrer Führung sein.'},
+            {id:'F4',sie:'Erotische Demütigung, Vergleiche oder bewusstes Kleinmachen passen für mich grundsätzlich zu unserer Sexualität.',er:'Erotische Demütigung, Vergleiche oder bewusstes Kleinmachen passen für mich grundsätzlich zu unserer Sexualität.'},
+            {id:'F5',sie:'Eine sexuelle Service-Rolle für ihn – mit meinem Genuss als Schwerpunkt – reizt mich.',er:'Eine sexuelle Service-Rolle für mich – mit ihrem Genuss als Schwerpunkt – reizt mich.'},
+            {id:'F6',sie:'Ich möchte sexuelle Wünsche äußern können, ohne sie zuerst danach zu filtern, ob sie für ihn gleich viel Nutzen haben.',er:'Ich finde es stimmig, wenn sie sexuelle Wünsche äußert, ohne sie zuerst danach zu filtern, ob sie für mich gleich viel Nutzen haben.'}
+          ]},
+          {key:'G',title:'Freiheit, Lifestyle & Priorität der Frau',short:'Freiheit',min:'wenig wichtig',max:'sehr wichtig',questions:[
+            {id:'G1',sie:'Meine freie Zeit soll bewusst geschützt werden und nicht automatisch für Haushalt oder Organisation draufgehen.',er:'Ihre freie Zeit soll bewusst geschützt werden und nicht automatisch für Haushalt oder Organisation draufgehen.'},
+            {id:'G2',sie:'Freundinnen, eigene Interessen, Sport, Reisen oder Beauty dürfen einen wichtigen Platz in meinem Leben haben.',er:'Ihre Freundinnen, eigenen Interessen, Sport, Reisen oder Beauty dürfen einen wichtigen Platz in ihrem Leben haben.'},
+            {id:'G3',sie:'Ich möchte ohne schlechtes Gewissen Zeit und Geld für Dinge verwenden können, die vor allem mir Freude machen.',er:'Ich finde es gut, wenn sie ohne schlechtes Gewissen Zeit und Geld für Dinge verwendet, die vor allem ihr Freude machen.'},
+            {id:'G4',sie:'Ich möchte selbstverständlich allein ausgehen, Unternehmungen planen oder eigene Erfahrungen machen können.',er:'Ich finde es selbstverständlich, dass sie allein ausgeht, Unternehmungen plant oder eigene Erfahrungen macht.'},
+            {id:'G5',sie:'Bei gemeinsamen Planungen dürfen meine Wünsche bewusst etwas stärker gewichtet werden.',er:'Bei gemeinsamen Planungen dürfen ihre Wünsche bewusst etwas stärker gewichtet werden.'},
+            {id:'G6',sie:'Ich möchte, dass meine wachsende Eigenständigkeit und mein Selbstbewusstsein als Gewinn für unsere Dynamik gesehen werden.',er:'Ich sehe ihre wachsende Eigenständigkeit und ihr Selbstbewusstsein als Gewinn für unsere Dynamik.'}
+          ]},
+          {key:'H',title:'Kommunikation & Entwicklung',short:'Entwicklung',min:'wenig wichtig',max:'sehr wichtig',questions:[
+            {id:'H1',sie:'Ich möchte Erwartungen und Kritik direkt aussprechen können, ohne jedes Mal eine Grundsatzdiskussion auszulösen.',er:'Ich möchte ihre Erwartungen und Kritik direkt annehmen können, ohne jedes Mal eine Grundsatzdiskussion daraus zu machen.'},
+            {id:'H2',sie:'Er soll auch sagen können, wenn ihn etwas tatsächlich überfordert oder eine Regel nicht funktioniert.',er:'Ich möchte sagen können, wenn mich etwas tatsächlich überfordert oder eine Regel nicht funktioniert.'},
+            {id:'H3',sie:'Unsere Regeln dürfen regelmäßig angepasst werden, wenn sie mir keinen echten Nutzen mehr bringen.',er:'Unsere Regeln dürfen regelmäßig angepasst werden, wenn sie ihr keinen echten Nutzen mehr bringen.'},
+            {id:'H4',sie:'Fehler oder Unsicherheiten möchte ich lieber offen besprechen als durch Schweigen oder Ausweichen verdecken.',er:'Fehler oder Unsicherheiten möchte ich lieber offen besprechen als durch Schweigen oder Ausweichen verdecken.'},
+            {id:'H5',sie:'Ich wünsche mir, dass er sich langfristig in Zuverlässigkeit, Aufmerksamkeit, Service und Selbstständigkeit weiterentwickelt.',er:'Ich möchte mich langfristig in Zuverlässigkeit, Aufmerksamkeit, Service und Selbstständigkeit weiterentwickeln.'},
+            {id:'H6',sie:'Die weiblich geführte Dynamik soll sich für mich wie eine bewusst gewählte Beziehungsform anfühlen, nicht wie zusätzliche Arbeit.',er:'Die weiblich geführte Dynamik soll sich für mich wie eine bewusst gewählte Beziehungsform anfühlen, nicht wie eine Rolle, die ich nur widerwillig erfülle.'}
+          ]}
+        ],
+        data(){return ensureCompassData(DataManager.lokaleDaten).flr;},
+        role(){const v=this.data().activeView;return v==='er'?'er':'sie';},
+        profile(role=this.role()){return this.data().profiles[role];},
+        allQuestions(){return this.sections.flatMap(s=>s.questions);},
+        answer(id,role=this.role()){const v=Number(this.profile(role).answers[id]);return Number.isFinite(v)?v:0;},
+        count(role=this.role()){return this.allQuestions().filter(q=>this.answer(q.id,role)>0).length;},
+        complete(role=this.role()){return this.count(role)===this.allQuestions().length;},
+        score(section,role=this.role()){const vals=section.questions.map(q=>this.answer(q.id,role)).filter(Boolean);return vals.length?vals.reduce((a,b)=>a+b,0)/vals.length:0;},
+        sectionScores(role=this.role()){return this.sections.map(section=>({section,value:this.score(section,role)}));},
+        scheduleSave(){clearTimeout(this.saveTimer);this.saveTimer=setTimeout(()=>DataManager.save(),450);},
+        setView(view){const d=this.data();d.activeView=['sie','er','paar'].includes(view)?view:'sie';document.querySelectorAll('[data-flr-view]').forEach(btn=>btn.classList.toggle('active',btn.dataset.flrView===d.activeView));document.getElementById('flrProfileArea')?.classList.toggle('hidden',d.activeView==='paar');document.getElementById('flrPairArea')?.classList.toggle('hidden',d.activeView!=='paar');if(d.activeView==='paar')this.renderPair();else this.renderProfile();},
+        renderQuestionnaire(){const root=document.getElementById('flrQuestionnaire');if(!root)return;const role=this.role();root.innerHTML=this.sections.map(section=>`<section class="compass-section"><div class="compass-section-head"><h3>${esc(section.key+' · '+section.title)}</h3><p>1 = ${esc(section.min)} · 5 = ${esc(section.max)}</p></div>${section.questions.map(q=>`<div class="compass-question"><div class="compass-qline"><span class="compass-qid">${esc(q.id)}</span><div class="compass-qtext">${esc(q[role])}</div></div><div class="compass-scale">${[1,2,3,4,5].map(v=>`<button type="button" class="compass-choice${this.answer(q.id,role)===v?' selected':''}" data-flr-id="${q.id}" data-value="${v}" aria-pressed="${this.answer(q.id,role)===v}">${v}</button>`).join('')}</div><div class="compass-scale-labels"><span>${esc(section.min)}</span><span>${esc(section.max)}</span></div></div>`).join('')}</section>`).join('');},
+        scoreRow(section,value){return `<div class="compass-score-row"><span>${esc(section.short)}</span><div class="compass-score-track"><div class="compass-score-fill" style="width:${Math.max(0,Math.min(100,value/5*100))}%"></div></div><strong>${value.toFixed(1)}</strong></div>`;},
+        label(value){if(value>=4.3)return 'sehr klarer Schwerpunkt';if(value>=3.7)return 'deutlich wichtig';if(value>=3.0)return 'offen / situationsabhängig';if(value>=2.2)return 'eher nachrangig';return 'aktuell wenig wichtig';},
+        roleSummaryHtml(role){const scores=this.sectionScores(role).sort((a,b)=>b.value-a.value);const top=scores.slice(0,3),low=[...scores].sort((a,b)=>a.value-b.value).slice(0,2);return `<div class="compass-insight"><strong>Stärkste Schwerpunkte</strong><p>${top.map(x=>`${esc(x.section.title)} <span class="metric">${x.value.toFixed(1)}/5</span>`).join(' · ')}</p></div><div class="compass-insight"><strong>Eher nachrangig</strong><p>${low.map(x=>`${esc(x.section.title)} <span class="metric">${x.value.toFixed(1)}/5</span>`).join(' · ')}</p></div><div class="compass-insight"><strong>Lesart</strong><p>Die Werte zeigen, welche Elemente dieser Person wichtig oder reizvoll erscheinen. Sie sagen nicht, dass jeder hoch bewertete Punkt immer umgesetzt werden soll.</p></div>`;},
+        renderIndividualResults(){const role=this.role(),scores=this.sectionScores(role);const title=document.getElementById('flrScoreTitle');if(title)title.textContent=`Profil · ${this.roleLabels[role]}`;const list=document.getElementById('flrScoreList');if(list)list.innerHTML=scores.map(x=>this.scoreRow(x.section,x.value)).join('');const sum=document.getElementById('flrIndividualSummary');if(sum)sum.innerHTML=this.roleSummaryHtml(role);document.getElementById('flrResults')?.classList.add('visible');},
+        renderProfile(){const role=this.role(),count=this.count(role),total=this.allQuestions().length;const lab=document.getElementById('flrProfileLabel');if(lab)lab.textContent=`Profil · ${this.roleLabels[role]}`;const p=document.getElementById('flrProgressText');if(p)p.textContent=`${count} / ${total} Fragen`;const bar=document.getElementById('flrProgressBar');if(bar)bar.style.width=`${Math.round(count/total*100)}%`;const evalBtn=document.getElementById('flrEvaluate');if(evalBtn)evalBtn.disabled=count!==total;this.renderQuestionnaire();if(this.complete(role))this.renderIndividualResults();else document.getElementById('flrResults')?.classList.remove('visible');QuestionnaireHub.renderProgress?.();},
+        pairQuestionRows(){return this.allQuestions().map(q=>({q,er:this.answer(q.id,'er'),sie:this.answer(q.id,'sie'),diff:Math.abs(this.answer(q.id,'er')-this.answer(q.id,'sie')),common:Math.min(this.answer(q.id,'er'),this.answer(q.id,'sie'))}));},
+        pairList(items,mode,empty){if(!items.length)return `<p class="compass-disclaimer">${esc(empty)}</p>`;return `<div class="pair-answer-list">${items.map(x=>`<div class="pair-answer-item ${mode}"><strong>${esc(x.q.id+' · '+x.q.sie)}</strong><span>Er ${x.er}/5 · Sie ${x.sie}/5${mode==='talk'?` · Abstand ${x.diff}`:''}</span></div>`).join('')}</div>`;},
+        renderPair(){const missing=document.getElementById('flrPairMissing'),results=document.getElementById('flrPairResults'),ec=this.count('er'),sc=this.count('sie'),total=this.allQuestions().length;if(!this.complete('er')||!this.complete('sie')){results?.classList.add('hidden');missing?.classList.remove('hidden');if(missing)missing.innerHTML=`<h3>Noch nicht vollständig vergleichbar</h3><p class="compass-disclaimer">Sie: ${sc}/${total} · Er: ${ec}/${total}. Sobald beide den FLR-Fragebogen vollständig beantwortet haben, erscheint die gemeinsame Auswertung.</p>`;return;}missing?.classList.add('hidden');results?.classList.remove('hidden');const she=this.sectionScores('sie'),he=this.sectionScores('er');document.getElementById('flrSheSummary').innerHTML=this.roleSummaryHtml('sie');document.getElementById('flrHeSummary').innerHTML=this.roleSummaryHtml('er');const pairs=this.sections.map((section,i)=>({section,sie:she[i].value,er:he[i].value,diff:Math.abs(she[i].value-he[i].value),common:Math.min(she[i].value,he[i].value)}));document.getElementById('flrPairAxes').innerHTML=pairs.map(x=>`<div class="flr-pair-axis"><div class="flr-pair-axis-head"><strong>${esc(x.section.title)}</strong><span>Sie ${x.sie.toFixed(1)} · Er ${x.er.toFixed(1)} · Δ ${x.diff.toFixed(1)}</span></div><p>${x.common>=4?'Beide bewerten diesen Bereich als sehr wichtig.':x.common>=3.4?'Hier gibt es eine deutliche gemeinsame Basis.':x.diff>=1.2?'Hier unterscheiden sich eure Perspektiven sichtbar.':'Dieser Bereich liegt bei euch eher im mittleren oder niedrigeren Bereich.'}</p></div>`).join('');const shared=pairs.filter(x=>x.sie>=3.7&&x.er>=3.7).sort((a,b)=>b.common-a.common);const diffs=[...pairs].sort((a,b)=>b.diff-a.diff).filter(x=>x.diff>=.7).slice(0,5);document.getElementById('flrShared').innerHTML=shared.length?`<div class="pair-answer-list">${shared.map(x=>`<div class="pair-answer-item good"><strong>${esc(x.section.title)}</strong><span>Sie ${x.sie.toFixed(1)} · Er ${x.er.toFixed(1)}</span></div>`).join('')}</div>`:'<p class="compass-disclaimer">Noch kein Bereich liegt bei beiden klar im hohen Bereich.</p>';document.getElementById('flrDifferences').innerHTML=diffs.length?`<div class="pair-answer-list">${diffs.map(x=>`<div class="pair-answer-item talk"><strong>${esc(x.section.title)}</strong><span>Sie ${x.sie.toFixed(1)} · Er ${x.er.toFixed(1)} · Abstand ${x.diff.toFixed(1)}</span></div>`).join('')}</div>`:'<p class="compass-disclaimer">Eure Bereichswerte liegen insgesamt recht nah beieinander.</p>';const rows=this.pairQuestionRows(),gaps=rows.filter(x=>x.diff>=2).sort((a,b)=>b.diff-a.diff).slice(0,8);document.getElementById('flrQuestionGaps').innerHTML=this.pairList(gaps,'talk','Keine einzelnen Fragen mit einem Abstand von mindestens 2 Punkten.');},
+        async reset(){const role=this.role();if(!confirm(`FLR-Antworten für „${this.roleLabels[role]}“ löschen?`))return;this.profile(role).answers={};this.profile(role).updatedAt=new Date().toISOString();await DataManager.save();this.renderProfile();showToast('FLR-Antworten gelöscht.','success');},
+        bind(){const root=document.getElementById('flrCompassModule');if(!root)return;root.addEventListener('click',e=>{const view=e.target.closest('[data-flr-view]');if(view){this.setView(view.dataset.flrView);return;}const b=e.target.closest('[data-flr-id]');if(b){const role=this.role(),p=this.profile(role);p.answers[b.dataset.flrId]=Number(b.dataset.value);p.updatedAt=new Date().toISOString();this.scheduleSave();this.renderProfile();return;}});document.getElementById('flrEvaluate')?.addEventListener('click',()=>this.renderIndividualResults());document.getElementById('flrReset')?.addEventListener('click',()=>this.reset());},
+        render(){const v=this.data().activeView||'sie';this.setView(v);},
+        refreshFromCloud(){ensureCompassData(DataManager.lokaleDaten);this.render();},
+        init(){if(this.initialized)return;this.initialized=true;ensureCompassData(DataManager.lokaleDaten);this.bind();this.render();}
+      };
+
+      const QuestionnaireHub = {
+        initialized:false,
+        init(){if(this.initialized){this.renderProgress();return;}this.initialized=true;ensureCompassData(DataManager.lokaleDaten);document.getElementById('tab-kompass')?.addEventListener('click',e=>{const open=e.target.closest('[data-questionnaire-open]');if(open){this.open(open.dataset.questionnaireOpen);return;}if(e.target.closest('[data-questionnaire-back]')){this.showLibrary();return;}});this.showLibrary();},
+        open(name){document.getElementById('compassQuestionnaireLibrary')?.classList.add('hidden');document.getElementById('cuckoldCompassModule')?.classList.toggle('hidden',name!=='cuckold');document.getElementById('flrCompassModule')?.classList.toggle('hidden',name!=='flr');if(name==='cuckold')CompassApp.init();if(name==='flr')FlrCompassApp.init();try{document.getElementById('tab-kompass')?.scrollIntoView({behavior:'smooth',block:'start'});}catch(_){}},
+        showLibrary(){document.getElementById('compassQuestionnaireLibrary')?.classList.remove('hidden');document.getElementById('cuckoldCompassModule')?.classList.add('hidden');document.getElementById('flrCompassModule')?.classList.add('hidden');this.renderProgress();},
+        renderProgress(){const c=ensureCompassData(DataManager.lokaleDaten);const cuck=(role)=>Object.values(c.profiles?.[role]?.answers||{}).filter(v=>Number(v)>0).length;const flr=(role)=>Object.values(c.flr?.profiles?.[role]?.answers||{}).filter(v=>Number(v)>0).length;const ce=document.getElementById('cuckoldLibraryProgress');if(ce)ce.textContent=`Er ${cuck('er')}/60 · Sie ${cuck('sie')}/60`;const fe=document.getElementById('flrLibraryProgress');if(fe)fe.textContent=`Sie ${flr('sie')}/48 · Er ${flr('er')}/48`;}
       };
 
       // ===== SPIELE: FARBFALL + WORTRÄTSEL + 10-LEVEL-BILDBIBLIOTHEK =====
@@ -6897,7 +6785,7 @@
           else if(action==='image')this.pickIdeaImage(card,id);
           else if(action==='delete-image')this.deleteIdeaImage(card,id);
           else if(action==='comments')card.querySelector('[data-school-comments]')?.classList.toggle('open');
-          else if(e.target.closest('[data-school-comment-delete]')){const btn=e.target.closest('[data-school-comment-delete]'),idx=Number(btn.dataset.schoolCommentDelete),list=Array.isArray(this.state.comments[id])?this.state.comments[id]:[];if(Number.isInteger(idx)&&idx>=0&&idx<list.length){list.splice(idx,1);this.state.comments[id]=list;this.save();this.renderComments(card,id);}}
+          else if(e.target.closest('[data-school-comment-delete]')){const btn=e.target.closest('[data-school-comment-delete]'),idx=Number(btn.dataset.schoolCommentDelete),list=Array.isArray(this.state.comments[id])?this.state.comments[id]:[];if(Number.isInteger(idx)&&idx>=0&&idx<list.length){const removed=list.splice(idx,1)[0];this.state.comments[id]=list;this.save();const idea=this.byId(id);DataManager.addChangeLog({area:'Femtopia',action:'Ideen-Kommentar gelöscht',target:idea?.title||id,targetId:id,changes:[{field:'Kommentar',before:removed?.text||'—',after:'gelöscht'},{field:'Autor',before:removed?.author||'—',after:'gelöscht'}]});DataManager.save();this.renderComments(card,id);}}
         },
         handleCompactClick(e) { const card=e.target.closest('[data-school-id]');if(!card)return;const id=card.dataset.schoolId,action=e.target.closest('[data-compact-action]')?.dataset.compactAction;if(action==='interest')this.setInterested(id);else if(action==='trial'){this.startTrial(id);this.showPanel('testing');}else if(action==='unkeep')this.unkeep(id); },
         renderTesting() {
@@ -6911,7 +6799,7 @@
         handleCommentSubmit(e){
           const form=e.target.closest('[data-school-comment-form]');if(!form)return;e.preventDefault();const card=form.closest('[data-school-id]');if(!card)return;
           const id=card.dataset.schoolId,input=form.querySelector('textarea'),author=form.querySelector('select')?.value||'Sie',value=String(input?.value||'').trim();if(!value)return;
-          if(!Array.isArray(this.state.comments[id]))this.state.comments[id]=[];this.state.comments[id].push({text:value,author,time:new Date().toISOString()});this.save();if(input)input.value='';this.renderComments(card,id);
+          if(!Array.isArray(this.state.comments[id]))this.state.comments[id]=[];this.state.comments[id].push({text:value,author,time:new Date().toISOString()});this.save();const idea=this.byId(id);DataManager.addChangeLog({area:'Femtopia',action:'Ideen-Kommentar hinzugefügt',target:idea?.title||id,targetId:id,changes:[{field:'Autor',before:'—',after:author},{field:'Kommentar',before:'—',after:value}]});DataManager.save();if(input)input.value='';this.renderComments(card,id);
           const button=card.querySelector('[data-school-action="comments"]');if(button)button.textContent=`💬 Kommentare (${this.state.comments[id].length})`;
         },
         renderComments(card,id){
@@ -6925,9 +6813,9 @@
           try{const blob=await this.getImage(`idea:${id}`);if(!blob)return;const url=URL.createObjectURL(blob);const img=document.createElement('img');img.alt='Eigene Inspiration zu dieser Idee';img.src=url;img.onload=()=>URL.revokeObjectURL(url);const del=document.createElement('button');del.type='button';del.className='school-image-remove';del.dataset.schoolAction='delete-image';del.title='Bild entfernen';del.textContent='×';slot.append(img,del);}catch(_){slot.innerHTML='';}
         },
         pickIdeaImage(card,id){
-          const input=document.createElement('input');input.type='file';input.accept='image/*';input.hidden=true;document.body.appendChild(input);input.addEventListener('change',async()=>{const file=input.files?.[0];input.remove();if(!file)return;if(!this.validImage(file)){showToast('Bitte ein Bild bis 12 MB auswählen.','error');return;}try{await this.putImage(`idea:${id}`,file);await this.renderIdeaImage(card,id);showToast('Bild lokal an der Idee gespeichert.','success');}catch(_){showToast('Bild konnte lokal nicht gespeichert werden.','error');}});input.click();
+          const input=document.createElement('input');input.type='file';input.accept='image/*';input.hidden=true;document.body.appendChild(input);input.addEventListener('change',async()=>{const file=input.files?.[0];input.remove();if(!file)return;if(!this.validImage(file)){showToast('Bitte ein Bild bis 12 MB auswählen.','error');return;}try{const existing=await this.getImage(`idea:${id}`);await this.putImage(`idea:${id}`,file);await this.renderIdeaImage(card,id);const idea=this.byId(id);DataManager.addChangeLog({area:'Femtopia',action:existing?'Ideen-Bild ersetzt':'Ideen-Bild hinzugefügt',target:idea?.title||id,targetId:id,changes:[{field:'Bild',before:existing?'vorhandenes lokales Bild':'kein Bild',after:`${file.name} (${file.type||'Bild'}, ${file.size||0} Bytes)`}]});await DataManager.save();showToast('Bild lokal an der Idee gespeichert.','success');}catch(_){showToast('Bild konnte lokal nicht gespeichert werden.','error');}});input.click();
         },
-        async deleteIdeaImage(card,id){try{await this.removeImage(`idea:${id}`);await this.renderIdeaImage(card,id);showToast('Bild entfernt.','success');}catch(_){showToast('Bild konnte nicht entfernt werden.','error');}},
+        async deleteIdeaImage(card,id){try{const existing=await this.getImage(`idea:${id}`);await this.removeImage(`idea:${id}`);await this.renderIdeaImage(card,id);const idea=this.byId(id);if(existing){DataManager.addChangeLog({area:'Femtopia',action:'Ideen-Bild entfernt',target:idea?.title||id,targetId:id,changes:[{field:'Bild',before:'lokales Bild vorhanden',after:'kein Bild'}]});await DataManager.save();}showToast('Bild entfernt.','success');}catch(_){showToast('Bild konnte nicht entfernt werden.','error');}},
         saveReview(){const ids=['reviewHerGood','reviewHerAnnoy','reviewHerMore','reviewHerLess','reviewHisReliable','reviewHisReminders','reviewHisNext','reviewFocus'];const values={};ids.forEach(id=>values[id]=String(document.getElementById(id)?.value||'').trim());if(!Object.values(values).some(Boolean)){showToast('Bitte mindestens ein Feld ausfüllen.','error');return;}this.state.reviews.unshift({time:new Date().toISOString(),...values});this.state.reviews=this.state.reviews.slice(0,24);this.save();ids.forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});this.renderReviewHistory();showToast('Wochenreview lokal gespeichert.','success');},
         renderReviewHistory(){const box=document.getElementById('reviewHistory');if(!box)return;box.innerHTML='';const reviews=this.state.reviews||[];if(!reviews.length){box.innerHTML='<div class="atelier-mini-note">Noch kein gespeichertes Review.</div>';return;}reviews.slice(0,6).forEach(r=>{const d=document.createElement('details');const date=(()=>{try{return new Date(r.time).toLocaleDateString('de-DE',{day:'2-digit',month:'2-digit',year:'numeric'});}catch(_){return 'Review';}})();const focus=r.reviewFocus?` · ${r.reviewFocus}`:'';d.innerHTML=`<summary>${this.escape(date+focus)}</summary><div class="body"></div>`;const lines=[['Für sie · gut',r.reviewHerGood],['Für sie · störend',r.reviewHerAnnoy],['Mehr',r.reviewHerMore],['Weniger',r.reviewHerLess],['Für ihn · zuverlässig',r.reviewHisReliable],['Erinnerungen',r.reviewHisReminders],['Nächster Schritt',r.reviewHisNext],['Fokus',r.reviewFocus]].filter(x=>x[1]).map(x=>`${x[0]}: ${x[1]}`).join('\n\n');d.querySelector('.body').textContent=lines;box.appendChild(d);});},
         renderRituals(){const grid=document.getElementById('atelierRitualGrid');if(!grid)return;grid.innerHTML='';this.ritualDefs.forEach(r=>{const label=document.createElement('label');label.className='atelier-ritual-card';label.innerHTML=`<input type="checkbox" data-ritual-id="${this.escape(r.id)}" ${this.state.rituals[r.id]?'checked':''}><span><strong>${this.escape(r.title)}</strong><span>${this.escape(r.text)}</span></span>`;grid.appendChild(label);});const list=document.getElementById('atelierCustomRitualList');if(list){list.innerHTML='';(this.state.customRituals||[]).forEach((x,idx)=>{const chip=document.createElement('span');chip.className='atelier-custom-chip';chip.innerHTML=`<span>${this.escape(x)}</span><button type="button" data-custom-ritual-delete="${idx}" title="Entfernen">×</button>`;list.appendChild(chip);});}},
@@ -6937,16 +6825,16 @@
         async handleLifestyleUpload(e){
           e.preventDefault();const file=document.getElementById('lifestyleImageFile')?.files?.[0];if(!this.validImage(file)){showToast('Bitte ein Bild bis 12 MB auswählen.','error');return;}
           const id=`life-${Date.now()}-${Math.random().toString(36).slice(2,7)}`;const title=String(document.getElementById('lifestyleImageTitle')?.value||'').trim()||'Inspiration';const category=String(document.getElementById('lifestyleImageCategory')?.value||'Sonstiges');const caption=String(document.getElementById('lifestyleImageCaption')?.value||'').trim();
-          try{await this.putImage(`life:${id}`,file);this.state.lifestyle.unshift({id,title,category,caption,created:new Date().toISOString()});this.state.lifestyle=this.state.lifestyle.slice(0,80);this.save();e.target.reset();await this.renderLifestyle();showToast('Bild ins Moodboard aufgenommen.','success');}catch(_){showToast('Bild konnte lokal nicht gespeichert werden.','error');}
+          try{await this.putImage(`life:${id}`,file);this.state.lifestyle.unshift({id,title,category,caption,created:new Date().toISOString()});this.state.lifestyle=this.state.lifestyle.slice(0,80);this.save();DataManager.addChangeLog({area:'Femtopia · Moodboard',action:'Bild hinzugefügt',target:title,targetId:id,changes:[{field:'Datei',before:'—',after:`${file.name} (${file.type||'Bild'}, ${file.size||0} Bytes)`},{field:'Kategorie',before:'—',after:category},{field:'Gedanke / Wunsch',before:'—',after:caption||'—'}]});await DataManager.save();e.target.reset();await this.renderLifestyle();showToast('Bild ins Moodboard aufgenommen.','success');}catch(_){showToast('Bild konnte lokal nicht gespeichert werden.','error');}
         },
         async renderLifestyle(){
           const grid=document.getElementById('lifestyleGallery');if(!grid)return;grid.innerHTML='';const items=Array.isArray(this.state.lifestyle)?this.state.lifestyle:[];if(!items.length){grid.innerHTML='<div class="atelier-empty">Noch kein eigenes Bild im Moodboard. Ergänze Wellness, Outfit, Raumidee, Reise, Beauty oder Femdom-Ästhetik, die dich inspiriert.</div>';return;}
           for(const item of items){const card=document.createElement('article');card.className='lifestyle-photo-card';card.dataset.lifeId=item.id;const comments=Array.isArray(this.state.lifestyleComments[item.id])?this.state.lifestyleComments[item.id]:[];card.innerHTML=`<div class="lifestyle-photo-frame" data-life-image>Bild wird geladen …</div><div class="lifestyle-photo-body"><div class="lifestyle-photo-meta"><span class="school-chip">${this.escape(item.category||'Inspiration')}</span></div><h4>${this.escape(item.title||'Inspiration')}</h4>${item.caption?`<p>${this.escape(item.caption)}</p>`:''}<div class="lifestyle-photo-actions"><button type="button" data-life-action="comments">💬 Kommentare${comments.length?` (${comments.length})`:''}</button><button type="button" class="danger" data-life-action="delete">Bild entfernen</button></div><div class="lifestyle-comments" data-life-comments></div></div>`;grid.appendChild(card);this.renderLifestyleComments(card,item.id);try{const blob=await this.getImage(`life:${item.id}`),frame=card.querySelector('[data-life-image]');if(blob&&frame){const url=URL.createObjectURL(blob),img=document.createElement('img');img.alt=item.title||'Lifestyle-Inspiration';img.src=url;img.onload=()=>URL.revokeObjectURL(url);frame.innerHTML='';frame.appendChild(img);}else if(frame)frame.textContent='Lokales Bild nicht verfügbar';}catch(_){const frame=card.querySelector('[data-life-image]');if(frame)frame.textContent='Lokales Bild nicht verfügbar';}}
         },
-        handleLifestyleClick(e){const card=e.target.closest('[data-life-id]');if(!card)return;const id=card.dataset.lifeId,action=e.target.closest('[data-life-action]')?.dataset.lifeAction;if(action==='comments')card.querySelector('[data-life-comments]')?.classList.toggle('open');else if(action==='delete')this.deleteLifestyleItem(id);else if(e.target.closest('[data-life-comment-delete]')){const btn=e.target.closest('[data-life-comment-delete]'),idx=Number(btn.dataset.lifeCommentDelete),list=Array.isArray(this.state.lifestyleComments[id])?this.state.lifestyleComments[id]:[];if(Number.isInteger(idx)&&idx>=0&&idx<list.length){list.splice(idx,1);this.state.lifestyleComments[id]=list;this.save();this.renderLifestyleComments(card,id);}}},
-        handleLifestyleCommentSubmit(e){const form=e.target.closest('[data-life-comment-form]');if(!form)return;e.preventDefault();const card=form.closest('[data-life-id]');if(!card)return;const id=card.dataset.lifeId,author=form.querySelector('select')?.value||'Sie',input=form.querySelector('textarea'),value=String(input?.value||'').trim();if(!value)return;if(!Array.isArray(this.state.lifestyleComments[id]))this.state.lifestyleComments[id]=[];this.state.lifestyleComments[id].push({author,text:value,time:new Date().toISOString()});this.save();if(input)input.value='';this.renderLifestyleComments(card,id);const b=card.querySelector('[data-life-action="comments"]');if(b)b.textContent=`💬 Kommentare (${this.state.lifestyleComments[id].length})`;},
+        handleLifestyleClick(e){const card=e.target.closest('[data-life-id]');if(!card)return;const id=card.dataset.lifeId,action=e.target.closest('[data-life-action]')?.dataset.lifeAction;if(action==='comments')card.querySelector('[data-life-comments]')?.classList.toggle('open');else if(action==='delete')this.deleteLifestyleItem(id);else if(e.target.closest('[data-life-comment-delete]')){const btn=e.target.closest('[data-life-comment-delete]'),idx=Number(btn.dataset.lifeCommentDelete),list=Array.isArray(this.state.lifestyleComments[id])?this.state.lifestyleComments[id]:[];if(Number.isInteger(idx)&&idx>=0&&idx<list.length){const removed=list.splice(idx,1)[0];this.state.lifestyleComments[id]=list;this.save();const item=this.state.lifestyle.find(x=>x.id===id);DataManager.addChangeLog({area:'Femtopia · Moodboard',action:'Kommentar gelöscht',target:item?.title||'Inspiration',targetId:id,changes:[{field:'Kommentar',before:removed?.text||'—',after:'gelöscht'},{field:'Autor',before:removed?.author||'—',after:'gelöscht'}]});DataManager.save();this.renderLifestyleComments(card,id);}}},
+        handleLifestyleCommentSubmit(e){const form=e.target.closest('[data-life-comment-form]');if(!form)return;e.preventDefault();const card=form.closest('[data-life-id]');if(!card)return;const id=card.dataset.lifeId,author=form.querySelector('select')?.value||'Sie',input=form.querySelector('textarea'),value=String(input?.value||'').trim();if(!value)return;if(!Array.isArray(this.state.lifestyleComments[id]))this.state.lifestyleComments[id]=[];this.state.lifestyleComments[id].push({author,text:value,time:new Date().toISOString()});this.save();const item=this.state.lifestyle.find(x=>x.id===id);DataManager.addChangeLog({area:'Femtopia · Moodboard',action:'Kommentar hinzugefügt',target:item?.title||'Inspiration',targetId:id,changes:[{field:'Autor',before:'—',after:author},{field:'Kommentar',before:'—',after:value}]});DataManager.save();if(input)input.value='';this.renderLifestyleComments(card,id);const b=card.querySelector('[data-life-action="comments"]');if(b)b.textContent=`💬 Kommentare (${this.state.lifestyleComments[id].length})`;},
         renderLifestyleComments(card,id){const box=card.querySelector('[data-life-comments]');if(!box)return;const wasOpen=box.classList.contains('open'),comments=Array.isArray(this.state.lifestyleComments[id])?this.state.lifestyleComments[id]:[];box.innerHTML='';const list=document.createElement('div');list.className='school-comment-list';if(!comments.length){const empty=document.createElement('div');empty.className='text-muted';empty.style.fontSize='.64rem';empty.textContent='Noch keine Kommentare zu diesem Bild.';list.appendChild(empty);}comments.forEach((c,idx)=>{const row=document.createElement('div');row.className='school-comment';const copy=document.createElement('div');const badge=document.createElement('span');badge.className='comment-author-badge';badge.textContent=String(c.author||'Sie');copy.appendChild(badge);copy.appendChild(document.createTextNode(String(c.text||'')));const time=document.createElement('small');try{time.textContent=c.time?new Date(c.time).toLocaleString('de-DE'):'';}catch(_){time.textContent='';}copy.appendChild(time);const del=document.createElement('button');del.type='button';del.textContent='×';del.title='Kommentar löschen';del.dataset.lifeCommentDelete=String(idx);row.append(copy,del);list.appendChild(row);});const form=document.createElement('form');form.className='comment-form-rich';form.dataset.lifeCommentForm='';const who=document.createElement('select');['Sie','Er','Gemeinsam'].forEach(v=>{const o=document.createElement('option');o.value=v;o.textContent=v;who.appendChild(o);});const input=document.createElement('textarea');input.className='school-comment-input';input.rows=1;input.maxLength=600;input.placeholder='Was gefällt euch daran? Was möchtet ihr übernehmen?';const save=document.createElement('button');save.type='submit';save.className='school-comment-save';save.textContent='Senden';form.append(who,input,save);box.append(list,form);if(wasOpen)box.classList.add('open');},
-        async deleteLifestyleItem(id){if(!confirm('Dieses Moodboard-Bild wirklich entfernen?'))return;try{await this.removeImage(`life:${id}`);}catch(_){}this.state.lifestyle=this.state.lifestyle.filter(x=>x.id!==id);delete this.state.lifestyleComments[id];this.save();this.renderLifestyle();showToast('Moodboard-Bild entfernt.','success');},
+        async deleteLifestyleItem(id){if(!confirm('Dieses Moodboard-Bild wirklich entfernen?'))return;const item=this.state.lifestyle.find(x=>x.id===id);try{await this.removeImage(`life:${id}`);}catch(_){}this.state.lifestyle=this.state.lifestyle.filter(x=>x.id!==id);delete this.state.lifestyleComments[id];this.save();if(item){DataManager.addChangeLog({area:'Femtopia · Moodboard',action:'Bild entfernt',target:item.title||'Inspiration',targetId:id,changes:[{field:'Kategorie',before:item.category||'—',after:'gelöscht'},{field:'Gedanke / Wunsch',before:item.caption||'—',after:'gelöscht'},{field:'Bild',before:'lokales Bild',after:'gelöscht'}]});await DataManager.save();}this.renderLifestyle();showToast('Moodboard-Bild entfernt.','success');},
         renderAll(){this.renderCounts();this.renderToday();this.renderIdeas();this.renderTesting();this.renderKept();this.renderReviewHistory();this.renderRituals();this.renderLifestyle();}
       };
 
@@ -7014,7 +6902,7 @@
           if (tabName === 'puzzle') {
             PuzzleGame.init();
           } else if (tabName === 'kompass') {
-            CompassApp.init();
+            QuestionnaireHub.init();
           } else if (tabName === 'medien') {
             MediaApp.init();
             StoryApp.init();
@@ -7137,14 +7025,14 @@
             if (typ === 'aufgabe') {
               const punkte = parseInt(document.getElementById('neuPunkte').value) || 0;
               if (punkte < 1) { showToast('Punkte müssen positiv sein.', 'error'); return; }
-              DataManager.addAufgabe(text, punkte);
-              DataManager.addLog(`Neue Aufgabe: „${text}“ (${punkte} P.)`);
+              const neu = DataManager.addAufgabe(text, punkte);
+              DataManager.addChangeLog({ area:'Aufgaben', action:'Neue Aufgabe', target:text, targetId:neu.id, changes:[{ field:'Text', before:'—', after:text }, { field:'Punkte', before:'—', after:punkte }, { field:'Status', before:'—', after:'offen' }] });
             } else if (typ === 'einloesung') {
               const punkte = parseInt(document.getElementById('neuPunkte').value) || 0;
               const hinweis = document.getElementById('neuHinweis').value.trim();
               if (punkte < 1) { showToast('Kosten müssen positiv sein.', 'error'); return; }
-              DataManager.addEinloesung(text, punkte, hinweis);
-              DataManager.addLog(`Neue Einlösung: „${text}“ (${punkte} P.)`);
+              const neu = DataManager.addEinloesung(text, punkte, hinweis);
+              DataManager.addChangeLog({ area:'Einlösungen', action:'Neue Einlösung', target:text, targetId:neu.id, changes:[{ field:'Text', before:'—', after:text }, { field:'Kosten', before:'—', after:punkte }, { field:'Hinweis', before:'—', after:hinweis || '—' }] });
             } else if (typ === 'tagebuch') {
               const datum = document.getElementById('neuDatum').value;
               if (!datum) { showToast('Bitte Datum auswählen.', 'error'); return; }
@@ -7159,8 +7047,8 @@
                   return;
                 }
               }
-              DataManager.addTagebuchEintrag(datum, text, imageData);
-              DataManager.addLog(`Neuer Tagebucheintrag für ${datum}${bildInput.files[0] ? ' mit Bild' : ''}.`);
+              const neu = DataManager.addTagebuchEintrag(datum, text, imageData);
+              DataManager.addChangeLog({ area:'Tagebuch', action:'Neuer Eintrag', target:datum, targetId:neu.id, changes:[{ field:'Datum', before:'—', after:datum }, { field:'Text', before:'—', after:text }, { field:'Bild', before:'—', after:imageData || 'kein Bild' }, ...(bildInput.files[0] ? [{ field:'Dateiname', before:'—', after:bildInput.files[0].name || 'unbekannt' }] : [])] });
             }
 
             // Modal schließen und Felder zurücksetzen
@@ -7371,22 +7259,23 @@
           const neuerText = document.getElementById('bearbeitenText').value.trim();
           if (!neuerText) { showToast('Bitte einen Text eingeben.', 'error'); return; }
 
+          const vorher = { ...item };
           if (this._bearbeitenTyp === 'tagebuch') {
             const neuesDatum = document.getElementById('bearbeitenDatum').value;
             if (!neuesDatum) { showToast('Bitte ein Datum auswählen.', 'error'); return; }
             item.text = neuerText;
             item.datum = neuesDatum;
-            DataManager.addLog(`Tagebucheintrag bearbeitet (Text + Datum).`);
+            const changes = changedFields(vorher, item, [['text','Text'],['datum','Datum']]);
+            if (changes.length) DataManager.addChangeLog({ area:'Tagebuch', action:'Eintrag bearbeitet', target:logTargetLabel(item), targetId:item.id, changes });
           } else {
             const neuePunkte = parseInt(document.getElementById('bearbeitenPunkte').value) || 0;
             if (neuePunkte < 0) { showToast('Punkte/Kosten müssen positiv sein.', 'error'); return; }
             item.text = neuerText;
-            if (this._bearbeitenTyp === 'aufgabe') {
-              item.punkte = neuePunkte;
-            } else {
-              item.kosten = neuePunkte;
-            }
-            DataManager.addLog(`${this._bearbeitenTyp} „${item.text}“ bearbeitet (Text + Punkte).`);
+            if (this._bearbeitenTyp === 'aufgabe') item.punkte = neuePunkte;
+            else item.kosten = neuePunkte;
+            const fields = this._bearbeitenTyp === 'aufgabe' ? [['text','Text'],['punkte','Punkte']] : [['text','Text'],['kosten','Kosten']];
+            const changes = changedFields(vorher, item, fields);
+            if (changes.length) DataManager.addChangeLog({ area:this._bearbeitenTyp === 'aufgabe' ? 'Aufgaben' : 'Einlösungen', action:'Eintrag bearbeitet', target:logTargetLabel(item), targetId:item.id, changes });
           }
 
           this.modalSchliessen('bearbeitenModal');
@@ -7417,11 +7306,21 @@
           if (punkte <= 0) { showToast('Bitte positive Punkte vergeben.', 'error'); return; }
           if (qualitaet < 1 || qualitaet > 10) { showToast('Qualität muss zwischen 1 und 10 liegen.', 'error'); return; }
 
+          const vorherKonto = Number(DataManager.lokaleDaten.konto) || 0;
+          const vorherStatus = a.status || 'offen';
+          const vorherQualitaet = a.lastQuality ?? '—';
+          const vorherKommentar = a.lastComment || '—';
           DataManager.awardAufgabenPunkte(punkte);
           a.lastQuality = qualitaet;
           a.lastComment = kommentar;
           a.status = 'offen';
-          DataManager.addLog(`Frau vergibt ${punkte} P. für „${a.text}“ (⭐ ${qualitaet}/10)${kommentar ? ' – ' + kommentar : ''}`);
+          DataManager.addChangeLog({ area:'Aufgaben', action:'Bewertet und Punkte vergeben', target:a.text, targetId:a.id, changes:[
+            { field:'Vergebene Punkte', before:'—', after:punkte },
+            { field:'Punktestand', before:vorherKonto, after:Number(DataManager.lokaleDaten.konto) || 0 },
+            { field:'Qualität', before:vorherQualitaet, after:`${qualitaet}/10` },
+            { field:'Bewertungskommentar', before:vorherKommentar, after:kommentar || '—' },
+            { field:'Status', before:vorherStatus, after:'offen' }
+          ] });
           this.modalSchliessen('bewertungsModal');
           DataManager.save().then(() => UIRenderer.renderAlles(DataManager.lokaleDaten));
         },
