@@ -3024,7 +3024,96 @@
         padding-inline:1px !important;
       }
     }
-</style>
+
+
+    /* ===== PERFORMANCE-PATCH – flüssigeres Scrollen =====
+       Ziele:
+       - nur noch eine feste Hintergrundbild-Ebene
+       - keine permanenten Live-Backdrop-Blurs auf scrollenden/sticky Flächen
+       - weniger teure Compositing-Arbeit auf Mobilgeräten
+       - Optik bleibt über deckendere Flächen weitgehend erhalten
+    */
+    html {
+      background-attachment: scroll !important;
+    }
+
+    /* Zwei vollflächige fixed Hintergrundbilder + Filter waren unnötig teuer. */
+    body::after {
+      display: none !important;
+    }
+    body::before {
+      filter: none !important;
+      transform: none !important;
+      will-change: auto !important;
+      opacity: .34;
+    }
+    html[data-theme="dark"] body::before {
+      filter: none !important;
+      opacity: .28;
+    }
+
+    /* Live-Blur zwingt den Browser beim Scrollen zu laufender Neuberechnung
+       des Inhalts hinter den Elementen. Deckendere Flächen sind deutlich billiger. */
+    header,
+    .tab-bar,
+    .card,
+    .mobile-nav-shell,
+    #mainTabBar,
+    .top-utility-menu {
+      backdrop-filter: none !important;
+      -webkit-backdrop-filter: none !important;
+    }
+
+    header {
+      background: color-mix(in srgb, var(--surface-solid) 94%, transparent) !important;
+    }
+    .card {
+      background: color-mix(in srgb, var(--surface-solid) 96%, transparent) !important;
+    }
+    .tab-bar,
+    .mobile-nav-shell,
+    #mainTabBar {
+      background: color-mix(in srgb, var(--surface-solid) 97%, transparent) !important;
+    }
+    .top-utility-menu {
+      background: var(--surface-solid) !important;
+    }
+
+    /* Auf kleineren Geräten zusätzlich Repaint-/Shadow-Kosten reduzieren. */
+    @media (max-width: 900px) {
+      html {
+        scroll-behavior: auto !important;
+      }
+      body {
+        text-rendering: auto;
+      }
+      body::before {
+        opacity: .30;
+      }
+      html[data-theme="dark"] body::before {
+        opacity: .24;
+      }
+      .card {
+        box-shadow: 0 8px 24px rgba(57, 34, 28, .06) !important;
+      }
+      .top-nav-shell,
+      .tab-bar,
+      #mainTabBar,
+      .mobile-nav-shell {
+        box-shadow: 0 5px 16px rgba(57, 34, 28, .07) !important;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto !important; }
+      *, *::before, *::after {
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .01ms !important;
+      }
+    }
+
+  </style>
 </head>
 <body>
 
@@ -6790,13 +6879,38 @@
           if(this.collides(this.ball,0,0)){this.handleLoss();return;}
           this.running=true;this.paused=false;this.lastDrop=performance.now();
           this.updateStatus('Läuft – erst ab 4 verbundenen Kugeln gleicher Farbe wird ein Bildfeld geöffnet.');
-          this.stopLoop();
-          const loop=t=>{if(!this.running)return;if(!this.paused&&t-this.lastDrop>720){this.move(0,1);this.lastDrop=t;}this.draw();this.timer=requestAnimationFrame(loop);};
-          this.timer=requestAnimationFrame(loop);this.renderButtons();
+          this.startLoop();
+          this.renderButtons();
         },
-        pause(show=true){if(!this.running)return;this.paused=!this.paused;if(show)this.updateStatus(this.paused?'Pausiert.':'Weiter geht’s.');this.renderButtons();},
+        startLoop() {
+          // Performance: Das Spielfeld ändert sich nur etwa alle 720 ms.
+          // Deshalb keine permanente 60-FPS-requestAnimationFrame-Schleife mehr.
+          this.stopLoop();
+          const tick = () => {
+            if (!this.running || this.paused) {
+              this.timer = null;
+              return;
+            }
+            this.move(0, 1);
+            this.lastDrop = performance.now();
+            if (this.running && !this.paused) this.timer = setTimeout(tick, 720);
+          };
+          this.timer = setTimeout(tick, 720);
+        },
+        pause(show=true){
+          if(!this.running)return;
+          this.paused=!this.paused;
+          if(this.paused){
+            this.stopLoop();
+          }else{
+            this.lastDrop=performance.now();
+            this.startLoop();
+          }
+          if(show)this.updateStatus(this.paused?'Pausiert.':'Weiter geht’s.');
+          this.renderButtons();
+        },
         stop(message='Gestoppt.'){this.running=false;this.paused=false;this.stopLoop();this.updateStatus(message);this.renderButtons();this.scheduleSave(80);},
-        stopLoop(){if(this.timer)cancelAnimationFrame(this.timer);this.timer=null;},
+        stopLoop(){if(this.timer)clearTimeout(this.timer);this.timer=null;},
         updateStatus(text){const el=document.getElementById('puzzleStatus');if(el)el.textContent=text;},
         renderNextBall(){const el=document.getElementById('nextBallPreview');if(el)el.style.background=this.palette[this.nextColor]||this.palette[1];},
         draw() {
