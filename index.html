@@ -3113,6 +3113,104 @@
       }
     }
 
+
+/* Übersicht und Navigation */
+:root {
+  --paper: #fffdf8;
+  --bordeaux: #682641;
+  --rose: #e0a5b8;
+  --rose-ink: #853953;
+  --journal-line: #e4d6dc;
+}
+html[data-theme="dark"] {
+  --paper: #292227;
+  --bordeaux: #752d4c;
+  --rose: #e0a5b8;
+  --rose-ink: #f4bbc9;
+  --journal-line: #493942;
+}
+body:not(.subview-mode) header {
+  border: 1px solid var(--journal-line);
+  background: linear-gradient(115deg,var(--paper) 35%,color-mix(in srgb,var(--paper) 80%,var(--rose))) !important;
+}
+body:not(.subview-mode) .konto-wrap {
+  background: var(--bordeaux);
+  box-shadow: none;
+}
+body:not(.subview-mode) .konto-wrap .konto {
+  font-family: var(--serif);
+  font-variant-numeric: tabular-nums;
+  font-weight: 500;
+  line-height: 1;
+}
+#mainTabBar { gap: 4px !important; padding: 5px !important; }
+#mainTabBar .tab-btn { min-height: 42px !important; font-size: .77rem !important; }
+#mainTabBar .tab-btn[aria-selected="true"] {
+  color: #fff !important;
+  background: var(--bordeaux) !important;
+  box-shadow: none;
+}
+#tab-heute.card {
+  padding: 0;
+  border: 0;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+#tab-heute .today-dashboard {
+  display: grid;
+  grid-template-columns: minmax(0, .85fr) minmax(0, 1.4fr);
+  align-items: start;
+  gap: clamp(12px, 2vw, 24px);
+}
+#tab-heute .progress-section, #tab-heute .recent-activity {
+  min-width: 0;
+  margin: 0;
+  padding: clamp(18px, 2.7vw, 32px);
+  border: 1px solid var(--journal-line);
+  border-radius: 22px;
+  background: var(--paper);
+  box-shadow: var(--shadow-sm);
+}
+#tab-heute .progress-section {
+  background: linear-gradient(155deg,color-mix(in srgb,var(--paper) 84%,var(--rose)),var(--paper));
+}
+#tab-heute .progress-meta { display: grid; gap: 12px; }
+#tab-heute .milestone-kicker { color: var(--text-muted); letter-spacing: .1em; }
+#tab-heute #milestoneTitle {
+  display: block; margin-top: 7px; font-size: clamp(1.24rem,2vw,1.7rem);
+  color: var(--text); line-height: 1.2;
+}
+#tab-heute #progressLabel { justify-self: start; }
+#tab-heute .progress-wrap { margin-top: 9px; height: 8px; }
+#tab-heute .progress-wrap .bar { background: linear-gradient(90deg,#853953,#c9859e); }
+#tab-heute .lifetime-progress { margin-top: 19px; }
+#tab-heute .recent-activity-head { margin-bottom: 12px; align-items: center; }
+#tab-heute #recentActivityTitle { margin: 0; font-size: clamp(1.45rem,2.8vw,2rem); }
+#tab-heute .recent-activity-head small { font-size: .75rem; }
+#tab-heute .recent-activity-list { display: grid; gap: 0; }
+#tab-heute .recent-activity-item {
+  padding: 13px 6px; border-radius: 0; background: transparent;
+  border-top: 1px solid var(--journal-line); gap: 13px;
+}
+#tab-heute .recent-activity-item:hover { background: var(--surface-soft); transform: none; }
+#tab-heute .activity-copy strong {
+  font-size: .88rem; line-height: 1.4; white-space: normal; overflow-wrap: anywhere;
+}
+#tab-heute .activity-copy small { font-size: .74rem; margin-top: 3px; }
+#tab-heute .activity-dot { background: var(--rose-ink); box-shadow: none; }
+#cloudLogin { width: min(90vw,22rem); box-shadow: var(--shadow-lg); }
+#cloudLogin::backdrop { background: rgba(38,20,30,.64); }
+#cloudLogin h2 { margin: 0 0 16px; font: 600 1.8rem/1.15 var(--serif); }
+#cloudPassword { min-height: 48px; font-size: 1.25rem; letter-spacing: .24em; text-align: center; }
+#cloudLogin button { width: 100%; min-height: 44px; background: var(--bordeaux); color: #fff; border: 0; border-radius: 12px; }
+#cloudLogin [role="status"]:empty { margin: 0; }
+@media(max-width: 780px) {
+  #tab-heute .today-dashboard { grid-template-columns: 1fr; }
+  #mainTabBar { grid-template-columns: repeat(3,minmax(0,1fr)) !important; }
+  #mainTabBar .tab-btn { min-height: 40px !important; font-size: .76rem !important; }
+  .top-nav-shell { position: static !important; }
+}
+
   </style>
 </head>
 <body>
@@ -3141,23 +3239,6 @@
     </div>
   </header>
 
-  <div class="progress-section">
-    <div class="progress-meta">
-      <span class="milestone-current"><span class="milestone-kicker">Meilenstein</span><strong id="milestoneTitle">🪑 Für mich ist er Luft.</strong></span>
-      <strong id="progressLabel">0 / 300 Punkte</strong>
-    </div>
-    <div class="progress-wrap" id="progressWrap" role="progressbar" aria-label="Meilenstein-Fortschritt" aria-valuemin="0" aria-valuemax="300" aria-valuenow="0"><div class="bar" id="progressBar"></div></div>
-    <div class="milestone-scale" aria-hidden="true">
-      <span>0</span><span>30</span><span>60</span><span>90</span><span>120</span><span>150</span><span>180</span><span>210</span><span>240</span><span>270</span><span>300</span>
-    </div>
-    <div class="lifetime-progress" aria-label="Jemals verdiente Punkte">
-      <div class="lifetime-head"><span>🏅 Jemals durch Aufgaben verdient</span><strong id="lifetimePointsLabel">0 P.</strong></div>
-      <div class="lifetime-track"><div class="lifetime-bar" id="lifetimePointsBar"></div></div>
-      <div class="lifetime-scale" aria-hidden="true"><span>0</span><span>150</span><span>300+</span></div>
-    </div>
-  </div>
-
-
   <div class="top-nav-shell" aria-label="Hauptnavigation">
     <div class="tab-bar" id="mainTabBar" role="tablist">
       <button class="tab-btn active" data-tab="heute" id="tabBtn-heute" role="tab" aria-selected="true" aria-controls="tab-heute">Übersicht</button>
@@ -3180,13 +3261,27 @@
     <!-- ÜBERSICHT / STARTSEITE -->
     <section id="tab-heute" class="tab-content card" role="tabpanel" aria-labelledby="tabBtn-heute">
       <div class="today-dashboard today-dashboard-compact">
+        <div class="progress-section">
+    <div class="progress-meta">
+      <span class="milestone-current"><span class="milestone-kicker">Meilenstein</span><strong id="milestoneTitle">🪑 Für mich ist er Luft.</strong></span>
+      <strong id="progressLabel">0 / 300 Punkte</strong>
+    </div>
+    <div class="progress-wrap" id="progressWrap" role="progressbar" aria-label="Meilenstein-Fortschritt" aria-valuemin="0" aria-valuemax="300" aria-valuenow="0"><div class="bar" id="progressBar"></div></div>
+    <div class="milestone-scale" aria-hidden="true">
+      <span>0</span><span>30</span><span>60</span><span>90</span><span>120</span><span>150</span><span>180</span><span>210</span><span>240</span><span>270</span><span>300</span>
+    </div>
+    <div class="lifetime-progress" aria-label="Jemals verdiente Punkte">
+      <div class="lifetime-head"><span>🏅 Jemals durch Aufgaben verdient</span><strong id="lifetimePointsLabel">0 P.</strong></div>
+      <div class="lifetime-track"><div class="lifetime-bar" id="lifetimePointsBar"></div></div>
+      <div class="lifetime-scale" aria-hidden="true"><span>0</span><span>150</span><span>300+</span></div>
+    </div>
+  </div>
         <section class="recent-activity" aria-labelledby="recentActivityTitle">
           <div class="recent-activity-head">
             <div>
-              <span class="today-card-kicker">Zuletzt passiert</span>
               <h2 id="recentActivityTitle">Letzte Aktivitäten</h2>
             </div>
-            <small>Die letzten 5 · antippen zum Öffnen</small>
+            <small>Zum Eintrag</small>
           </div>
           <div id="recentActivityList" class="recent-activity-list" aria-live="polite">
             <div class="recent-activity-empty">Noch keine Aktivität vorhanden.</div>
