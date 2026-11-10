@@ -4086,7 +4086,7 @@
         async uploadBlob(blob) {
           const res = await cloudFetch('/api/media', {method:'POST',headers:{'Content-Type':blob.type},body:blob});
           if (!res.ok) throw new Error(res.status === 401 ? 'Sitzung abgelaufen. Bitte die Seite neu laden und die PIN eingeben.' : await res.text());
-          return (await res.json()).url;
+          return toDisplay(null, (await res.json()).url);
         },
 
         async copyImportedMedia(data) {
@@ -4324,7 +4324,7 @@
           try {
             const raw = localStorage.getItem(this.FAST_CACHE_KEY);
             if (!raw) return false;
-            const cached = JSON.parse(raw);
+            const cached = JSON.parse(raw, toDisplay);
             if (!cached || typeof cached !== 'object') return false;
             if (!Array.isArray(cached.aufgaben) || !Array.isArray(cached.einloesungen)) return false;
             this.lokaleDaten = {
@@ -4436,7 +4436,7 @@
             } else {
               const record = records[0];
               this.aktuelleVersion = record.version;
-              this.lokaleDaten = record.daten;   // <--- Spalte heißt "daten"
+              this.lokaleDaten = displayData(record.daten);   // <--- Spalte heißt "daten"
               ensureLifetimePoints(this.lokaleDaten);
               ensurePuzzleData(this.lokaleDaten);
               ensureCompassData(this.lokaleDaten);
@@ -4465,7 +4465,7 @@
         },
 
         async save(initial = false, silent = false) {
-          const body = JSON.stringify(this.lokaleDaten);
+          const body = JSON.stringify(this.lokaleDaten, toStorage);
           const write = async () => {
             if (this.aktuelleVersion === null) throw new Error('Bitte Seite neu laden.');
             const res = await cloudFetch('/api/state', {method:'PUT', headers:{
@@ -7453,7 +7453,7 @@
           // PIN
           // Export / Import
           document.getElementById('exportDatenBtn').addEventListener('click', () => {
-            const json = JSON.stringify(DataManager.lokaleDaten, null, 2);
+            const json = JSON.stringify(DataManager.lokaleDaten, toStorage, 2);
             const blob = new Blob([json], { type: 'application/json' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
@@ -7471,7 +7471,7 @@
             const reader = new FileReader();
             reader.onload = async (ev) => {
               try {
-                const imported = JSON.parse(ev.target.result);
+                const imported = JSON.parse(ev.target.result, toDisplay);
                 if (!Array.isArray(imported?.aufgaben) || !Array.isArray(imported?.einloesungen)) {
                   showToast('Ungültiges Dateiformat.', 'error');
                   return;
@@ -7670,6 +7670,20 @@
       // ===== START =====
 
       const cloudOrigin = 'https://punkte-paar-271.pages.dev';
+      // Die Anzeige nutzt Adressen dieser GitHub-Seite; der Export bleibt portabel.
+      const cloudMedia = cloudOrigin + '/media/';
+      const localMedia = new URL('private-medien/', location.href.split('?')[0].split('#')[0]).href;
+      function mediaAddress(value, from, to) {
+        if (typeof value !== 'string' || !value.startsWith(from)) return value;
+        const key = value.slice(from.length);
+        return /^[a-f0-9]{64}$/.test(key) ? to + key : value;
+      }
+      const toDisplay = (_, value) => mediaAddress(value, cloudMedia, localMedia);
+      const toStorage = (_, value) => mediaAddress(value, localMedia, cloudMedia);
+      function displayData(data) {
+        return JSON.parse(JSON.stringify(data), toDisplay);
+      }
+
       let cloudAuth = '';
       function cloudFetch(path, options = {}) {
         const headers = new Headers(options.headers);
@@ -7696,14 +7710,26 @@
               if (event.source === navigator.serviceWorker.controller && event.data === 'punkte-medien-anmeldung')
                 event.ports[0]?.postMessage(cloudAuth);
             });
-            await navigator.serviceWorker.register('./punkte-medien.js');
-            await navigator.serviceWorker.ready;
-            if (!navigator.serviceWorker.controller) {
+            // Erst starten, wenn der aktuelle Medienhelfer dieses Fenster kontrolliert.
+            const script = new URL('./medienzugriff.js',location.href).href;
+            await navigator.serviceWorker.register(script);
+            if (navigator.serviceWorker.controller?.scriptURL !== script) {
               await new Promise((resolve,reject) => {
-                const timeout = setTimeout(() => reject(new Error('Bitte die Seite neu laden.')),10000);
-                navigator.serviceWorker.addEventListener('controllerchange', () => {
-                  clearTimeout(timeout); resolve();
-                }, {once:true});
+                const sw = navigator.serviceWorker;
+                const onChange = () => {
+                  if (sw.controller?.scriptURL !== script) return;
+                  cleanup();
+                  resolve();
+                };
+                const cleanup = () => {
+                  clearTimeout(timer);
+                  sw.removeEventListener('controllerchange',onChange);
+                };
+                const timer = setTimeout(() => {
+                  cleanup(); reject(new Error('Medienzugriff noch nicht bereit. Bitte die Seite neu laden.'));
+                },15000);
+                sw.addEventListener('controllerchange',onChange);
+                onChange();
               });
             }
             field.value = '';
