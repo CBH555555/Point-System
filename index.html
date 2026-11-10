@@ -3117,8 +3117,8 @@
 </head>
 <body>
   <dialog id="cloudLogin" style="max-width:22rem;border:1px solid var(--card-border);border-radius:16px;padding:1.5rem;background:var(--surface-solid);color:var(--text)">
-    <form><h2>Liebe &amp; Einsatz</h2><label for="cloudPassword">Passwort für euren Cloud-Speicher</label>
-      <input id="cloudPassword" name="password" type="password" autocomplete="current-password" required style="width:100%;margin:.8rem 0">
+    <form><h2>Liebe &amp; Einsatz</h2><label for="cloudPassword">Eure vierstellige PIN</label>
+      <input id="cloudPassword" name="password" type="password" inputmode="numeric" pattern="[0-9]{4}" minlength="4" maxlength="4" autocomplete="off" required style="width:100%;margin:.8rem 0">
       <button type="submit">Anmelden</button><p role="status" aria-live="polite"></p></form>
   </dialog>
 
@@ -3792,12 +3792,7 @@
       <div class="settings-layout">
         <div class="settings-group">
           <div class="settings-section-title"><span class="icon">🔐</span><span>Sicherheit</span></div>
-          <label style="display:block; font-weight:600; margin-bottom:6px;">PIN ändern</label>
-          <div class="flex-wrap">
-            <input type="password" id="neuePin" placeholder="Neue PIN (z.B. 1234)" style="flex:1; padding:10px 14px; background:var(--bg); border:1px solid var(--card-border); border-radius:10px;">
-            <button id="pinAendernBtn" class="btn-primary" style="width:auto; padding:10px 20px; min-height:44px;">Ändern</button>
-          </div>
-          <p class="text-muted" style="font-size:0.7rem; margin-top:4px;">Aktuelle PIN: <span id="aktuellePinAnzeige">0000</span></p>
+          <p>Die gemeinsame Geräte-PIN wird in Cloudflare unter APP_PIN verwaltet.</p>
         </div>
 
         <div class="settings-group">
@@ -4090,7 +4085,7 @@
 
         async uploadBlob(blob) {
           const res = await cloudFetch('/api/media', {method:'POST',headers:{'Content-Type':blob.type},body:blob});
-          if (!res.ok) throw new Error(await res.text());
+          if (!res.ok) throw new Error(res.status === 401 ? 'Sitzung abgelaufen. Bitte die Seite neu laden und die PIN eingeben.' : await res.text());
           return (await res.json()).url;
         },
 
@@ -4432,7 +4427,7 @@
           try {
             document.getElementById('syncStatus').textContent = ' (lade…)';
             const res = await cloudFetch('/api/state', {cache:'no-store'});
-            if (!res.ok) throw new Error(await res.text());
+            if (!res.ok) throw new Error(res.status === 401 ? 'Sitzung abgelaufen. Bitte die Seite neu laden und die PIN eingeben.' : await res.text());
             const records = await res.json();
             if (!records || records.length === 0) {
               this.initDefaultData();
@@ -4453,9 +4448,7 @@
                   ensureKommentare(e);
                 });
               });
-              const savedPin = localStorage.getItem('pin');
-              if (savedPin) CONFIG.PIN = savedPin;
-              document.getElementById('aktuellePinAnzeige').textContent = CONFIG.PIN;
+
             }
             this.saveFastCache();
             document.getElementById('syncStatus').textContent = ' ✅';
@@ -4478,7 +4471,7 @@
             const res = await cloudFetch('/api/state', {method:'PUT', headers:{
               'Content-Type':'application/json', 'If-Match':String(this.aktuelleVersion)
             }, body});
-            if (!res.ok) throw new Error(await res.text());
+            if (!res.ok) throw new Error(res.status === 401 ? 'Sitzung abgelaufen. Bitte die Seite neu laden und die PIN eingeben.' : await res.text());
             this.aktuelleVersion = (await res.json()).version;
             this.saveFastCache();
             document.getElementById('syncStatus').textContent = ' ✅';
@@ -7206,14 +7199,6 @@
         init() {
           initTheme();
 
-          if (CONFIG.PIN) {
-            const eingabe = prompt('Bitte PIN eingeben:', '');
-            if (eingabe !== CONFIG.PIN) {
-              document.body.innerHTML = '<h1 style="color:#d45c4c;text-align:center;padding:40px;">Zugriff verweigert – falsche PIN.</h1>';
-              return;
-            }
-          }
-
           // Sofort etwas anzeigen, wenn bereits ein kleiner Cache vorhanden ist.
           // Der aktuelle Cloud-Stand wird direkt danach normal nachgeladen.
           if (DataManager.loadFastCache()) {
@@ -7466,19 +7451,6 @@
           });
 
           // PIN
-          document.getElementById('pinAendernBtn').addEventListener('click', () => {
-            const neuePin = document.getElementById('neuePin').value.trim();
-            if (!neuePin || neuePin.length < 4) {
-              showToast('Bitte mindestens 4 Zeichen eingeben.', 'error');
-              return;
-            }
-            CONFIG.PIN = neuePin;
-            localStorage.setItem('pin', neuePin);
-            document.getElementById('aktuellePinAnzeige').textContent = neuePin;
-            document.getElementById('neuePin').value = '';
-            showToast('PIN erfolgreich geändert.', 'success');
-          });
-
           // Export / Import
           document.getElementById('exportDatenBtn').addEventListener('click', () => {
             const json = JSON.stringify(DataManager.lokaleDaten, null, 2);
@@ -7716,10 +7688,10 @@
           const submit = form.querySelector('button');
           submit.disabled = true;
           try {
-            cloudAuth = 'Basic ' + btoa('paar:' + field.value);
-            const check = await cloudFetch('/api/state', {cache:'no-store'});
-            if (check.status === 401) throw new Error('Passwort stimmt nicht.');
-            if (!check.ok) throw new Error('Cloudflare antwortet mit Fehler ' + check.status + '.');
+            const check = await fetch(cloudOrigin + '/api/pin', {method:'POST',body:field.value,
+              credentials:'omit',redirect:'error',cache:'no-store'});
+            if (!check.ok) throw new Error(await check.text());
+            cloudAuth = 'Bearer ' + (await check.json()).token;
             navigator.serviceWorker.addEventListener('message', event => {
               if (event.source === navigator.serviceWorker.controller && event.data === 'punkte-medien-anmeldung')
                 event.ports[0]?.postMessage(cloudAuth);
