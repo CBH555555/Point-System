@@ -3116,6 +3116,11 @@
   </style>
 </head>
 <body>
+  <dialog id="cloudLogin" style="max-width:22rem;border:1px solid var(--card-border);border-radius:16px;padding:1.5rem;background:var(--surface-solid);color:var(--text)">
+    <form><h2>Liebe &amp; Einsatz</h2><label for="cloudPassword">Passwort für euren Cloud-Speicher</label>
+      <input id="cloudPassword" name="password" type="password" autocomplete="current-password" required style="width:100%;margin:.8rem 0">
+      <button type="submit">Anmelden</button><p role="status" aria-live="polite"></p></form>
+  </dialog>
 
   <div id="toastContainer"></div>
 
@@ -3797,7 +3802,7 @@
 
         <div class="settings-group">
           <div class="settings-section-title"><span class="icon">☁️</span><span>Daten &amp; Cloud</span></div>
-          <p class="settings-note">Hauptdaten wie Aufgaben, Tagebuch, Medien und Punktestand werden in der Supabase-Cloud gespeichert. Femtopia-Moodboard-Bilder und einige Ideennotizen bleiben lokal in diesem Browser.</p>
+          <p class="settings-note">Hauptdaten wie Aufgaben, Tagebuch, Medien und Punktestand werden bei Cloudflare gespeichert. Der JSON-Export enthält für hochgeladene Dateien nur Verweise. Femtopia-Moodboard-Bilder und einige Ideennotizen bleiben lokal in diesem Browser.</p>
           <div class="flex-wrap" style="margin-top:10px;">
             <button id="exportDatenBtn" class="btn-primary" style="width:auto; padding:10px 20px; margin-top:0; background:var(--bg); color:var(--text); border:1px solid var(--card-border);">📥 Daten exportieren (JSON)</button>
             <button id="importDatenBtn" class="btn-primary" style="width:auto; padding:10px 20px; margin-top:0; background:var(--bg); color:var(--text); border:1px solid var(--card-border);">📤 Daten importieren (JSON)</button>
@@ -3939,11 +3944,6 @@
 
       // ===== KONFIGURATION =====
       const CONFIG = {
-        SUPABASE_URL: 'https://wvggsmdnsdnwxtivdgsr.supabase.co',
-        SUPABASE_KEY: 'sb_publishable_S9NZCm46akp3HEHhl72Q0A_6kWnON7B',
-        SUPABASE_TABLE: 'punkte_system',
-        SUPABASE_ID: 'hauptkonto',
-        SUPABASE_BUCKET: 'media',
         PIN: localStorage.getItem('pin') || '0000'
       };
 
@@ -4088,32 +4088,31 @@
           return String(path).split('/').map(encodeURIComponent).join('/');
         },
 
-        publicUrl(path) {
-          return `${CONFIG.SUPABASE_URL}/storage/v1/object/public/${encodeURIComponent(CONFIG.SUPABASE_BUCKET)}/${this.encodePath(path)}`;
+        async uploadBlob(blob) {
+          const res = await cloudFetch('/api/media', {method:'POST',headers:{'Content-Type':blob.type},body:blob});
+          if (!res.ok) throw new Error(await res.text());
+          return (await res.json()).url;
         },
 
-        async uploadBlob(blob, originalName = '', folder = 'uploads') {
-          if (!(blob instanceof Blob)) throw new Error('Ungültige Datei.');
-          const ext = this.extensionForMime(blob.type);
-          const rawName = this.cleanName(originalName || `datei.${ext}`);
-          const base = rawName.replace(/\.[^.]+$/, '') || 'datei';
-          const path = `${folder}/${new Date().toISOString().slice(0,10)}/${Date.now()}-${genId()}-${base}.${ext}`;
-          const url = `${CONFIG.SUPABASE_URL}/storage/v1/object/${encodeURIComponent(CONFIG.SUPABASE_BUCKET)}/${this.encodePath(path)}`;
-          const res = await fetch(url, {
-            method: 'POST',
-            headers: {
-              'apikey': CONFIG.SUPABASE_KEY,
-              'Authorization': `Bearer ${CONFIG.SUPABASE_KEY}`,
-              'Content-Type': blob.type || 'application/octet-stream',
-              'x-upsert': 'false'
-            },
-            body: blob
-          });
-          if (!res.ok) {
-            const msg = await res.text().catch(() => '');
-            throw new Error(`Storage-Upload fehlgeschlagen (${res.status})${msg ? ': ' + msg : ''}`);
-          }
-          return this.publicUrl(path);
+        async copyImportedMedia(data) {
+          const prefix = 'https://wvggsmdnsdnwxtivdgsr.supabase.co/storage/v1/object/public/media/';
+          const copied = new Map();
+          const visit = async value => {
+            if (typeof value === 'string' && (value.startsWith(prefix) || this.isInlineAsset(value))) {
+              if (!copied.has(value)) {
+                document.getElementById('syncStatus').textContent = ' (übertrage Medium ' + (copied.size + 1) + '…)';
+                const res = await fetch(value, {credentials:'omit',referrerPolicy:'no-referrer'});
+                if (!res.ok) throw new Error('Altes Medium nicht erreichbar. Supabase aktivieren und erneut importieren.');
+                copied.set(value, await this.uploadBlob(await res.blob()));
+              }
+              return copied.get(value);
+            }
+            if (value && typeof value === 'object') {
+              for (const key of Object.keys(value)) value[key] = await visit(value[key]);
+            }
+            return value;
+          };
+          return visit(data);
         },
 
         async uploadFile(file, folder = 'uploads', maxBytes = 10 * 1024 * 1024) {
@@ -4366,15 +4365,6 @@
           }
         },
 
-        getHeaders(extra = {}) {
-          return {
-            'apikey': CONFIG.SUPABASE_KEY,
-            'Authorization': `Bearer ${CONFIG.SUPABASE_KEY}`,
-            'Content-Type': 'application/json',
-            ...extra
-          };
-        },
-
         initDefaultData() {
           this.lokaleDaten = {
             aufgaben: [
@@ -4441,21 +4431,12 @@
         async load() {
           try {
             document.getElementById('syncStatus').textContent = ' (lade…)';
-            const url = `${CONFIG.SUPABASE_URL}/rest/v1/${CONFIG.SUPABASE_TABLE}?id=eq.${CONFIG.SUPABASE_ID}&select=daten,version`;
-            const res = await fetch(url, { headers: this.getHeaders() });
-            if (!res.ok) {
-              if (res.status === 404) {
-                // Kein Datensatz gefunden -> Standarddaten erstellen
-                this.initDefaultData();
-                await this.save(true);
-                document.getElementById('syncStatus').textContent = ' ✅';
-                return true;
-              }
-              throw new Error(`HTTP ${res.status}`);
-            }
+            const res = await cloudFetch('/api/state', {cache:'no-store'});
+            if (!res.ok) throw new Error(await res.text());
             const records = await res.json();
             if (!records || records.length === 0) {
               this.initDefaultData();
+              this.aktuelleVersion = 0;
               await this.save(true);
             } else {
               const record = records[0];
@@ -4491,104 +4472,24 @@
         },
 
         async save(initial = false, silent = false) {
-          try {
-            const baseUrl = `${CONFIG.SUPABASE_URL}/rest/v1/${CONFIG.SUPABASE_TABLE}`;
-            
-            if (initial) {
-              // Erstinstallation: Datensatz einfügen
-              const insertBody = {
-                id: CONFIG.SUPABASE_ID,
-                daten: this.lokaleDaten,      // <--- Spalte "daten"
-                version: 1
-              };
-              const res = await fetch(baseUrl, {
-                method: 'POST',
-                headers: this.getHeaders({ 'Prefer': 'return=representation' }),
-                body: JSON.stringify(insertBody)
-              });
-              if (!res.ok) {
-                const errText = await res.text();
-                throw new Error(`Initiales Speichern fehlgeschlagen (${res.status}): ${errText}`);
-              }
-              const result = await res.json();
-              if (result && result[0]) {
-                this.aktuelleVersion = result[0].version;
-              } else {
-                this.aktuelleVersion = 1;
-              }
-              this.saveFastCache();
-              document.getElementById('syncStatus').textContent = ' ✅';
-              showToast('Erstinstallation gespeichert.', 'success');
-              return;
-            }
-
-            // Nicht-initiales Speichern: erst aktuellen Stand holen
-            const getUrl = `${baseUrl}?id=eq.${CONFIG.SUPABASE_ID}&select=version`;
-            const getRes = await fetch(getUrl, { headers: this.getHeaders() });
-            if (!getRes.ok) {
-              throw new Error(`Server-Abfrage fehlgeschlagen (${getRes.status})`);
-            }
-            const current = await getRes.json();
-
-            if (!current || current.length === 0) {
-              // Datensatz existiert nicht mehr -> neu anlegen
-              return this.save(true);
-            }
-
-            const serverVersion = current[0].version;
-            if (this.aktuelleVersion !== serverVersion) {
-              const choice = confirm(
-                'Die Daten auf dem Server wurden von einem anderen Gerät geändert.\n' +
-                'Möchtest du deine lokalen Änderungen verwerfen und die Server-Daten laden?\n' +
-                '(OK = Server laden, Abbrechen = Server überschreiben)'
-              );
-              if (choice) {
-                // Den vollständigen Server-Datensatz nur dann laden, wenn er wirklich gebraucht wird.
-                showToast('Server-Daten werden geladen.', 'info');
-                await this.load();
-                UIRenderer.renderAlles(this.lokaleDaten);
-                return;
-              } else {
-                // Überschreiben: wir verwenden die aktuelle Server-Version als Basis für den Filter
-                this.aktuelleVersion = serverVersion;
-              }
-            }
-
-            // Optimistic Locking: PATCH mit Versionsfilter.
-            // Der Trigger erhöht die Version automatisch (old.version + 1).
-            const patchUrl = `${baseUrl}?id=eq.${CONFIG.SUPABASE_ID}&version=eq.${this.aktuelleVersion}`;
-            const patchBody = {
-              daten: this.lokaleDaten       // <--- Spalte "daten"
-            };
-            const patchRes = await fetch(patchUrl, {
-              method: 'PATCH',
-              headers: this.getHeaders({ 'Prefer': 'return=representation' }),
-              body: JSON.stringify(patchBody)
-            });
-            if (!patchRes.ok) {
-              const errText = await patchRes.text();
-              if (patchRes.status === 404 || patchRes.status === 406) {
-                // Version nicht mehr aktuell -> Konflikt erneut behandeln
-                showToast('Konflikt erkannt – lade Server-Daten neu.', 'error');
-                return this.load();
-              }
-              throw new Error(`Speichern fehlgeschlagen (${patchRes.status}): ${errText}`);
-            }
-            const patchResult = await patchRes.json();
-            if (patchResult && patchResult[0]) {
-              this.aktuelleVersion = patchResult[0].version;
-            } else {
-              // Fallback: Version selbst erhöhen (sollte nicht passieren, da Trigger)
-              this.aktuelleVersion = serverVersion + 1;
-            }
+          const body = JSON.stringify(this.lokaleDaten);
+          const write = async () => {
+            if (this.aktuelleVersion === null) throw new Error('Bitte Seite neu laden.');
+            const res = await cloudFetch('/api/state', {method:'PUT', headers:{
+              'Content-Type':'application/json', 'If-Match':String(this.aktuelleVersion)
+            }, body});
+            if (!res.ok) throw new Error(await res.text());
+            this.aktuelleVersion = (await res.json()).version;
             this.saveFastCache();
             document.getElementById('syncStatus').textContent = ' ✅';
             if (!silent) showToast('Gespeichert.', 'success');
-          } catch (e) {
-            console.error('Save error:', e);
+          };
+          this.pendingSave = (this.pendingSave || Promise.resolve()).catch(() => {}).then(write);
+          try { await this.pendingSave; }
+          catch (err) {
             document.getElementById('syncStatus').textContent = ' ❌';
-            showToast('Fehler beim Speichern: ' + e.message, 'error');
-            throw e;
+            showToast('Nicht gespeichert: ' + err.message, 'error');
+            throw err;
           }
         },
 
@@ -7320,7 +7221,8 @@
             document.getElementById('syncStatus').textContent = ' (aktualisiert…)';
           }
 
-          DataManager.load().then(() => {
+          DataManager.load().then(loaded => {
+            if (!loaded) { alert('Laden fehlgeschlagen. Bitte Einrichtung prüfen und die Seite neu laden.'); return; }
             UIRenderer.renderAlles(DataManager.lokaleDaten);
             this.bindEvents();
 
@@ -7345,7 +7247,7 @@
             btn.disabled = true;
             btn.textContent = '↻ Lädt…';
             try {
-              await DataManager.load();
+              if (!await DataManager.load()) return;
               UIRenderer.renderAlles(DataManager.lokaleDaten);
               showToast('Synchronisiert.', 'success');
             } finally {
@@ -7595,33 +7497,36 @@
             const file = e.target.files[0];
             if (!file) return;
             const reader = new FileReader();
-            reader.onload = (ev) => {
+            reader.onload = async (ev) => {
               try {
                 const imported = JSON.parse(ev.target.result);
-                if (!imported.aufgaben || !imported.einloesungen) {
+                if (!Array.isArray(imported?.aufgaben) || !Array.isArray(imported?.einloesungen)) {
                   showToast('Ungültiges Dateiformat.', 'error');
                   return;
                 }
-                if (confirm('Daten importieren? Alle lokalen Daten werden überschrieben.')) {
-                  DataManager.lokaleDaten = imported;
-                  ensureLifetimePoints(DataManager.lokaleDaten);
-                  ensurePuzzleData(DataManager.lokaleDaten);
-                  ensureCompassData(DataManager.lokaleDaten);
-                  ensureGeschichtenData(DataManager.lokaleDaten);
-                  ensureMedienData(DataManager.lokaleDaten);
+                if (confirm('Gemeinsamen Cloud-Datenstand durch diese Sicherung ersetzen? Medien werden zuerst kopiert.')) {
+                  await StorageManager.copyImportedMedia(imported);
+                  ensureLifetimePoints(imported);
+                  ensurePuzzleData(imported);
+                  ensureCompassData(imported);
+                  ensureGeschichtenData(imported);
+                  ensureMedienData(imported);
                   ['aufgaben', 'einloesungen', 'tagebuch'].forEach(key => {
-                    (DataManager.lokaleDaten[key] || []).forEach(e => {
+                    (imported[key] || []).forEach(e => {
                       if (!e.image) e.image = '';
                       if (!e.kommentare) e.kommentare = [];
                     });
                   });
-                  DataManager.save().then(() => {
-                    UIRenderer.renderAlles(DataManager.lokaleDaten);
-                    showToast('Import erfolgreich.', 'success');
-                  });
+                  const previous = DataManager.lokaleDaten;
+                  DataManager.lokaleDaten = imported;
+                  try { await DataManager.save(); }
+                  catch (err) { DataManager.lokaleDaten = previous; throw err; }
+                  UIRenderer.renderAlles(imported);
+                  showToast('Import erfolgreich.', 'success');
                 }
               } catch (err) {
-                showToast('Fehler beim Import: ' + err.message, 'error');
+                document.getElementById('syncStatus').textContent = ' ❌';
+                alert('Import nicht abgeschlossen: ' + err.message);
               }
             };
             reader.readAsText(file);
@@ -7791,8 +7696,55 @@
       };
 
       // ===== START =====
-      console.warn('⚠️ Sicherheitshinweis: Der Supabase-Key ist im Client-Code sichtbar – für Produktion RLS verwenden.');
-      document.addEventListener('DOMContentLoaded', () => App.init());
+
+      const cloudOrigin = 'https://punkte-paar-271.pages.dev';
+      let cloudAuth = '';
+      function cloudFetch(path, options = {}) {
+        const headers = new Headers(options.headers);
+        headers.set('Authorization',cloudAuth);
+        return fetch(cloudOrigin + path, {...options,headers,credentials:'omit',redirect:'error'});
+      }
+
+      async function startGitHubApp() {
+        const dialog = document.getElementById('cloudLogin');
+        const form = dialog.querySelector('form');
+        const field = form.elements.password;
+        const status = dialog.querySelector('[role=status]');
+        dialog.showModal();
+        form.addEventListener('submit', async event => {
+          event.preventDefault();
+          const submit = form.querySelector('button');
+          submit.disabled = true;
+          try {
+            cloudAuth = 'Basic ' + btoa('paar:' + field.value);
+            const check = await cloudFetch('/api/state', {cache:'no-store'});
+            if (check.status === 401) throw new Error('Passwort stimmt nicht.');
+            if (!check.ok) throw new Error('Cloudflare antwortet mit Fehler ' + check.status + '.');
+            navigator.serviceWorker.addEventListener('message', event => {
+              if (event.source === navigator.serviceWorker.controller && event.data === 'punkte-medien-anmeldung')
+                event.ports[0]?.postMessage(cloudAuth);
+            });
+            await navigator.serviceWorker.register('./punkte-medien.js');
+            await navigator.serviceWorker.ready;
+            if (!navigator.serviceWorker.controller) {
+              await new Promise((resolve,reject) => {
+                const timeout = setTimeout(() => reject(new Error('Bitte die Seite neu laden.')),10000);
+                navigator.serviceWorker.addEventListener('controllerchange', () => {
+                  clearTimeout(timeout); resolve();
+                }, {once:true});
+              });
+            }
+            field.value = '';
+            dialog.close();
+            App.init();
+          } catch (err) {
+            cloudAuth = '';
+            status.textContent = err.message === 'Failed to fetch' ? 'Verbindung fehlgeschlagen. Bitte zuerst die neue Cloudflare-Version bereitstellen.' : err.message;
+          } finally { submit.disabled = false; }
+        });
+        dialog.addEventListener('cancel', e => e.preventDefault());
+      }
+      document.addEventListener('DOMContentLoaded', startGitHubApp);
     })();
   </script>
 
